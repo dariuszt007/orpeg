@@ -4,83 +4,155 @@
     "name": "Polski",
     "color": "#5147e8",
     "defaultPlannedCount": 18,
-    "yearPlans": []
+    "yearPlans": [
+      {
+        "schoolYear": "2026-2027",
+        "grade": 5,
+        "plannedCount": 18
+      }
+    ]
   },
   {
     "id": "d77def58-905d-4b14-9d93-01989f6cc2a5",
     "name": "Matematyka",
-    "color": "#e86e45",
+    "color": "#ff3a2f",
     "defaultPlannedCount": 18,
-    "yearPlans": []
+    "yearPlans": [
+      {
+        "schoolYear": "2026-2027",
+        "grade": 5,
+        "plannedCount": 18
+      }
+    ]
   },
   {
     "id": "cb063af6-2270-4746-aa46-a6463432698b",
     "name": "Angielski",
-    "color": "#5147e8",
+    "color": "#982abc",
     "defaultPlannedCount": 10,
-    "yearPlans": []
+    "yearPlans": [
+      {
+        "schoolYear": "2026-2027",
+        "grade": 5,
+        "plannedCount": 10
+      }
+    ]
   },
   {
     "id": "e4fa603f-1f71-4478-86b9-74872729cc9f",
     "name": "Historia",
-    "color": "#5147e8",
+    "color": "#01c7fc",
     "defaultPlannedCount": 18,
-    "yearPlans": []
+    "yearPlans": [
+      {
+        "schoolYear": "2026-2027",
+        "grade": 5,
+        "plannedCount": 18
+      }
+    ]
   },
   {
     "id": "c419d3dc-d4e5-41e0-bb03-4126a20e784b",
     "name": "Biologia",
-    "color": "#5147e8",
+    "color": "#33c759",
     "defaultPlannedCount": 10,
-    "yearPlans": []
+    "yearPlans": [
+      {
+        "schoolYear": "2026-2027",
+        "grade": 5,
+        "plannedCount": 10
+      }
+    ]
   },
   {
     "id": "a4dc69c5-d3dd-42f8-902a-9df1a740d947",
     "name": "Geografia",
-    "color": "#5147e8",
+    "color": "#707070",
     "defaultPlannedCount": 10,
-    "yearPlans": []
+    "yearPlans": [
+      {
+        "schoolYear": "2026-2027",
+        "grade": 5,
+        "plannedCount": 10
+      }
+    ]
   },
   {
     "id": "9480f4b7-3be1-42c6-9e44-05a61baf5272",
     "name": "Technika",
-    "color": "#5147e8",
+    "color": "#99244f",
     "defaultPlannedCount": 10,
-    "yearPlans": []
+    "yearPlans": [
+      {
+        "schoolYear": "2026-2027",
+        "grade": 5,
+        "plannedCount": 10
+      }
+    ]
   },
   {
     "id": "02f0d475-168e-450c-a671-22defa514bdf",
     "name": "Informatyka",
-    "color": "#5147e8",
+    "color": "#c4bc00",
     "defaultPlannedCount": 10,
-    "yearPlans": []
+    "yearPlans": [
+      {
+        "schoolYear": "2026-2027",
+        "grade": 5,
+        "plannedCount": 10
+      }
+    ]
   },
   {
     "id": "c864f720-d494-49ec-acb3-5298c9d3d774",
     "name": "Edukazja Zdrowotna",
-    "color": "#5147e8",
+    "color": "#4e7a27",
     "defaultPlannedCount": 10,
-    "yearPlans": []
+    "yearPlans": [
+      {
+        "schoolYear": "2026-2027",
+        "grade": 5,
+        "plannedCount": 10
+      }
+    ]
   },
   {
     "id": "c303c882-0054-454b-80d2-e81183fcdf32",
     "name": "Plastyka",
-    "color": "#5147e8",
+    "color": "#e292fe",
     "defaultPlannedCount": 10,
-    "yearPlans": []
+    "yearPlans": [
+      {
+        "schoolYear": "2026-2027",
+        "grade": 5,
+        "plannedCount": 10
+      }
+    ]
   },
   {
     "id": "3416f8aa-7f0f-4efc-9ac1-a5ff4428a817",
     "name": "Muzyka",
-    "color": "#5147e8",
+    "color": "#ff6a00",
     "defaultPlannedCount": 10,
-    "yearPlans": []
+    "yearPlans": [
+      {
+        "schoolYear": "2026-2027",
+        "grade": 5,
+        "plannedCount": 10
+      }
+    ]
   },
   {
     "id": "14b58501-9a0a-4056-90ee-732b19995771",
     "name": "WF",
-    "color": "#5147e8",
+    "color": "#ffd977",
     "defaultPlannedCount": 10,
-    "yearPlans": []
+    "yearPlans": [
+      {
+        "schoolYear": "2026-2027",
+        "grade": 5,
+        "plannedCount": 10
+      }
+    ]
   }
 ]

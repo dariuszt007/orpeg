@@ -10,171 +10,451 @@
 
   <style>
     :root {
-      --bg:#f5f6fa; --card:#fff; --text:#202437; --muted:#687087;
-      --line:#e2e5ed; --primary:#5147e8; --primary-soft:#eeedff;
-      --green:#168451; --red:#bd3045;
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+      --bg: #f5f6fa;
+      --card: #fff;
+      --text: #202437;
+      --muted: #687087;
+      --line: #e2e5ed;
+      --primary: #5147e8;
+      --primary-soft: #eeedff;
+      --green: #168451;
+      --red: #bd3045;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
-    * { box-sizing:border-box; }
-    body { margin:0; min-height:100vh; padding-bottom:env(safe-area-inset-bottom); background:var(--bg); color:var(--text); }
-    button,input,select,textarea { font:inherit; }
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding-bottom: env(safe-area-inset-bottom);
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    button, input, select, textarea { font: inherit; }
+
     button {
-      min-height:44px; padding:9px 12px; border:1px solid var(--line);
-      border-radius:11px; background:#fff; color:var(--text); cursor:pointer;
-      touch-action:manipulation;
+      min-height: 44px;
+      padding: 9px 12px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: #fff;
+      color: var(--text);
+      cursor: pointer;
+      touch-action: manipulation;
     }
-    button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible {
-      outline:3px solid #aaa5ff; outline-offset:2px;
+
+    button:focus-visible, input:focus-visible, select:focus-visible,
+    textarea:focus-visible {
+      outline: 3px solid #aaa5ff;
+      outline-offset: 2px;
     }
-    button.primary { background:var(--primary); color:#fff; border-color:var(--primary); }
-    button.danger { color:var(--red); }
 
-    .app { width:min(100%,1000px); margin:auto; padding:14px; padding-top:max(14px,env(safe-area-inset-top)); }
-    .topbar,.toolbar,.row,.button-row { display:flex; align-items:center; gap:8px; }
-    .topbar { justify-content:space-between; margin-bottom:15px; }
-    h1 { margin:0; font-size:clamp(21px,6vw,29px); }
-    h2 { margin:0 0 12px; font-size:20px; }
-    h3 { margin:0 0 10px; font-size:16px; }
+    button.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+    button.danger { color: var(--red); }
 
-    .toolbar { flex-wrap:wrap; margin-bottom:12px; }
-    .period { flex:1 1 100%; order:2; padding:5px 0; text-align:center; font-weight:700; }
-    .view-switch { display:flex; gap:5px; order:3; margin-left:auto; }
-    .view-switch button.active { color:var(--primary); background:var(--primary-soft); border-color:#d5d2ff; font-weight:700; }
+    .app {
+      width: min(100%, 1000px);
+      margin: auto;
+      padding: 14px;
+      padding-top: max(14px, env(safe-area-inset-top));
+    }
 
-    .card,.calendar-card { background:var(--card); border:1px solid var(--line); border-radius:16px; }
-    .month-calendar { overflow:hidden; }
-    .weekday-row,.month-grid { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); }
-    .weekday { padding:9px 2px; background:#fafaff; border-bottom:1px solid var(--line); text-align:center; color:var(--muted); font-size:12px; }
+    .topbar, .toolbar, .row, .button-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .topbar { justify-content: space-between; margin-bottom: 15px; }
+    h1 { margin: 0; font-size: clamp(21px, 6vw, 29px); }
+    h2 { margin: 0 0 12px; font-size: 20px; }
+    h3 { margin: 0 0 10px; font-size: 16px; }
+
+    .toolbar { flex-wrap: wrap; margin-bottom: 12px; }
+    .period {
+      flex: 1 1 100%;
+      order: 2;
+      padding: 5px 0;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .view-switch { display: flex; gap: 5px; order: 3; margin-left: auto; }
+    .view-switch button.active {
+      color: var(--primary);
+      background: var(--primary-soft);
+      border-color: #d5d2ff;
+      font-weight: 700;
+    }
+
+    .card, .calendar-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+    }
+
+    /* Miesiąc */
+    .month-calendar { overflow: hidden; }
+    .weekday-row, .month-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+    }
+
+    .weekday {
+      padding: 9px 2px;
+      background: #fafaff;
+      border-bottom: 1px solid var(--line);
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
 
     .month-day {
-      min-width:0; min-height:78px; padding:4px 3px; border:0;
-      border-right:1px solid var(--line); border-bottom:1px solid var(--line);
-      border-radius:0; background:#fff; display:flex; flex-direction:column;
-      align-items:stretch; gap:3px;
+      min-width: 0;
+      min-height: 78px;
+      padding: 4px 3px;
+      border: 0;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      border-radius: 0;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 3px;
     }
-    .month-day:nth-child(7n) { border-right:0; }
-    .month-day.outside { color:#a3a8b5; background:#fafbfe; }
-    .month-day.selected { background:var(--primary-soft); }
-    .month-day.today .day-number { background:var(--primary); color:#fff; }
-    .day-head { display:flex; justify-content:space-between; align-items:center; gap:2px; }
-    .day-number {
-      display:grid; place-items:center; width:25px; height:25px; padding:0;
-      border:0; border-radius:50%; background:transparent; font-size:13px; font-weight:700;
-    }
-    .add-day { min-height:25px; width:27px; padding:0; border:0; color:var(--primary); background:transparent; font-size:20px; line-height:1; }
-    .month-events { display:grid; gap:3px; min-width:0; }
-    .month-event {
-      display:block; width:100%; min-height:22px; overflow:hidden; padding:3px 4px;
-      border:0; border-left:3px solid var(--event-color,var(--primary)); border-radius:4px;
-      background:color-mix(in srgb,var(--event-color,var(--primary)) 16%,white);
-      color:#202437; text-align:left; font-size:10px; font-weight:700; line-height:1.2;
-      white-space:nowrap; text-overflow:ellipsis;
-    }
-    .month-more { color:var(--muted); font-size:9px; text-align:left; }
 
-    .section-heading { display:flex; align-items:center; justify-content:space-between; gap:8px; margin:18px 2px 10px; }
-    .section-heading h2 { margin:0; }
-    .event-list,.week-days { display:grid; gap:9px; }
-    .day-card { padding:12px; background:#fff; border:1px solid var(--line); border-radius:15px; }
-    .day-card-heading { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:9px; }
+    .month-day:nth-child(7n) { border-right: 0; }
+    .month-day.outside { color: #a3a8b5; background: #fafbfe; }
+    .month-day.selected { background: var(--primary-soft); }
+    .month-day.today .day-number { background: var(--primary); color: #fff; }
+    .day-head { display: flex; justify-content: space-between; align-items: center; gap: 2px; }
+
+    .day-number {
+      display: grid;
+      place-items: center;
+      width: 25px;
+      height: 25px;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .add-day {
+      min-height: 25px;
+      width: 27px;
+      padding: 0;
+      border: 0;
+      color: var(--primary);
+      background: transparent;
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .month-events { display: grid; gap: 3px; min-width: 0; }
+
+    .month-event {
+      display: block;
+      width: 100%;
+      min-height: 22px;
+      overflow: hidden;
+      padding: 3px 4px;
+      border: 0;
+      border-left: 3px solid var(--event-color, var(--primary));
+      border-radius: 4px;
+      background: color-mix(in srgb, var(--event-color, var(--primary)) 16%, white);
+      color: #202437;
+      text-align: left;
+      font-size: 10px;
+      font-weight: 700;
+      line-height: 1.2;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .month-more { color: var(--muted); font-size: 9px; text-align: left; }
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin: 18px 2px 10px;
+    }
+
+    .section-heading h2 { margin: 0; }
+    .event-list, .week-days { display: grid; gap: 9px; }
+
+    .day-card {
+      padding: 12px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+    }
+
+    .day-card-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 9px;
+    }
 
     .lesson-card {
-      padding:10px; border:0; border-left:6px solid var(--lesson-color,var(--primary));
-      border-radius:10px; background:color-mix(in srgb,var(--lesson-color,var(--primary)) 9%,white);
+      padding: 10px;
+      border: 0;
+      border-left: 6px solid var(--lesson-color, var(--primary));
+      border-radius: 10px;
+      background: color-mix(in srgb, var(--lesson-color, var(--primary)) 9%, white);
     }
-    .lesson-main { display:block; width:100%; min-height:36px; padding:0; border:0; border-radius:0; background:transparent; text-align:left; }
-    .lesson-topline { display:flex; align-items:center; justify-content:space-between; gap:8px; font-weight:700; }
-    .lesson-subline { margin-top:3px; color:var(--muted); font-size:12px; }
 
-    .attendance-select { width:100%; min-height:38px; margin-top:7px; padding:5px 8px; border-radius:9px; font-size:14px; font-weight:600; }
-    .attendance-select.present { color:#126b42; background:#e5f5ec; border-color:#a6d8ba; }
-    .attendance-select.absent { color:#a12639; background:#fde9ec; border-color:#efb6bf; }
-    .empty { padding:16px 12px; border:1px dashed var(--line); border-radius:12px; color:var(--muted); text-align:center; }
-
-    /* Tygodniowa siatka z osią godzin */
-    .week-scroll { overflow-x:auto; overscroll-behavior-x:contain; border-radius:15px; background:#fff; -webkit-overflow-scrolling:touch; }
-    .week-grid { display:grid; grid-template-columns:48px repeat(7,128px); min-width:944px; }
-    .week-head { position:sticky; top:0; z-index:3; min-height:52px; padding:7px 3px; border-right:1px solid var(--line); border-bottom:1px solid var(--line); background:#fafaff; text-align:center; font-size:12px; }
-    .week-head.time-head { left:0; z-index:4; }
-    .week-day-name { display:block; font-weight:700; }
-    .week-date { display:block; margin-top:2px; color:var(--muted); }
-    .time-axis,.week-column {
-      position:relative; height:1344px;
-      background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 55px,var(--line) 55px,var(--line) 56px);
+    .lesson-main {
+      display: block;
+      width: 100%;
+      min-height: 36px;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      text-align: left;
     }
-    .time-axis { position:sticky; left:0; z-index:2; border-right:1px solid var(--line); background-color:#fafaff; }
-    .hour-label { position:absolute; right:4px; transform:translateY(-7px); color:var(--muted); font-size:10px; }
-    .week-column { border-right:1px solid var(--line); background-color:#fff; }
+
+    .lesson-topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-weight: 700;
+    }
+
+    .lesson-subline { margin-top: 3px; color: var(--muted); font-size: 12px; }
+
+    .attendance-select {
+      width: 100%;
+      min-height: 38px;
+      margin-top: 7px;
+      padding: 5px 8px;
+      border-radius: 9px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .attendance-select.present { color: #126b42; background: #e5f5ec; border-color: #a6d8ba; }
+    .attendance-select.absent { color: #a12639; background: #fde9ec; border-color: #efb6bf; }
+    .empty {
+      padding: 16px 12px;
+      border: 1px dashed var(--line);
+      border-radius: 12px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    /* Tydzień i oś godzinowa */
+    .week-scroll {
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      border-radius: 15px;
+      background: #fff;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .week-grid {
+      display: grid;
+      grid-template-columns: 48px repeat(7, 128px);
+      min-width: 944px;
+    }
+
+    .week-head {
+      position: sticky;
+      top: 0;
+      z-index: 3;
+      min-height: 52px;
+      padding: 7px 3px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background: #fafaff;
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .week-head.time-head { left: 0; z-index: 4; }
+    .week-day-name { display: block; font-weight: 700; }
+    .week-date { display: block; margin-top: 2px; color: var(--muted); }
+
+    .time-axis, .week-column {
+      position: relative;
+      height: 1344px;
+      background-image: repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 55px,
+        var(--line) 55px,
+        var(--line) 56px
+      );
+    }
+
+    .time-axis {
+      position: sticky;
+      left: 0;
+      z-index: 2;
+      border-right: 1px solid var(--line);
+      background-color: #fafaff;
+    }
+
+    .hour-label {
+      position: absolute;
+      right: 4px;
+      transform: translateY(-7px);
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .week-column { border-right: 1px solid var(--line); background-color: #fff; }
+
     .week-event {
-      position:absolute; left:3px; right:3px; min-height:42px; overflow:hidden; padding:4px;
-      border:0; border-left:4px solid var(--event-color,var(--primary)); border-radius:6px;
-      background:color-mix(in srgb,var(--event-color,var(--primary)) 18%,white);
-      text-align:left; font-size:10px; line-height:1.25;
+      position: absolute;
+      left: 3px;
+      right: 3px;
+      min-height: 42px;
+      overflow: hidden;
+      padding: 4px;
+      border: 0;
+      border-left: 4px solid var(--event-color, var(--primary));
+      border-radius: 6px;
+      background: color-mix(in srgb, var(--event-color, var(--primary)) 18%, white);
+      text-align: left;
+      font-size: 10px;
+      line-height: 1.25;
     }
-    .week-event strong,.week-event span { display:block; overflow-wrap:anywhere; }
-    .week-event span { margin-top:2px; }
 
-    /* Przeciąganie lekcji */
-    .month-event,.week-event,.lesson-main { touch-action:none; cursor:grab; }
-    .month-event:active,.week-event:active,.lesson-main:active { cursor:grabbing; }
+    .week-event strong, .week-event span { display: block; overflow-wrap: anywhere; }
+    .week-event span { margin-top: 2px; }
+
+    /* Przeciąganie i podgląd miejsca upuszczenia */
+    .month-event, .week-event, .lesson-main { touch-action: none; cursor: grab; }
+    .month-event:active, .week-event:active, .lesson-main:active { cursor: grabbing; }
+
     .drag-ghost {
-      position:fixed; z-index:99999; pointer-events:none; padding:9px 12px;
-      border-left:5px solid var(--drag-color,var(--primary)); border-radius:8px;
-      background:#fff; box-shadow:0 8px 24px #0003; font-size:13px; font-weight:700;
-      opacity:.92; transform:translate(12px,12px);
+      position: fixed;
+      z-index: 99999;
+      pointer-events: none;
+      padding: 9px 12px;
+      border-left: 5px solid var(--drag-color, var(--primary));
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 8px 24px #0003;
+      font-size: 13px;
+      font-weight: 700;
+      opacity: .92;
+      transform: translate(12px, 12px);
     }
-    .drag-over { outline:3px dashed var(--primary)!important; outline-offset:-4px; background-color:var(--primary-soft)!important; }
+
+    .drag-over {
+      outline: 3px dashed var(--primary) !important;
+      outline-offset: -4px;
+      background-color: var(--primary-soft) !important;
+    }
+
+    .week-drop-preview {
+      position: absolute;
+      z-index: 10;
+      left: 3px;
+      right: 3px;
+      min-height: 42px;
+      pointer-events: none;
+      padding: 5px;
+      border: 2px dashed var(--primary);
+      border-radius: 7px;
+      background: #eeedffdd;
+      color: #3029a8;
+      font-size: 11px;
+      font-weight: 700;
+    }
 
     /* Panel Admin */
-    .admin-card { margin:12px 0; padding:15px; }
-    .form-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
-    label { display:block; margin:8px 0 5px; color:var(--muted); font-size:13px; }
-    input,select,textarea { width:100%; min-height:44px; padding:9px 10px; border:1px solid var(--line); border-radius:10px; background:#fff; color:var(--text); }
-    input[type="color"] { padding:4px; }
-    textarea { min-height:80px; resize:vertical; }
-    .button-row { flex-wrap:wrap; margin-top:11px; }
-    .hint,.small-muted { color:var(--muted); font-size:13px; line-height:1.5; }
-    .stats { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin:10px 0; }
-    .stat { padding:10px; border-radius:11px; background:#f5f6fb; font-size:13px; }
-    .subject-row,.lesson-admin-row { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 0; border-bottom:1px solid var(--line); }
-    .subject-row:last-child,.lesson-admin-row:last-child { border-bottom:0; }
-    .row-info { min-width:0; overflow-wrap:anywhere; }
-    .row-actions { display:flex; gap:5px; flex-shrink:0; }
-    .row-actions button { min-height:38px; padding:6px 9px; }
-    .table-wrap { overflow-x:auto; }
-    table { width:100%; min-width:450px; border-collapse:collapse; background:#fff; }
-    th,td { padding:10px 9px; border:1px solid #d7d9df; text-align:left; font-size:14px; }
-    th { background:#f1f2f6; color:#303548; font-weight:700; }
-    tbody tr:nth-child(even) { background:#fafbfe; }
-    .status-text { font-weight:700; }
-    .status-text.present { color:var(--green); }
-    .status-text.absent { color:var(--red); }
-    .status-text.unknown { color:var(--muted); }
-    .hidden { display:none!important; }
+    .admin-card { margin: 12px 0; padding: 15px; }
+    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 
-    dialog { width:min(540px,calc(100% - 22px)); max-height:88vh; overflow:auto; padding:18px; border:1px solid var(--line); border-radius:18px; color:var(--text); box-shadow:0 20px 70px #14182d40; }
-    dialog::backdrop { background:#1317278c; }
-    .dialog-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:16px; }
-    .check-row { display:flex; align-items:center; gap:9px; margin:10px 0; }
-    .check-row input { width:20px; min-height:20px; }
-    .class-field { max-width:220px; }
+    label { display: block; margin: 8px 0 5px; color: var(--muted); font-size: 13px; }
 
-    @media(min-width:720px) {
-      .app { padding:22px; }
-      .toolbar { flex-wrap:nowrap; }
-      .period { flex:initial; order:initial; min-width:190px; }
-      .view-switch { order:initial; margin-left:0; }
-      .stats { grid-template-columns:repeat(3,minmax(0,1fr)); }
+    input, select, textarea {
+      width: 100%;
+      min-height: 44px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      color: var(--text);
     }
 
-    @media(max-width:430px) {
-      .app { padding:10px; }
-      button { padding:8px 10px; }
-      .month-day { min-height:66px; padding:3px 2px; }
-      .month-event { padding:3px 2px; font-size:9px; }
-      .form-grid { grid-template-columns:1fr; gap:4px; }
-      .subject-row,.lesson-admin-row { align-items:flex-start; flex-direction:column; }
+    input[type="color"] { padding: 4px; }
+    textarea { min-height: 80px; resize: vertical; }
+    .button-row { flex-wrap: wrap; margin-top: 11px; }
+    .hint, .small-muted { color: var(--muted); font-size: 13px; line-height: 1.5; }
+    .stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 10px 0; }
+    .stat { padding: 10px; border-radius: 11px; background: #f5f6fb; font-size: 13px; }
+
+    .subject-row, .lesson-admin-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .subject-row:last-child, .lesson-admin-row:last-child { border-bottom: 0; }
+    .row-info { min-width: 0; overflow-wrap: anywhere; }
+    .row-actions { display: flex; gap: 5px; flex-shrink: 0; }
+    .row-actions button { min-height: 38px; padding: 6px 9px; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; min-width: 450px; border-collapse: collapse; background: #fff; }
+    th, td { padding: 10px 9px; border: 1px solid #d7d9df; text-align: left; font-size: 14px; }
+    th { background: #f1f2f6; color: #303548; font-weight: 700; }
+    tbody tr:nth-child(even) { background: #fafbfe; }
+    .status-text { font-weight: 700; }
+    .status-text.present { color: var(--green); }
+    .status-text.absent { color: var(--red); }
+    .status-text.unknown { color: var(--muted); }
+    .hidden { display: none !important; }
+
+    dialog {
+      width: min(540px, calc(100% - 22px));
+      max-height: 88vh;
+      overflow: auto;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      color: var(--text);
+      box-shadow: 0 20px 70px #14182d40;
+    }
+
+    dialog::backdrop { background: #1317278c; }
+    .dialog-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+    .check-row { display: flex; align-items: center; gap: 9px; margin: 10px 0; }
+    .check-row input { width: 20px; min-height: 20px; }
+    .class-field { max-width: 220px; }
+
+    @media (min-width: 720px) {
+      .app { padding: 22px; }
+      .toolbar { flex-wrap: nowrap; }
+      .period { flex: initial; order: initial; min-width: 190px; }
+      .view-switch { order: initial; margin-left: 0; }
+      .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 430px) {
+      .app { padding: 10px; }
+      button { padding: 8px 10px; }
+      .month-day { min-height: 66px; padding: 3px 2px; }
+      .month-event { padding: 3px 2px; font-size: 9px; }
+      .form-grid { grid-template-columns: 1fr; gap: 4px; }
+      .subject-row, .lesson-admin-row { align-items: flex-start; flex-direction: column; }
     }
   </style>
 </head>
@@ -253,7 +533,7 @@
       <div class="button-row">
         <button id="saveDisplayZoneBtn" class="primary" type="button">Zapisz strefę wyświetlania</button>
       </div>
-      <p class="hint">To ustawienie jest niezależne od strefy czasowej konkretnego wydarzenia.</p>
+      <p class="hint">Domyślna strefa kalendarza i nowych wydarzeń: Asia/Tokyo.</p>
     </section>
 
     <section class="card admin-card">
@@ -263,7 +543,9 @@
       <div id="overallStats" class="stats"></div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Numer lekcji</th><th>Przedmiot</th><th>Obecność</th></tr></thead>
+          <thead>
+            <tr><th>Numer lekcji</th><th>Przedmiot</th><th>Obecność</th></tr>
+          </thead>
           <tbody id="attendanceBody"></tbody>
         </table>
       </div>
@@ -278,7 +560,7 @@
       <h3>Import i eksport ICS</h3>
       <p class="hint">
         Import rozpoznaje tytuły, np. „Matematyka 1”. Nazwa przedmiotu dopasowuje kolor wydarzenia.
-        Importowane wydarzenia są dodawane do danych kalendarza.
+        Jeśli przedmiot nie istnieje, zostanie dodany z wolnym kolorem.
       </p>
       <div class="button-row">
         <button id="exportIcsBtn" type="button">Eksportuj .ics</button>
@@ -294,12 +576,15 @@
         Po zmianach skopiuj JSON-y do plików w repozytorium i opublikuj aktualizację.
         Zmiany nie zapisują się automatycznie. Dane na publicznej stronie GitHub Pages mogą być publiczne.
       </p>
+
       <label for="subjectsJson">data/subjects.json</label>
       <textarea id="subjectsJson" class="json" readonly></textarea>
       <button class="copyJson" data-target="subjectsJson" type="button">Kopiuj JSON przedmiotów</button>
+
       <label for="lessonsJson">data/lessons.json</label>
       <textarea id="lessonsJson" class="json" readonly></textarea>
       <button class="copyJson" data-target="lessonsJson" type="button">Kopiuj JSON lekcji</button>
+
       <label for="settingsJson">data/settings.json</label>
       <textarea id="settingsJson" class="json" readonly></textarea>
       <button class="copyJson" data-target="settingsJson" type="button">Kopiuj JSON ustawień</button>
@@ -371,22 +656,23 @@
   const $ = id => document.getElementById(id);
   const weekdays = ["Pon", "Wt", "Śr", "Czw", "Pt", "Sob", "Niedz"];
   const deviceZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "Europe/Warsaw";
+  const defaultZone = "Asia/Tokyo";
   const colorPalette = ["#5147e8", "#168451", "#e06a24", "#bd3045", "#147a9e", "#a13e9b"];
 
   let subjects = [];
   let lessons = [];
-  let settings = { displayTimeZone: deviceZone };
+  let settings = { displayTimeZone: defaultZone };
   let mode = "month";
   let cursor = new Date();
   cursor.setHours(0, 0, 0, 0);
   let selectedDate = new Date(cursor);
   let editingId = null;
 
-  // Stan przeciągania wydarzenia
   let dragState = null;
   let dragTimer = null;
   let dragGhost = null;
   let dragOverElement = null;
+  let dragPreview = null;
   let suppressClickUntil = 0;
 
   function esc(value) {
@@ -420,8 +706,13 @@
 
   function zoneParts(date, zone) {
     const parts = new Intl.DateTimeFormat("en-CA", {
-      timeZone: zone, year: "numeric", month: "2-digit", day: "2-digit",
-      hour: "2-digit", minute: "2-digit", hourCycle: "h23"
+      timeZone: zone,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23"
     }).formatToParts(date);
 
     return Object.fromEntries(parts.map(part => [part.type, part.value]));
@@ -451,18 +742,22 @@
   }
 
   function displayZone() {
-    return settings.displayTimeZone || deviceZone;
+    return settings.displayTimeZone || defaultZone;
   }
 
   function formatDateTime(iso, zone = displayZone()) {
     return new Intl.DateTimeFormat("pl-PL", {
-      timeZone: zone, dateStyle: "medium", timeStyle: "short"
+      timeZone: zone,
+      dateStyle: "medium",
+      timeStyle: "short"
     }).format(new Date(iso));
   }
 
   function formatTime(iso, zone = displayZone()) {
     return new Intl.DateTimeFormat("pl-PL", {
-      timeZone: zone, hour: "2-digit", minute: "2-digit"
+      timeZone: zone,
+      hour: "2-digit",
+      minute: "2-digit"
     }).format(new Date(iso));
   }
 
@@ -557,9 +852,9 @@
     for (let i = 0; i < 42; i++) {
       const day = new Date(begin);
       day.setDate(begin.getDate() + i);
+
       const key = dateKey(day);
       const events = lessonsOnDate(day);
-
       const classes = [
         "month-day",
         day.getMonth() !== cursor.getMonth() ? "outside" : "",
@@ -612,7 +907,10 @@
     const items = lessonsOnDate(selectedDate);
     $("selectedDateTitle").textContent = new Intl.DateTimeFormat("pl-PL", {
       timeZone: displayZone(),
-      weekday: "long", day: "numeric", month: "long", year: "numeric"
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric"
     }).format(selectedDate);
 
     $("selectedDateCount").textContent = items.length ? `${items.length} lekcji` : "";
@@ -675,7 +973,9 @@
       const items = lessonsOnDate(date);
       const title = new Intl.DateTimeFormat("pl-PL", {
         timeZone: displayZone(),
-        weekday: "long", day: "numeric", month: "long"
+        weekday: "long",
+        day: "numeric",
+        month: "long"
       }).format(date);
 
       return `<section class="day-card" data-drop-date="${dateKey(date)}">
@@ -698,7 +998,9 @@
       <div class="week-days">${agendas}</div>`;
 
     $("weekView").querySelectorAll("[data-add-date]").forEach(button => {
-      button.addEventListener("click", () => openLessonForm(null, parseDateKey(button.dataset.addDate)));
+      button.addEventListener("click", () =>
+        openLessonForm(null, parseDateKey(button.dataset.addDate))
+      );
     });
 
     bindEventControls($("weekView"));
@@ -717,8 +1019,15 @@
 
   function renderZoneLists() {
     const zones = [...new Set([
-      deviceZone, "Europe/Warsaw", "Europe/London", "Europe/Paris",
-      "America/New_York", "Asia/Tokyo", "UTC", settings.displayTimeZone || deviceZone
+      defaultZone,
+      deviceZone,
+      "Europe/Warsaw",
+      "Europe/London",
+      "Europe/Paris",
+      "America/New_York",
+      "Asia/Tokyo",
+      "UTC",
+      settings.displayTimeZone || defaultZone
     ])];
 
     const options = zones.map(zone =>
@@ -726,8 +1035,8 @@
 
     $("displayZone").innerHTML = options;
     $("eventZone").innerHTML = options;
-    $("displayZone").value = settings.displayTimeZone || deviceZone;
-    $("eventZone").value = settings.displayTimeZone || deviceZone;
+    $("displayZone").value = settings.displayTimeZone || defaultZone;
+    $("eventZone").value = settings.displayTimeZone || defaultZone;
   }
 
   function refreshJson() {
@@ -738,6 +1047,7 @@
 
   function renderAdmin() {
     const currentSubject = $("lessonSubject").value;
+
     $("lessonSubject").innerHTML = subjects.map(subject =>
       `<option value="${esc(subject.id)}">${esc(subject.name)}</option>`).join("");
 
@@ -832,7 +1142,9 @@
       ? sorted.map(lesson => `<div class="lesson-admin-row">
           <div class="row-info">
             <b>${esc(lessonTitle(lesson))}</b><br>
-            <span class="small-muted">${esc(formatDateTime(lesson.start))} · ${esc(attendanceLabel(lesson.attendance))}</span>
+            <span class="small-muted">
+              ${esc(formatDateTime(lesson.start))} · ${esc(attendanceLabel(lesson.attendance))}
+            </span>
           </div>
           <div class="row-actions">
             <button type="button" data-edit-lesson="${esc(lesson.id)}">Edytuj</button>
@@ -1001,10 +1313,9 @@
       return;
     }
 
-    const zone = $("eventZone").value || displayZone();
+    const zone = $("eventZone").value || defaultZone;
     const start = zonedTimeToIso(date, time, zone);
 
-    // Ostrzeżenie, jeśli lekcja jest wcześniejsza niż inna lekcja tego przedmiotu.
     const laterLesson = lessons
       .filter(lesson =>
         lesson.subjectId === subjectId &&
@@ -1056,7 +1367,7 @@
     renderAll();
   }
 
-  /* Funkcje przeciągania */
+  /* Przeciąganie lekcji */
   function findDropTarget(x, y) {
     const element = document.elementFromPoint(x, y);
     return element?.closest("[data-drop-date]") || null;
@@ -1067,36 +1378,41 @@
       dragOverElement.classList.remove("drag-over");
       dragOverElement = null;
     }
+
+    if (dragPreview) {
+      dragPreview.remove();
+      dragPreview = null;
+    }
   }
 
   function updateDragHighlight(x, y) {
     clearDragHighlight();
+
     const target = findDropTarget(x, y);
+    if (!target) return;
 
-    if (target) {
-      dragOverElement = target;
-      dragOverElement.classList.add("drag-over");
-    }
-  }
+    dragOverElement = target;
+    target.classList.add("drag-over");
 
-  function beginDrag() {
-    if (!dragState || dragState.started) return;
+    const weekColumn = target.closest(".week-column");
+    if (!weekColumn || !dragState) return;
 
     const lesson = lessons.find(item => item.id === dragState.lessonId);
     if (!lesson) return;
 
-    dragState.started = true;
-    const subject = subjectById(lesson.subjectId);
+    const rect = weekColumn.getBoundingClientRect();
+    const minutesFromTop = Math.max(0, y - rect.top);
+    let minutes = Math.round((minutesFromTop / 56 * 60) / 15) * 15;
+    minutes = Math.max(0, Math.min(23 * 60 + 15, minutes));
 
-    dragGhost = document.createElement("div");
-    dragGhost.className = "drag-ghost";
-    dragGhost.style.setProperty("--drag-color", subject?.color || "#5147e8");
-    dragGhost.textContent = lessonTitle(lesson);
-    document.body.appendChild(dragGhost);
+    const hour = Math.floor(minutes / 60);
+    const minute = minutes % 60;
 
-    dragGhost.style.left = `${dragState.x}px`;
-    dragGhost.style.top = `${dragState.y}px`;
-    document.body.style.userSelect = "none";
+    dragPreview = document.createElement("div");
+    dragPreview.className = "week-drop-preview";
+    dragPreview.style.top = `${minutes / 60 * 56}px`;
+    dragPreview.textContent = `${pad(hour)}:${pad(minute)} · 45 min`;
+    weekColumn.appendChild(dragPreview);
   }
 
   function moveLessonToDrop(lessonId, target, pointerY) {
@@ -1108,28 +1424,64 @@
 
     const weekColumn = target.closest(".week-column");
     const zone = displayZone();
-
-    // Domyślnie zostaw aktualną godzinę. Upuszczenie w kolumnie osi tygodnia zmienia ją.
     const currentParts = zoneParts(new Date(lesson.start), zone);
     let minutes = Number(currentParts.hour) * 60 + Number(currentParts.minute);
 
+    // Tylko upuszczenie w kolumnie osi tygodnia ustawia nową godzinę.
     if (weekColumn) {
       const rect = weekColumn.getBoundingClientRect();
       const minutesFromTop = Math.max(0, pointerY - rect.top);
+
+      // Zaokrąglamy czas do najbliższych 15 minut.
       minutes = Math.round((minutesFromTop / 56 * 60) / 15) * 15;
       minutes = Math.max(0, Math.min(23 * 60 + 15, minutes));
     }
 
     const hour = Math.floor(minutes / 60);
     const minute = minutes % 60;
-    const time = `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
+    const time = `${pad(hour)}:${pad(minute)}`;
 
     lesson.start = zonedTimeToIso(targetDate, time, zone);
     lesson.timeZone = zone;
-
     selectedDate = parseDateKey(targetDate);
     cursor = new Date(selectedDate);
+
     renderAll();
+
+    // Po przesunięciu przewiń do samej lekcji w widoku kalendarza.
+    requestAnimationFrame(() => {
+      const visibleLesson = [...document.querySelectorAll("[data-edit-lesson]")]
+        .find(element =>
+          element.dataset.editLesson === lessonId &&
+          element.getClientRects().length > 0
+        );
+
+      visibleLesson?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center"
+      });
+    });
+  }
+
+  function beginDrag() {
+    if (!dragState || dragState.started) return;
+
+    const lesson = lessons.find(item => item.id === dragState.lessonId);
+    if (!lesson) return;
+
+    dragState.started = true;
+
+    const subject = subjectById(lesson.subjectId);
+    dragGhost = document.createElement("div");
+    dragGhost.className = "drag-ghost";
+    dragGhost.style.setProperty("--drag-color", subject?.color || "#5147e8");
+    dragGhost.textContent = lessonTitle(lesson);
+    document.body.appendChild(dragGhost);
+
+    dragGhost.style.left = `${dragState.x}px`;
+    dragGhost.style.top = `${dragState.y}px`;
+    document.body.style.userSelect = "none";
   }
 
   function stopDrag() {
@@ -1166,7 +1518,7 @@
         started: false
       };
 
-      // Na ekranie dotykowym przytrzymaj wydarzenie, aby zacząć je przeciągać.
+      // Na ekranie dotykowym rozpocznij przeciąganie po krótkim przytrzymaniu.
       if (event.pointerType === "touch") {
         dragTimer = setTimeout(beginDrag, 350);
       }
@@ -1183,6 +1535,7 @@
           event.clientX - dragState.startX,
           event.clientY - dragState.startY
         );
+
         if (distance > 6) beginDrag();
       }
 
@@ -1212,7 +1565,7 @@
           moveLessonToDrop(dragState.lessonId, target, event.clientY);
         }
 
-        // Zapobiega otwarciu edycji po zakończeniu przeciągania.
+        // Nie otwieraj edycji po upuszczeniu.
         suppressClickUntil = Date.now() + 500;
         setTimeout(() => { suppressClickUntil = 0; }, 550);
       }
@@ -1230,6 +1583,7 @@
     }, true);
   }
 
+  /* Eksport ICS */
   function escapeIcs(value) {
     return String(value || "")
       .replace(/\\/g, "\\\\")
@@ -1295,6 +1649,7 @@
     downloadFile("moje-lekcje.ics", lines.join("\r\n"), "text/calendar;charset=utf-8");
   }
 
+  /* Import ICS: istniejący sposób importu zachowany; zmieniono tylko dobór koloru nowego przedmiotu. */
   function unfoldIcs(text) {
     return text.replace(/\r?\n[ \t]/g, "");
   }
@@ -1365,12 +1720,40 @@
     return null;
   }
 
+  function normalizeColor(color) {
+    return String(color || "").trim().toLowerCase();
+  }
+
+  function getUnusedSubjectColor() {
+    const used = new Set(subjects.map(subject => normalizeColor(subject.color)));
+
+    // Najpierw wykorzystaj kolor z palety, jeśli nie ma go jeszcze żaden przedmiot.
+    const available = colorPalette.find(color => !used.has(normalizeColor(color)));
+    if (available) return available;
+
+    // Gdy paleta jest wyczerpana, wygeneruj nowy kolor i sprawdź, czy jest wolny.
+    for (let hue = 0; hue < 360; hue += 17) {
+      const color = `hsl(${hue} 68% 45%)`;
+      if (!used.has(normalizeColor(color))) return color;
+    }
+
+    // Zapasowy, bardzo mało prawdopodobny przypadek.
+    let color;
+    do {
+      color = `#${Math.floor(Math.random() * 0xffffff).toString(16).padStart(6, "0")}`;
+    } while (used.has(normalizeColor(color)));
+
+    return color;
+  }
+
   function findOrCreateSubject(summary) {
     const title = summary.trim();
 
     const matchingSubject = [...subjects]
       .sort((a, b) => b.name.length - a.name.length)
-      .find(subject => title.toLowerCase().startsWith(subject.name.toLowerCase() + " "));
+      .find(subject =>
+        title.toLowerCase().startsWith(subject.name.toLowerCase() + " ")
+      );
 
     if (matchingSubject) return matchingSubject;
 
@@ -1382,7 +1765,7 @@
       subject = {
         id: makeId(),
         name,
-        color: colorPalette[subjects.length % colorPalette.length],
+        color: getUnusedSubjectColor(),
         plannedCount: 0,
         grade: null
       };
@@ -1520,7 +1903,7 @@
   $("attendanceFilter").addEventListener("change", renderAdmin);
 
   $("saveDisplayZoneBtn").addEventListener("click", () => {
-    settings.displayTimeZone = $("displayZone").value || deviceZone;
+    settings.displayTimeZone = $("displayZone").value || defaultZone;
     renderAll();
   });
 
@@ -1537,6 +1920,123 @@
   document.querySelectorAll(".copyJson").forEach(button => {
     button.addEventListener("click", () => copyJson(button.dataset.target));
   });
+
+  function findDropTarget(x, y) {
+    const element = document.elementFromPoint(x, y);
+    return element?.closest("[data-drop-date]") || null;
+  }
+
+  function clearDragHighlight() {
+    if (dragOverElement) {
+      dragOverElement.classList.remove("drag-over");
+      dragOverElement = null;
+    }
+
+    if (dragPreview) {
+      dragPreview.remove();
+      dragPreview = null;
+    }
+  }
+
+  function updateDragHighlight(x, y) {
+    clearDragHighlight();
+    const target = findDropTarget(x, y);
+    if (!target) return;
+
+    dragOverElement = target;
+    target.classList.add("drag-over");
+
+    const weekColumn = target.closest(".week-column");
+    if (!weekColumn || !dragState) return;
+
+    const rect = weekColumn.getBoundingClientRect();
+    const minutesFromTop = Math.max(0, y - rect.top);
+    let minutes = Math.round((minutesFromTop / 56 * 60) / 15) * 15;
+    minutes = Math.max(0, Math.min(23 * 60 + 15, minutes));
+
+    dragPreview = document.createElement("div");
+    dragPreview.className = "week-drop-preview";
+    dragPreview.style.top = `${minutes / 60 * 56}px`;
+    dragPreview.textContent =
+      `${pad(Math.floor(minutes / 60))}:${pad(minutes % 60)} · 45 min`;
+    weekColumn.appendChild(dragPreview);
+  }
+
+  function moveLessonToDrop(lessonId, target, pointerY) {
+    const lesson = lessons.find(item => item.id === lessonId);
+    if (!lesson || !target) return;
+
+    const targetDate = target.dataset.dropDate;
+    if (!targetDate) return;
+
+    const weekColumn = target.closest(".week-column");
+    const zone = displayZone();
+    const currentParts = zoneParts(new Date(lesson.start), zone);
+    let minutes = Number(currentParts.hour) * 60 + Number(currentParts.minute);
+
+    if (weekColumn) {
+      const rect = weekColumn.getBoundingClientRect();
+      const minutesFromTop = Math.max(0, pointerY - rect.top);
+      minutes = Math.round((minutesFromTop / 56 * 60) / 15) * 15;
+      minutes = Math.max(0, Math.min(23 * 60 + 15, minutes));
+    }
+
+    const time = `${pad(Math.floor(minutes / 60))}:${pad(minutes % 60)}`;
+    lesson.start = zonedTimeToIso(targetDate, time, zone);
+    lesson.timeZone = zone;
+
+    selectedDate = parseDateKey(targetDate);
+    cursor = new Date(selectedDate);
+    renderAll();
+
+    requestAnimationFrame(() => {
+      const lessonElement = [...document.querySelectorAll("[data-edit-lesson]")]
+        .find(element =>
+          element.dataset.editLesson === lessonId &&
+          element.getClientRects().length > 0
+        );
+
+      lessonElement?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center"
+      });
+    });
+  }
+
+  function beginDrag() {
+    if (!dragState || dragState.started) return;
+
+    const lesson = lessons.find(item => item.id === dragState.lessonId);
+    if (!lesson) return;
+
+    dragState.started = true;
+    const subject = subjectById(lesson.subjectId);
+
+    dragGhost = document.createElement("div");
+    dragGhost.className = "drag-ghost";
+    dragGhost.style.setProperty("--drag-color", subject?.color || "#5147e8");
+    dragGhost.textContent = lessonTitle(lesson);
+    document.body.appendChild(dragGhost);
+
+    dragGhost.style.left = `${dragState.x}px`;
+    dragGhost.style.top = `${dragState.y}px`;
+    document.body.style.userSelect = "none";
+  }
+
+  function stopDrag() {
+    clearTimeout(dragTimer);
+    dragTimer = null;
+    clearDragHighlight();
+
+    if (dragGhost) {
+      dragGhost.remove();
+      dragGhost = null;
+    }
+
+    document.body.style.userSelect = "";
+    dragState = null;
+  }
 
   function installDragging() {
     document.addEventListener("pointerdown", event => {
@@ -1578,7 +2078,6 @@
       }
 
       if (!dragState.started) return;
-
       event.preventDefault();
 
       if (dragGhost) {
@@ -1624,21 +2123,22 @@
     const [loadedSubjects, loadedLessons, loadedSettings] = await Promise.all([
       loadJson("./data/subjects.json", []),
       loadJson("./data/lessons.json", []),
-      loadJson("./data/settings.json", { displayTimeZone: deviceZone })
+      loadJson("./data/settings.json", { displayTimeZone: defaultZone })
     ]);
 
     subjects = Array.isArray(loadedSubjects) ? loadedSubjects : [];
     lessons = Array.isArray(loadedLessons) ? loadedLessons : [];
     settings = loadedSettings && typeof loadedSettings === "object"
       ? loadedSettings
-      : { displayTimeZone: deviceZone };
+      : { displayTimeZone: defaultZone };
 
     if (!settings.displayTimeZone) {
-      settings.displayTimeZone = settings.timeZone || deviceZone;
+      settings.displayTimeZone = defaultZone;
     }
 
     renderZoneLists();
     renderAll();
+
     $("loadMessage").textContent =
       "Dane są wczytywane z plików JSON. Zmiany trzeba skopiować do repozytorium, aby je zachować.";
   }

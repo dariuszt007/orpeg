@@ -2,184 +2,110 @@
 <html lang="pl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f6fa">
 <title>Kalendarz lekcji</title>
 
 <style>
-:root {
-  --bg:#f5f6fa;
-  --card:#fff;
-  --text:#202437;
-  --muted:#687087;
-  --line:#e2e5ed;
-  --primary:#5147e8;
-  --soft:#eeedff;
-  --green:#168451;
-  --red:#bd3045;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+:root{
+  --bg:#f5f6fa;--card:#fff;--text:#202437;--muted:#687087;
+  --line:#e2e5ed;--primary:#5147e8;--soft:#eeedff;--red:#bd3045;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif
 }
-* { box-sizing:border-box; }
-body { margin:0; min-height:100vh; background:var(--bg); color:var(--text); }
-button,input,select,textarea { font:inherit; }
-button {
-  min-height:42px; padding:8px 12px; border:1px solid var(--line);
-  border-radius:10px; background:#fff; color:var(--text); cursor:pointer;
-  touch-action:manipulation;
-}
-button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible {
-  outline:3px solid #aaa5ff; outline-offset:2px;
-}
-button.primary { background:var(--primary); border-color:var(--primary); color:#fff; }
-button.danger { color:var(--red); }
-button.active { background:var(--soft); color:var(--primary); }
-button:disabled { opacity:.55; cursor:not-allowed; }
-input,select,textarea {
-  width:100%; min-height:42px; padding:8px 10px; border:1px solid var(--line);
-  border-radius:9px; background:#fff; color:var(--text);
-}
-input[type="checkbox"] { width:20px; min-height:20px; }
-input[type="color"] { padding:4px; }
-textarea { min-height:85px; resize:vertical; }
-label { display:block; margin:8px 0 5px; color:var(--muted); font-size:13px; }
-h1,h2,h3,h4 { margin:0 0 10px; }
-h1 { font-size:clamp(21px,5vw,28px); }
-h2 { font-size:20px; }
-h3 { font-size:16px; }
-h4 { margin-top:12px; font-size:15px; }
-.app { max-width:1000px; margin:auto; padding:14px; }
-.topbar,.toolbar,.row,.actions { display:flex; align-items:center; gap:8px; }
-.topbar { justify-content:space-between; margin-bottom:14px; }
-.toolbar { flex-wrap:wrap; margin-bottom:12px; }
-.period { flex:1; text-align:center; font-weight:700; }
-.views { display:flex; gap:5px; }
-.card,.calendar { background:var(--card); border:1px solid var(--line); border-radius:15px; }
-.calendar { overflow:hidden; }
-.weekdays,.month-grid { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); }
-.weekday {
-  padding:8px 2px; text-align:center; color:var(--muted);
-  background:#fafaff; border-bottom:1px solid var(--line); font-size:12px;
-}
-.month-day {
-  min-width:0; min-height:76px; padding:4px 3px; display:flex; flex-direction:column;
-  gap:3px; border:0; border-right:1px solid var(--line);
-  border-bottom:1px solid var(--line); border-radius:0; background:#fff;
-}
-.month-day:nth-child(7n) { border-right:0; }
-.month-day.outside { background:#fafbfe; color:#a3a8b5; }
-.month-day.selected { background:var(--soft); }
-.month-day.today .day-num { background:var(--primary); color:#fff; }
-.day-head { display:flex; justify-content:space-between; align-items:center; }
-.day-num,.add-day { min-height:26px; width:28px; padding:0; border:0; background:transparent; }
-.day-num { border-radius:50%; font-weight:700; }
-.add-day { color:var(--primary); font-size:19px; }
-.month-events { display:grid; gap:3px; }
-.month-event {
-  width:100%; min-height:21px; overflow:hidden; padding:3px;
-  border:0; border-left:3px solid var(--event-color,var(--primary));
-  border-radius:4px;
-  background:color-mix(in srgb,var(--event-color,var(--primary)) 16%,white);
-  text-align:left; font-size:10px; font-weight:700;
-  white-space:nowrap; text-overflow:ellipsis;
-}
-.section-heading {
-  display:flex; justify-content:space-between; align-items:center;
-  margin:16px 2px 9px;
-}
-.section-heading h2 { margin:0; }
-.event-list,.week-days { display:grid; gap:8px; }
-.day-card { padding:11px; border:1px solid var(--line); border-radius:13px; background:#fff; }
-.day-card-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
-.lesson-card {
-  padding:9px; border-left:6px solid var(--lesson-color,var(--primary));
-  border-radius:9px;
-  background:color-mix(in srgb,var(--lesson-color,var(--primary)) 9%,white);
-}
-.lesson-main { width:100%; min-height:36px; padding:0; border:0; background:transparent; text-align:left; }
-.lesson-line { display:flex; justify-content:space-between; gap:8px; font-weight:700; }
-.muted { color:var(--muted); font-size:13px; }
-.attendance { margin-top:6px; }
-.hidden { display:none!important; }
-.empty { padding:14px; border:1px dashed var(--line); border-radius:10px; color:var(--muted); text-align:center; }
-
-.week-scroll { overflow:auto; border-radius:12px; background:#fff; }
-.week-grid { display:grid; grid-template-columns:48px repeat(7,128px); min-width:944px; }
-.week-head {
-  position:sticky; top:0; z-index:2; min-height:48px; padding:6px;
-  border:1px solid var(--line); background:#fafaff; text-align:center; font-size:12px;
-}
-.time-axis,.week-column {
-  position:relative; height:1344px;
-  background-image:repeating-linear-gradient(
-    to bottom,transparent 0,transparent 55px,var(--line) 55px,var(--line) 56px
-  );
-}
-.time-axis { position:sticky; left:0; z-index:1; background-color:#fafaff; }
-.hour-label { position:absolute; right:3px; transform:translateY(-7px); color:var(--muted); font-size:10px; }
-.week-column { border-right:1px solid var(--line); background-color:#fff; }
-.week-event {
-  position:absolute; left:3px; right:3px; height:42px; overflow:hidden; padding:4px;
-  border:0; border-left:4px solid var(--event-color,var(--primary)); border-radius:6px;
-  background:color-mix(in srgb,var(--event-color,var(--primary)) 18%,white);
-  text-align:left; font-size:10px;
-}
-.week-event strong,.week-event span { display:block; }
-.month-event,.week-event,.lesson-main { touch-action:none; cursor:grab; }
-.drag-ghost {
-  position:fixed; z-index:9999; pointer-events:none; padding:8px 10px;
-  border-left:5px solid var(--drag-color,var(--primary)); border-radius:8px;
-  background:#fff; box-shadow:0 5px 20px #0003; font-size:13px; font-weight:700;
-  transform:translate(10px,10px);
-}
-.drag-over { outline:3px dashed var(--primary)!important; outline-offset:-4px; background-color:var(--soft)!important; }
-.week-drop-preview {
-  position:absolute; z-index:10; left:3px; right:3px; min-height:42px;
-  pointer-events:none; padding:5px; border:2px dashed var(--primary); border-radius:7px;
-  background:#eeedffdd; color:#3029a8; font-size:11px; font-weight:700;
-}
-.admin-card { margin:12px 0; padding:14px; }
-.form-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; }
-.stats { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin:10px 0; }
-.stat { padding:9px; border-radius:9px; background:#f5f6fb; font-size:13px; }
-.subject-row,.lesson-admin-row {
-  display:flex; justify-content:space-between; align-items:center;
-  gap:10px; padding:9px 0; border-bottom:1px solid var(--line);
-}
-.subject-row:last-child,.lesson-admin-row:last-child { border-bottom:0; }
-.row-info { min-width:0; overflow-wrap:anywhere; }
-.row-actions { display:flex; gap:5px; flex-shrink:0; }
-.row-actions button { min-height:36px; padding:5px 8px; }
-.lesson-row-main { display:flex; align-items:center; gap:9px; min-width:0; }
-.bulk-actions { display:flex; align-items:center; flex-wrap:wrap; gap:10px; margin:9px 0; }
-.bulk-select-label { display:flex; align-items:center; gap:7px; margin:0; }
-.bulk-select-label input { width:20px; min-height:20px; }
-.export-subject-list { display:grid; gap:5px; margin-top:6px; }
-.export-subject-option {
-  display:flex; align-items:center; gap:8px; margin:0; padding:7px 9px;
-  border:1px solid var(--line); border-radius:8px; background:#fff;
-}
-.export-subject-option input { flex:0 0 20px; width:20px; min-height:20px; margin:0; }
-.export-subject-option span { color:var(--text); }
-.table-wrap { overflow:auto; }
-table { width:100%; min-width:420px; border-collapse:collapse; }
-th,td { padding:8px; border:1px solid #ddd; text-align:left; font-size:14px; }
-th { background:#f1f2f6; }
-dialog {
-  width:min(540px,calc(100% - 20px)); max-height:88vh; overflow:auto;
-  padding:17px; border:1px solid var(--line); border-radius:16px;
-}
-dialog::backdrop { background:#13172788; }
-.dialog-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:14px; }
-.check-row { display:flex; align-items:center; gap:8px; }
-.check-row input { width:20px; min-height:20px; }
-@media(min-width:720px) { .app { padding:22px; } .stats { grid-template-columns:repeat(3,minmax(0,1fr)); } }
-@media(max-width:430px) {
-  .app { padding:9px; }
-  .month-day { min-height:65px; padding:3px 2px; }
-  .month-event { font-size:9px; }
-  .form-grid { grid-template-columns:1fr; gap:3px; }
-  .subject-row,.lesson-admin-row { align-items:flex-start; flex-direction:column; }
-}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--text)}
+button,input,select,textarea{font:inherit}
+button{min-height:42px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--text);cursor:pointer;touch-action:manipulation}
+button.primary{background:var(--primary);border-color:var(--primary);color:#fff}
+button.danger{color:var(--red)}
+button.active{background:var(--soft);color:var(--primary)}
+button:disabled{opacity:.55;cursor:not-allowed}
+input,select,textarea{width:100%;min-height:42px;padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--text)}
+input[type=checkbox]{width:20px;min-height:20px}
+input[type=color]{padding:4px}
+textarea{min-height:85px;resize:vertical}
+label{display:block;margin:8px 0 5px;color:var(--muted);font-size:13px}
+h1,h2,h3,h4{margin:0 0 10px}
+h1{font-size:clamp(21px,5vw,28px)}
+h2{font-size:20px}
+h3{font-size:16px}
+h4{margin-top:12px;font-size:15px}
+.app{max-width:1000px;margin:auto;padding:14px}
+.topbar,.toolbar,.row,.actions{display:flex;align-items:center;gap:8px}
+.topbar{justify-content:space-between;margin-bottom:14px}
+.toolbar{flex-wrap:wrap;margin-bottom:12px}
+.period{flex:1;text-align:center;font-weight:700}
+.views{display:flex;gap:5px}
+.card,.calendar{background:var(--card);border:1px solid var(--line);border-radius:15px}
+.calendar{overflow:hidden}
+.weekdays,.month-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
+.weekday{padding:8px 2px;text-align:center;color:var(--muted);background:#fafaff;border-bottom:1px solid var(--line);font-size:12px}
+.month-day{min-width:0;min-height:76px;padding:4px 3px;display:flex;flex-direction:column;gap:3px;border:0;border-right:1px solid var(--line);border-bottom:1px solid var(--line);border-radius:0;background:#fff}
+.month-day:nth-child(7n){border-right:0}
+.month-day.outside{background:#fafbfe;color:#a3a8b5}
+.month-day.selected{background:var(--soft)}
+.month-day.today .day-num{background:var(--primary);color:#fff}
+.day-head{display:flex;justify-content:space-between;align-items:center}
+.day-num,.add-day{min-height:26px;width:28px;padding:0;border:0;background:transparent}
+.day-num{border-radius:50%;font-weight:700}
+.add-day{color:var(--primary);font-size:19px}
+.month-events{display:grid;gap:3px}
+.month-event{width:100%;min-height:21px;overflow:hidden;padding:3px;border:0;border-left:3px solid var(--event-color,var(--primary));border-radius:4px;background:color-mix(in srgb,var(--event-color,var(--primary)) 16%,white);text-align:left;font-size:10px;font-weight:700;white-space:nowrap;text-overflow:ellipsis}
+.section-heading{display:flex;justify-content:space-between;align-items:center;margin:16px 2px 9px}
+.section-heading h2{margin:0}
+.event-list,.week-days{display:grid;gap:8px}
+.day-card{padding:11px;border:1px solid var(--line);border-radius:13px;background:#fff}
+.day-card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.lesson-card{padding:9px;border-left:6px solid var(--lesson-color,var(--primary));border-radius:9px;background:color-mix(in srgb,var(--lesson-color,var(--primary)) 9%,white)}
+.lesson-main{width:100%;min-height:36px;padding:0;border:0;background:transparent;text-align:left}
+.lesson-line{display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.muted{color:var(--muted);font-size:13px}
+.attendance{margin-top:6px}
+.hidden{display:none!important}
+.empty{padding:14px;border:1px dashed var(--line);border-radius:10px;color:var(--muted);text-align:center}
+.week-scroll{overflow:auto;border-radius:12px;background:#fff}
+.week-grid{display:grid;grid-template-columns:48px repeat(7,128px);min-width:944px}
+.week-head{position:sticky;top:0;z-index:2;min-height:48px;padding:6px;border:1px solid var(--line);background:#fafaff;text-align:center;font-size:12px}
+.time-axis,.week-column{position:relative;height:1344px;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 55px,var(--line) 55px,var(--line) 56px)}
+.time-axis{position:sticky;left:0;z-index:1;background-color:#fafaff}
+.hour-label{position:absolute;right:3px;transform:translateY(-7px);color:var(--muted);font-size:10px}
+.week-column{border-right:1px solid var(--line);background-color:#fff}
+.week-event{position:absolute;left:3px;right:3px;height:42px;overflow:hidden;padding:4px;border:0;border-left:4px solid var(--event-color,var(--primary));border-radius:6px;background:color-mix(in srgb,var(--event-color,var(--primary)) 18%,white);text-align:left;font-size:10px}
+.week-event strong,.week-event span{display:block}
+.month-event,.week-event,.lesson-main{touch-action:none;cursor:grab}
+.drag-ghost{position:fixed;z-index:9999;pointer-events:none;padding:8px 10px;border-left:5px solid var(--drag-color,var(--primary));border-radius:8px;background:#fff;box-shadow:0 5px 20px #0003;font-size:13px;font-weight:700;transform:translate(10px,10px)}
+.drag-over{outline:3px dashed var(--primary)!important;outline-offset:-4px;background-color:var(--soft)!important}
+.week-drop-preview{position:absolute;z-index:10;left:3px;right:3px;min-height:42px;pointer-events:none;padding:5px;border:2px dashed var(--primary);border-radius:7px;background:#eeedffdd;color:#3029a8;font-size:11px;font-weight:700}
+.admin-card{margin:12px 0;padding:14px}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0}
+.stat{padding:9px;border-radius:9px;background:#f5f6fb;font-size:13px}
+.subject-row,.lesson-admin-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
+.subject-row:last-child,.lesson-admin-row:last-child{border-bottom:0}
+.row-info{min-width:0;overflow-wrap:anywhere}
+.row-actions{display:flex;gap:5px;flex-shrink:0}
+.row-actions button{min-height:36px;padding:5px 8px}
+.lesson-row-main{display:flex;align-items:center;gap:9px;min-width:0}
+.bulk-actions{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:9px 0}
+.bulk-select-label{display:flex;align-items:center;gap:7px;margin:0}
+.bulk-select-label input{width:20px;min-height:20px}
+.export-subject-list{display:grid;gap:5px;margin-top:6px}
+.export-subject-option{display:flex;align-items:center;gap:8px;margin:0;padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.export-subject-option input{flex:0 0 20px;width:20px;min-height:20px;margin:0}
+.export-subject-option span{color:var(--text)}
+.table-wrap{overflow:auto}
+table{width:100%;min-width:420px;border-collapse:collapse}
+th,td{padding:8px;border:1px solid #ddd;text-align:left;font-size:14px}
+th{background:#f1f2f6}
+dialog{width:min(560px,calc(100% - 20px));max-height:90vh;overflow:auto;padding:17px;border:1px solid var(--line);border-radius:16px}
+dialog::backdrop{background:#13172788}
+.dialog-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+.check-row{display:flex;align-items:center;gap:8px}
+.check-row input{width:20px;min-height:20px}
+#previousGradeLessons{margin:8px 0;padding:8px 10px;background:#f5f6fb;border-radius:8px}
+#previousGradeLessons ul{margin:5px 0 0;padding-left:20px}
+@media(min-width:720px){.app{padding:22px}.stats{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:430px){.app{padding:9px}.month-day{min-height:65px;padding:3px 2px}.month-event{font-size:9px}.form-grid{grid-template-columns:1fr;gap:3px}.subject-row,.lesson-admin-row{align-items:flex-start;flex-direction:column}}
 </style>
 </head>
 
@@ -258,13 +184,11 @@ dialog::backdrop { background:#13172788; }
       <div id="overallStats" class="stats"></div>
       <div class="table-wrap">
         <table>
-          <thead>
-            <tr>
-              <th data-i18n="lessonNumber">Numer lekcji</th>
-              <th data-i18n="subject">Przedmiot</th>
-              <th data-i18n="attendance">Obecność</th>
-            </tr>
-          </thead>
+          <thead><tr>
+            <th data-i18n="lessonNumber">Numer lekcji</th>
+            <th data-i18n="subject">Przedmiot</th>
+            <th data-i18n="attendance">Obecność</th>
+          </tr></thead>
           <tbody id="attendanceBody"></tbody>
         </table>
       </div>
@@ -277,38 +201,35 @@ dialog::backdrop { background:#13172788; }
           <input id="selectAllLessons" type="checkbox">
           <span data-i18n="selectAll">Zaznacz wszystkie lekcje</span>
         </label>
-        <button id="deleteSelectedLessonsBtn" class="danger" disabled data-i18n="deleteSelected">
-          Usuń wybrane lekcje
-        </button>
+        <button id="deleteSelectedLessonsBtn" class="danger" disabled data-i18n="deleteSelected">Usuń wybrane lekcje</button>
       </div>
       <div id="adminLessonList"></div>
     </section>
 
     <section class="card admin-card">
       <h3 data-i18n="icsTitle">Import i eksport ICS</h3>
+
       <h4 data-i18n="exportRangeTitle">Zakres eksportu</h4>
       <div class="form-grid">
-        <div>
-          <label for="exportStartDate" data-i18n="exportFrom">Od dnia</label>
-          <input id="exportStartDate" type="date">
-        </div>
-        <div>
-          <label for="exportEndDate" data-i18n="exportTo">Do dnia</label>
-          <input id="exportEndDate" type="date">
-        </div>
+        <div><label for="exportStartDate" data-i18n="exportFrom">Od dnia</label><input id="exportStartDate" type="date"></div>
+        <div><label for="exportEndDate" data-i18n="exportTo">Do dnia</label><input id="exportEndDate" type="date"></div>
       </div>
       <label class="bulk-select-label" style="margin-top:10px">
         <input id="exportAllSubjects" type="checkbox" checked>
-        <span data-i18n="exportAll">Wszystkie przedmioty i klasy</span>
+        <span data-i18n="exportAll">Wszystkie przedmioty i lata szkolne</span>
       </label>
       <label data-i18n="exportChoose">Albo wybierz przedmiot, klasę i rok szkolny:</label>
       <div id="exportSubjectChoices"></div>
       <div class="actions" style="margin-top:12px">
         <button id="exportIcsBtn" data-i18n="exportIcs">Eksportuj ICS</button>
       </div>
+
       <hr style="border:0;border-top:1px solid var(--line);margin:16px 0">
+
       <h4 data-i18n="importHeading">Import kalendarza ICS</h4>
-      <div class="actions">
+      <label for="icsFallbackGrade" data-i18n="importFallbackGrade">Klasa dla planów, których nie można dopasować</label>
+      <select id="icsFallbackGrade"></select>
+      <div class="actions" style="margin-top:8px">
         <input id="icsFile" type="file" accept=".ics,text/calendar">
         <button id="importIcsBtn" data-i18n="importIcs">Importuj ICS</button>
       </div>
@@ -335,29 +256,25 @@ dialog::backdrop { background:#13172788; }
   <form id="lessonForm">
     <h2 id="lessonFormTitle"></h2>
     <input id="lessonId" type="hidden">
+
     <label for="lessonSubject" data-i18n="subject">Przedmiot</label>
     <select id="lessonSubject" required></select>
 
     <div class="form-grid">
-      <div>
-        <label for="lessonDate" data-i18n="lessonDate">Data lekcji</label>
-        <input id="lessonDate" type="date" required>
-      </div>
-      <div>
-        <label for="lessonTime" data-i18n="startTime">Godzina rozpoczęcia</label>
-        <input id="lessonTime" type="time" required>
-      </div>
-      <div>
-        <label for="eventZone" data-i18n="eventTimezone">Strefa czasowa lekcji</label>
-        <select id="eventZone"></select>
-      </div>
-      <div>
-        <label for="lessonGrade" data-i18n="grade">Klasa / rocznik</label>
-        <select id="lessonGrade" required></select>
-      </div>
+      <div><label for="lessonDate" data-i18n="lessonDate">Data lekcji</label><input id="lessonDate" type="date" required></div>
+      <div><label for="lessonTime" data-i18n="startTime">Godzina rozpoczęcia</label><input id="lessonTime" type="time" required></div>
+      <div><label for="eventZone" data-i18n="eventTimezone">Strefa czasowa lekcji</label><select id="eventZone"></select></div>
+      <div><label for="lessonGrade" data-i18n="grade">Klasa / rocznik</label><select id="lessonGrade" required></select></div>
     </div>
 
+    <label class="check-row">
+      <input id="showUsedGrades" type="checkbox">
+      <span data-i18n="showUsedGrades">Pokaż także wcześniej użyte klasy</span>
+    </label>
+
     <p id="schoolYearLabel" class="muted"></p>
+    <div id="previousGradeLessons" class="muted" aria-live="polite"></div>
+
     <label for="lessonYearPlan" data-i18n="yearPlan">Liczba lekcji w roku szkolnym</label>
     <input id="lessonYearPlan" type="number" min="1" value="20" required>
 
@@ -391,108 +308,115 @@ dialog::backdrop { background:#13172788; }
 (() => {
 "use strict";
 
-const $ = id => document.getElementById(id);
-const defaultZone = "Asia/Tokyo";
-const deviceZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "Europe/Warsaw";
-const lang = (navigator.languages?.[0] || navigator.language || "pl").toLowerCase().startsWith("ja") ? "ja" : "pl";
+const $=id=>document.getElementById(id);
+const DEFAULT_ZONE="Asia/Tokyo";
+const DEVICE_ZONE=Intl.DateTimeFormat().resolvedOptions().timeZone||"Europe/Warsaw";
+const LANG=(navigator.languages?.[0]||navigator.language||"pl").toLowerCase().startsWith("ja")?"ja":"pl";
 
-const translations = {
-  pl: {
-    appTitle:"Kalendarz lekcji", admin:"Panel Admin", back:"Wstecz", today:"Dziś", next:"Dalej",
-    month:"Miesiąc", week:"Tydzień", calendar:"Kalendarz", addSubject:"Dodaj przedmiot",
-    subjectName:"Nazwa przedmiotu", color:"Kolor", defaultPlan:"Domyślny roczny plan lekcji",
-    cancel:"Anuluj", timezoneTitle:"Strefa czasowa", timezoneLabel:"Strefa wyświetlania",
-    saveTimezone:"Zapisz strefę", tokyoDefault:"Domyślna strefa: Tokio (Asia/Tokyo).",
-    attendanceTitle:"Obecności", attendanceFilter:"Filtr przedmiotu", lessonNumber:"Numer lekcji",
-    subject:"Przedmiot", attendance:"Obecność", allLessons:"Wszystkie lekcje",
-    selectAll:"Zaznacz wszystkie lekcje", deleteSelected:"Usuń wybrane lekcje",
-    icsTitle:"Import i eksport ICS", exportRangeTitle:"Zakres eksportu", exportFrom:"Od dnia",
-    exportTo:"Do dnia", exportAll:"Wszystkie przedmioty i lata szkolne",
-    exportChoose:"Albo wybierz przedmiot, klasę i rok szkolny:",
-    importHeading:"Import kalendarza ICS", exportIcs:"Eksportuj ICS", importIcs:"Importuj ICS",
-    saveRepo:"Zapis do repozytorium", repoHint:"Skopiuj JSON-y do repozytorium, aby zachować zmiany.",
-    copySubjects:"Kopiuj JSON przedmiotów", copyLessons:"Kopiuj JSON lekcji", copySettings:"Kopiuj JSON ustawień",
-    lessonDate:"Data lekcji", startTime:"Godzina rozpoczęcia", eventTimezone:"Strefa czasowa lekcji",
-    grade:"Klasa / rocznik", yearPlan:"Liczba lekcji w roku szkolnym", unknown:"Nieustalona",
-    present:"Obecny / obecna", absent:"Nieobecny / nieobecna", alarm:"Alarm przed lekcją",
-    alarm5:"5 minut", alarm10:"10 minut", alarm15:"15 minut", alarm30:"30 minut", alarm60:"1 godzina",
-    note:"Notatka", save:"Zapisz", addLesson:"Dodaj lekcję", editLesson:"Edytuj lekcję",
-    noLessons:"Brak lekcji.", addHint:"Naciśnij +, aby dodać lekcję.", minutes:"min",
-    noSubject:"Przedmiot", allSubjects:"Wszystkie przedmioty", lesson:"lekcji",
-    planned:"Plan", entered:"Wpisano", remaining:"Pozostało", edit:"Edytuj", delete:"Usuń",
-    confirmDeleteLesson:"Usunąć tę lekcję?", confirmDeleteMany:"Usunąć zaznaczone lekcje?",
-    confirmDeleteSubject:"Usunięcie przedmiotu usunie również wszystkie jego lekcje i plany roczne. Kontynuować?",
-    noneSelected:"Nie wybrano lekcji.", chooseSubject:"Wybierz przedmiot.",
-    chooseDate:"Wybierz datę i godzinę.", chooseGrade:"Wybierz klasę.", choosePlan:"Wpisz plan większy od zera.",
-    duplicateSubject:"Przedmiot o takiej nazwie już istnieje.", earlierWarning:"Ta lekcja jest wcześniejsza niż inna lekcja tego samego przedmiotu i roku szkolnego. Zapisać mimo to?",
-    copied:"Skopiowano JSON.", imported:"zaimportowanych wydarzeń.", noImported:"Nie znaleziono nowych wydarzeń.",
-    chooseFile:"Wybierz plik ICS.", importError:"Nie udało się odczytać pliku ICS.",
-    chooseRange:"Wybierz początkowy i końcowy dzień eksportu.",
-    invalidRange:"Data początkowa nie może być późniejsza niż końcowa.",
-    chooseExportSubject:"Zaznacz co najmniej jeden plan albo wybierz wszystkie.",
-    noExportMatches:"Brak lekcji w wybranym zakresie i planach.",
-    exported:"Wyeksportowano lekcji", dragHint:"Przeciągnij lekcję, aby zmienić jej dzień lub godzinę.",
-    attendanceCount:"Obecności", absenceCount:"Nieobecności", unknownCount:"Nieustalone",
-    rate:"Frekwencja", schoolYear:"Rok szkolny", selectGrade:"Wybierz klasę",
-    class:"klasa", subjectDeleted:"Przedmiot i powiązane lekcje usunięto."
-  },
-  ja: {
-    appTitle:"レッスンカレンダー", admin:"管理パネル", back:"戻る", today:"今日", next:"次へ",
-    month:"月", week:"週", calendar:"カレンダー", addSubject:"科目を追加",
-    subjectName:"科目名", color:"色", defaultPlan:"年間予定授業数", cancel:"キャンセル",
-    timezoneTitle:"タイムゾーン", timezoneLabel:"表示タイムゾーン",
-    saveTimezone:"タイムゾーンを保存", tokyoDefault:"既定のタイムゾーン: 東京 (Asia/Tokyo)。",
-    attendanceTitle:"出欠", attendanceFilter:"科目で絞り込む", lessonNumber:"授業番号",
-    subject:"科目", attendance:"出欠状況", allLessons:"すべての授業",
-    selectAll:"すべての授業を選択", deleteSelected:"選択した授業を削除",
-    icsTitle:"ICSのインポート・エクスポート", exportRangeTitle:"エクスポート期間",
-    exportFrom:"開始日", exportTo:"終了日", exportAll:"すべての科目・年度",
-    exportChoose:"または科目、学年、年度を選択:", importHeading:"ICSカレンダーをインポート",
-    exportIcs:"ICSをエクスポート", importIcs:"ICSをインポート",
-    saveRepo:"リポジトリに保存", repoHint:"変更を保存するにはJSONをコピーしてリポジトリに保存してください。",
-    copySubjects:"科目JSONをコピー", copyLessons:"授業JSONをコピー", copySettings:"設定JSONをコピー",
-    lessonDate:"授業日", startTime:"開始時刻", eventTimezone:"授業のタイムゾーン",
-    grade:"学年", yearPlan:"年間授業数", unknown:"未設定", present:"出席", absent:"欠席",
-    alarm:"授業前の通知", alarm5:"5分前", alarm10:"10分前", alarm15:"15分前",
-    alarm30:"30分前", alarm60:"1時間前", note:"メモ", save:"保存",
-    addLesson:"授業を追加", editLesson:"授業を編集", noLessons:"授業はありません。",
-    addHint:"+を押して授業を追加してください。", minutes:"分", noSubject:"科目",
-    allSubjects:"すべての科目", lesson:"授業", planned:"予定", entered:"登録済み",
-    remaining:"残り", edit:"編集", delete:"削除", confirmDeleteLesson:"この授業を削除しますか？",
-    confirmDeleteMany:"選択した授業を削除しますか？",
-    confirmDeleteSubject:"科目を削除すると、関連するすべての授業と年間計画も削除されます。続行しますか？",
-    noneSelected:"授業が選択されていません。", chooseSubject:"科目を選択してください。",
-    chooseDate:"日付と時刻を選択してください。", chooseGrade:"学年を選択してください。",
-    choosePlan:"年間授業数を1以上で入力してください。",
-    duplicateSubject:"同じ名前の科目が既にあります。",
-    earlierWarning:"この授業は同じ科目・年度の別の授業より前の日付です。このまま保存しますか？",
-    copied:"JSONをコピーしました。", imported:"件の予定をインポートしました。",
-    noImported:"新しい予定はありません。", chooseFile:"ICSファイルを選択してください。",
-    importError:"ICSファイルを読み込めませんでした。",
-    chooseRange:"エクスポートの開始日と終了日を選択してください。",
-    invalidRange:"開始日は終了日より後にできません。",
-    chooseExportSubject:"年間計画を1つ以上選択するか、すべてを選択してください。",
-    noExportMatches:"選択した期間と計画に一致する授業はありません。",
-    exported:"エクスポートした授業数", dragHint:"授業をドラッグして日付や時刻を変更できます。",
-    attendanceCount:"出席", absenceCount:"欠席", unknownCount:"未設定",
-    rate:"出席率", schoolYear:"学年度", selectGrade:"学年を選択",
-    class:"年", subjectDeleted:"科目と関連授業を削除しました。"
-  }
-}[lang];
-const T=translations;
-
-document.documentElement.lang=lang;
+const STRINGS={
+pl:{
+  appTitle:"Kalendarz lekcji",admin:"Panel Admin",back:"Wstecz",today:"Dziś",next:"Dalej",
+  month:"Miesiąc",week:"Tydzień",calendar:"Kalendarz",addSubject:"Dodaj przedmiot",
+  subjectName:"Nazwa przedmiotu",color:"Kolor",defaultPlan:"Domyślny roczny plan lekcji",
+  cancel:"Anuluj",timezoneTitle:"Strefa czasowa",timezoneLabel:"Strefa wyświetlania",
+  saveTimezone:"Zapisz strefę",tokyoDefault:"Domyślna strefa: Tokio (Asia/Tokyo).",
+  attendanceTitle:"Obecności",attendanceFilter:"Filtr przedmiotu",lessonNumber:"Numer lekcji",
+  subject:"Przedmiot",attendance:"Obecność",allLessons:"Wszystkie lekcje",
+  selectAll:"Zaznacz wszystkie lekcje",deleteSelected:"Usuń wybrane lekcje",
+  icsTitle:"Import i eksport ICS",exportRangeTitle:"Zakres eksportu",exportFrom:"Od dnia",
+  exportTo:"Do dnia",exportAll:"Wszystkie przedmioty i lata szkolne",
+  exportChoose:"Albo wybierz przedmiot, klasę i rok szkolny:",
+  importHeading:"Import kalendarza ICS",exportIcs:"Eksportuj ICS",importIcs:"Importuj ICS",
+  importFallbackGrade:"Klasa dla planów, których nie można dopasować",
+  saveRepo:"Zapis do repozytorium",repoHint:"Skopiuj JSON-y do repozytorium, aby zachować zmiany.",
+  copySubjects:"Kopiuj JSON przedmiotów",copyLessons:"Kopiuj JSON lekcji",copySettings:"Kopiuj JSON ustawień",
+  lessonDate:"Data lekcji",startTime:"Godzina rozpoczęcia",eventTimezone:"Strefa czasowa lekcji",
+  grade:"Klasa / rocznik",yearPlan:"Liczba lekcji w roku szkolnym",showUsedGrades:"Pokaż także wcześniej użyte klasy",
+  unknown:"Nieustalona",present:"Obecny / obecna",absent:"Nieobecny / nieobecna",
+  alarm:"Alarm przed lekcją",alarm5:"5 minut",alarm10:"10 minut",alarm15:"15 minut",alarm30:"30 minut",alarm60:"1 godzina",
+  note:"Notatka",save:"Zapisz",addLesson:"Dodaj lekcję",editLesson:"Edytuj lekcję",
+  noLessons:"Brak lekcji.",addHint:"Naciśnij +, aby dodać lekcję.",minutes:"min",
+  noSubject:"Przedmiot",allSubjects:"Wszystkie przedmioty",lesson:"lekcji",
+  planned:"Plan",entered:"Wpisano",remaining:"Pozostało",edit:"Edytuj",delete:"Usuń",
+  confirmDeleteLesson:"Usunąć tę lekcję?",confirmDeleteMany:"Usunąć zaznaczone lekcje?",
+  confirmDeleteSubject:"Usunięcie przedmiotu usunie też wszystkie jego lekcje. Kontynuować?",
+  noneSelected:"Nie wybrano lekcji.",chooseSubject:"Wybierz przedmiot.",
+  chooseDate:"Wybierz datę i godzinę.",chooseGrade:"Wybierz klasę.",
+  choosePlan:"Wpisz plan większy od zera.",duplicateSubject:"Przedmiot o takiej nazwie już istnieje.",
+  earlierWarning:"Ta lekcja jest wcześniejsza niż inna lekcja tego samego przedmiotu i roku szkolnego. Zapisać mimo to?",
+  copied:"Skopiowano JSON.",imported:"zaimportowanych wydarzeń.",noImported:"Nie znaleziono nowych wydarzeń.",
+  chooseFile:"Wybierz plik ICS.",importError:"Nie udało się odczytać pliku ICS.",
+  chooseRange:"Wybierz początkowy i końcowy dzień eksportu.",
+  invalidRange:"Data początkowa nie może być późniejsza niż końcowa.",
+  chooseExportPlan:"Zaznacz co najmniej jeden plan albo wybierz wszystkie.",
+  noExportMatches:"Brak lekcji w wybranym zakresie i planach.",
+  exported:"Wyeksportowano lekcji",dragHint:"Przeciągnij lekcję, aby zmienić jej dzień lub godzinę.",
+  attendanceCount:"Obecności",absenceCount:"Nieobecności",unknownCount:"Nieustalone",rate:"Frekwencja",
+  schoolYear:"Rok szkolny",selectGrade:"Wybierz klasę",class:"klasa",
+  subjectDeleted:"Przedmiot i powiązane lekcje usunięto.",
+  earlierTitle:"Wcześniejsze lekcje znalezione dla tej klasy:",
+  earlierNone:"Nie znaleziono wcześniejszych lekcji dla tej klasy.",
+  selectGradeOption:"Wybierz klasę",importNoEvents:"Plik nie zawiera wydarzeń z datą rozpoczęcia.",
+  importSkipped:"Pominięto powtórzone wydarzenia."
+},
+ja:{
+  appTitle:"レッスンカレンダー",admin:"管理パネル",back:"戻る",today:"今日",next:"次へ",
+  month:"月",week:"週",calendar:"カレンダー",addSubject:"科目を追加",
+  subjectName:"科目名",color:"色",defaultPlan:"年間予定授業数",cancel:"キャンセル",
+  timezoneTitle:"タイムゾーン",timezoneLabel:"表示タイムゾーン",
+  saveTimezone:"タイムゾーンを保存",tokyoDefault:"既定のタイムゾーン: 東京 (Asia/Tokyo)。",
+  attendanceTitle:"出欠",attendanceFilter:"科目で絞り込む",lessonNumber:"授業番号",
+  subject:"科目",attendance:"出欠状況",allLessons:"すべての授業",
+  selectAll:"すべての授業を選択",deleteSelected:"選択した授業を削除",
+  icsTitle:"ICSのインポート・エクスポート",exportRangeTitle:"エクスポート期間",
+  exportFrom:"開始日",exportTo:"終了日",exportAll:"すべての科目・年度",
+  exportChoose:"または科目、学年、年度を選択:",importHeading:"ICSカレンダーをインポート",
+  exportIcs:"ICSをエクスポート",importIcs:"ICSをインポート",
+  importFallbackGrade:"計画を特定できない場合に使う学年",
+  saveRepo:"リポジトリに保存",repoHint:"変更を保存するにはJSONをコピーしてリポジトリに保存してください。",
+  copySubjects:"科目JSONをコピー",copyLessons:"授業JSONをコピー",copySettings:"設定JSONをコピー",
+  lessonDate:"授業日",startTime:"開始時刻",eventTimezone:"授業のタイムゾーン",
+  grade:"学年",yearPlan:"年間授業数",showUsedGrades:"以前使用した学年も表示",
+  unknown:"未設定",present:"出席",absent:"欠席",alarm:"授業前の通知",
+  alarm5:"5分前",alarm10:"10分前",alarm15:"15分前",alarm30:"30分前",alarm60:"1時間前",
+  note:"メモ",save:"保存",addLesson:"授業を追加",editLesson:"授業を編集",
+  noLessons:"授業はありません。",addHint:"+を押して授業を追加してください。",minutes:"分",
+  noSubject:"科目",allSubjects:"すべての科目",lesson:"授業",planned:"予定",
+  entered:"登録済み",remaining:"残り",edit:"編集",delete:"削除",
+  confirmDeleteLesson:"この授業を削除しますか？",confirmDeleteMany:"選択した授業を削除しますか？",
+  confirmDeleteSubject:"科目を削除すると、関連するすべての授業も削除されます。続行しますか？",
+  noneSelected:"授業が選択されていません。",chooseSubject:"科目を選択してください。",
+  chooseDate:"日付と時刻を選択してください。",chooseGrade:"学年を選択してください。",
+  choosePlan:"年間授業数を1以上で入力してください。",duplicateSubject:"同じ名前の科目が既にあります。",
+  earlierWarning:"この授業は同じ科目・年度の別の授業より前の日付です。このまま保存しますか？",
+  copied:"JSONをコピーしました。",imported:"件の予定をインポートしました。",
+  noImported:"新しい予定はありません。",chooseFile:"ICSファイルを選択してください。",
+  importError:"ICSファイルを読み込めませんでした。",
+  chooseRange:"エクスポートの開始日と終了日を選択してください。",
+  invalidRange:"開始日は終了日より後にできません。",
+  chooseExportPlan:"年間計画を1つ以上選択するか、すべてを選択してください。",
+  noExportMatches:"選択した期間と計画に授業はありません。",
+  exported:"エクスポートした授業数",dragHint:"授業をドラッグして日付や時刻を変更できます。",
+  attendanceCount:"出席",absenceCount:"欠席",unknownCount:"未設定",rate:"出席率",
+  schoolYear:"学年度",selectGrade:"学年を選択",class:"年",subjectDeleted:"科目と関連授業を削除しました。",
+  earlierTitle:"この学年で見つかった以前の授業:",earlierNone:"この学年の以前の授業は見つかりませんでした。",
+  selectGradeOption:"学年を選択",importNoEvents:"開始日時のある予定がICSファイルにありません。",
+  importSkipped:"重複した予定をスキップしました。"
+}
+}[LANG];
+const T=STRINGS;
+document.documentElement.lang=LANG;
 document.querySelectorAll("[data-i18n]").forEach(el=>{
-  const value=T[el.dataset.i18n];
-  if(value) el.textContent=value;
+  const text=T[el.dataset.i18n];
+  if(text) el.textContent=text;
 });
 
-const weekdays=lang==="ja"?["月","火","水","木","金","土","日"]:["Pon","Wt","Śr","Czw","Pt","Sob","Niedz"];
-const palette=["#5147e8","#168451","#e06a24","#bd3045","#147a9e","#a13e9b"];
+const WEEKDAYS=LANG==="ja"?["月","火","水","木","金","土","日"]:["Pon","Wt","Śr","Czw","Pt","Sob","Niedz"];
+const COLORS=["#5147e8","#168451","#e06a24","#bd3045","#147a9e","#a13e9b"];
 
 let subjects=[];
 let lessons=[];
-let settings={displayTimeZone:defaultZone};
+let settings={displayTimeZone:DEFAULT_ZONE};
 let mode="month";
 let cursor=new Date();
 cursor.setHours(0,0,0,0);
@@ -501,148 +425,137 @@ let selectedLessonIds=new Set();
 let dragState=null;
 let dragTimer=null;
 let dragGhost=null;
-let dragOver=null;
+let dragTarget=null;
 let dragPreview=null;
 let suppressClickUntil=0;
 
-function esc(value) {
+function esc(value){
   return String(value??"").replace(/[&<>"']/g,char=>({
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
   })[char]);
 }
-function makeId() {
+function makeId(){
   return crypto.randomUUID?.()||`id-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
-function pad(n) { return String(n).padStart(2,"0"); }
-function dateKey(date) {
+function pad(value){return String(value).padStart(2,"0");}
+function dateKey(date){
   return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}`;
 }
-function fromDateKey(key) {
-  const [y,m,d]=key.split("-").map(Number);
-  return new Date(y,m-1,d);
+function fromDateKey(value){
+  const [year,month,day]=value.split("-").map(Number);
+  return new Date(year,month-1,day);
 }
-function weekStart(date) {
+function weekStart(date){
   const result=new Date(date);
   result.setDate(result.getDate()-((result.getDay()+6)%7));
   result.setHours(0,0,0,0);
   return result;
 }
-function displayZone() { return settings.displayTimeZone||defaultZone; }
-function zonedParts(date,tz=displayZone()) {
+function displayZone(){return settings.displayTimeZone||DEFAULT_ZONE;}
+function getParts(date,timeZone=displayZone()){
   return Object.fromEntries(new Intl.DateTimeFormat("en-CA",{
-    timeZone:tz,year:"numeric",month:"2-digit",day:"2-digit",
+    timeZone,year:"numeric",month:"2-digit",day:"2-digit",
     hour:"2-digit",minute:"2-digit",hourCycle:"h23"
   }).formatToParts(date).map(part=>[part.type,part.value]));
 }
-function zonedIso(dateText,timeText,tz) {
+function zonedIso(dateText,timeText,timeZone){
   const [year,month,day]=dateText.split("-").map(Number);
   const [hour,minute]=timeText.split(":").map(Number);
   const wanted=Date.UTC(year,month-1,day,hour,minute);
   let guess=wanted;
-  for(let i=0;i<4;i++) {
-    const p=zonedParts(new Date(guess),tz);
-    guess+=wanted-Date.UTC(+p.year,+p.month-1,+p.day,+p.hour,+p.minute);
+  for(let i=0;i<4;i++){
+    const parts=getParts(new Date(guess),timeZone);
+    guess+=wanted-Date.UTC(+parts.year,+parts.month-1,+parts.day,+parts.hour,+parts.minute);
   }
   return new Date(guess).toISOString();
 }
-function dateInZone(iso,tz=displayZone()) {
-  const p=zonedParts(new Date(iso),tz);
-  return `${p.year}-${p.month}-${p.day}`;
+function dateInZone(iso,timeZone=displayZone()){
+  const parts=getParts(new Date(iso),timeZone);
+  return `${parts.year}-${parts.month}-${parts.day}`;
 }
-function formatDate(iso,tz=displayZone()) {
-  return new Intl.DateTimeFormat(lang==="ja"?"ja-JP":"pl-PL",{
-    timeZone:tz,dateStyle:"medium",timeStyle:"short"
+function formatDate(iso,timeZone=displayZone()){
+  return new Intl.DateTimeFormat(LANG==="ja"?"ja-JP":"pl-PL",{
+    timeZone,timeStyle:"short",dateStyle:"medium"
   }).format(new Date(iso));
 }
-function formatTime(iso,tz=displayZone()) {
-  return new Intl.DateTimeFormat(lang==="ja"?"ja-JP":"pl-PL",{
-    timeZone:tz,hour:"2-digit",minute:"2-digit"
+function formatTime(iso,timeZone=displayZone()){
+  return new Intl.DateTimeFormat(LANG==="ja"?"ja-JP":"pl-PL",{
+    timeZone,hour:"2-digit",minute:"2-digit"
   }).format(new Date(iso));
 }
-function getSchoolYear(dateText,tz=displayZone()) {
+function schoolYearForDate(dateText,timeZone=displayZone()){
   let year,month;
-  if(dateText) {
-    const [y,m]=dateText.split("-").map(Number);
-    year=y; month=m;
-  } else {
-    const p=zonedParts(new Date(),tz);
-    year=Number(p.year); month=Number(p.month);
+  if(dateText){
+    [year,month]=dateText.split("-").map(Number);
+  }else{
+    const parts=getParts(new Date(),timeZone);
+    year=Number(parts.year);
+    month=Number(parts.month);
   }
   const startYear=month>=9?year:year-1;
   return `${startYear}-${startYear+1}`;
 }
-function schoolYearStart(year) {
-  return Number(String(year).split("-")[0])||new Date().getFullYear();
+function schoolYearStart(schoolYear){
+  return Number(String(schoolYear).split("-")[0])||0;
 }
-function schoolYearLabel(year) {
-  return `${T.schoolYear} ${year}`;
+function schoolYearLabel(schoolYear){
+  return `${T.schoolYear} ${schoolYear.replace("-", "–")}`;
 }
-function subjectById(id) { return subjects.find(item=>item.id===id); }
-function subjectLabel(subject) { return subject?.name||T.noSubject; }
-function normalizeName(name) { return String(name||"").trim().toLocaleLowerCase(); }
-
-function ensureSubjectPlans(subject) {
+function normalizedName(name){
+  return String(name||"").trim().toLocaleLowerCase();
+}
+function subjectById(id){
+  return subjects.find(subject=>subject.id===id);
+}
+function subjectPlans(subject){
+  if(!subject) return [];
   if(!Array.isArray(subject.yearPlans)) subject.yearPlans=[];
-  subject.yearPlans=subject.yearPlans
-    .filter(plan=>plan&&plan.schoolYear)
-    .map(plan=>({
-      schoolYear:String(plan.schoolYear),
-      grade:Number(plan.grade)||null,
-      plannedCount:Math.max(0,Number(plan.plannedCount)||0)
-    }));
+  subject.yearPlans=subject.yearPlans.filter(plan=>plan&&plan.schoolYear).map(plan=>({
+    schoolYear:String(plan.schoolYear),
+    grade:Number(plan.grade)||null,
+    plannedCount:Math.max(0,Number(plan.plannedCount)||0)
+  }));
+  return subject.yearPlans;
 }
-function planFor(subjectId,schoolYear) {
-  const s=subjectById(subjectId);
-  return s?.yearPlans?.find(plan=>plan.schoolYear===schoolYear)||null;
+function planFor(subjectId,schoolYear){
+  const item=subjectById(subjectId);
+  return subjectPlans(item).find(plan=>plan.schoolYear===schoolYear)||null;
 }
-function lessonSchoolYear(lesson) {
-  if(lesson.schoolYear) return String(lesson.schoolYear);
-  return getSchoolYear(dateInZone(lesson.start,lesson.timeZone||displayZone()),lesson.timeZone||displayZone());
+function lessonSchoolYear(lesson){
+  return String(lesson.schoolYear||schoolYearForDate(
+    dateInZone(lesson.start,lesson.timeZone||displayZone()),
+    lesson.timeZone||displayZone()
+  ));
 }
-function lessonGrade(lesson) {
-  if(Number(lesson.grade)) return Number(lesson.grade);
+function lessonGrade(lesson){
+  const direct=Number(lesson.grade);
+  if(direct) return direct;
   const plan=planFor(lesson.subjectId,lessonSchoolYear(lesson));
-  if(plan?.grade) return Number(plan.grade);
-  return Number(subjectById(lesson.subjectId)?.grade)||null;
+  return Number(plan?.grade)||null;
 }
-function subjectPlans(subject) {
-  ensureSubjectPlans(subject);
-  const plans=new Map(subject.yearPlans.map(plan=>[plan.schoolYear,plan]));
-  lessons.filter(lesson=>lesson.subjectId===subject.id).forEach(lesson=>{
-    const schoolYear=lessonSchoolYear(lesson);
-    if(!plans.has(schoolYear)) {
-      plans.set(schoolYear,{
-        schoolYear,
-        grade:lessonGrade(lesson),
-        plannedCount:Number(subject.defaultPlannedCount)||0
-      });
-    }
-  });
-  return [...plans.values()].sort((a,b)=>schoolYearStart(a.schoolYear)-schoolYearStart(b.schoolYear));
-}
-function lessonsForPlan(subjectId,schoolYear) {
+function lessonsForPlan(subjectId,schoolYear){
   return lessons.filter(lesson=>
     lesson.subjectId===subjectId&&lessonSchoolYear(lesson)===schoolYear
   ).sort((a,b)=>new Date(a.start)-new Date(b.start));
 }
-function lessonNumber(lesson) {
+function lessonNumber(lesson){
   return lessonsForPlan(lesson.subjectId,lessonSchoolYear(lesson))
     .findIndex(item=>item.id===lesson.id)+1;
 }
-function lessonTitle(lesson) {
+function lessonTitle(lesson){
   return `${subjectById(lesson.subjectId)?.name||T.noSubject} ${lessonNumber(lesson)}`;
 }
-function attendanceLabel(status) {
+function statusLabel(status){
   if(status==="present") return T.present;
   if(status==="absent") return T.absent;
   return T.unknown;
 }
-function lessonsOn(date) {
+function lessonsOn(date){
   const key=dateKey(date);
   return lessons.filter(lesson=>dateInZone(lesson.start)===key)
     .sort((a,b)=>new Date(a.start)-new Date(b.start));
 }
-function allPlansForExport() {
+function getAllPlanRows(){
   const rows=[];
   subjects.forEach(subject=>{
     subjectPlans(subject).forEach(plan=>{
@@ -657,7 +570,8 @@ function allPlansForExport() {
   return rows;
 }
 
-function renderLessonCard(lesson) {
+/* Kalendarz */
+function lessonCard(lesson){
   const subject=subjectById(lesson.subjectId);
   return `<article class="lesson-card" style="--lesson-color:${esc(subject?.color||"#5147e8")}">
     <button type="button" class="lesson-main" data-edit-lesson="${esc(lesson.id)}">
@@ -674,44 +588,41 @@ function renderLessonCard(lesson) {
     </select>
   </article>`;
 }
-function bindEventControls(root) {
+function bindLessonControls(root){
   root.querySelectorAll("[data-edit-lesson]").forEach(button=>{
     button.addEventListener("click",()=>openLesson(button.dataset.editLesson));
   });
   root.querySelectorAll("[data-attendance]").forEach(select=>{
     select.addEventListener("change",()=>{
       const lesson=lessons.find(item=>item.id===select.dataset.attendance);
-      if(lesson) { lesson.attendance=select.value; renderAll(); }
+      if(lesson){lesson.attendance=select.value;renderAll();}
     });
   });
 }
-
-function renderMonth() {
+function renderMonth(){
   const first=new Date(cursor.getFullYear(),cursor.getMonth(),1);
-  const begin=weekStart(first);
-  const locale=lang==="ja"?"ja-JP":"pl-PL";
+  const start=weekStart(first);
+  const locale=LANG==="ja"?"ja-JP":"pl-PL";
   $("periodLabel").textContent=new Intl.DateTimeFormat(locale,{month:"long",year:"numeric"}).format(cursor);
-  let html=`<div class="weekdays">${weekdays.map(day=>`<div class="weekday">${day}</div>`).join("")}</div><div class="month-grid">`;
+  let html=`<div class="weekdays">${WEEKDAYS.map(day=>`<div class="weekday">${day}</div>`).join("")}</div><div class="month-grid">`;
 
-  for(let i=0;i<42;i++) {
-    const day=new Date(begin);
-    day.setDate(begin.getDate()+i);
+  for(let index=0;index<42;index++){
+    const day=new Date(start);
+    day.setDate(start.getDate()+index);
     const key=dateKey(day);
-    const events=lessonsOn(day);
+    const items=lessonsOn(day);
     const classes=[
       "month-day",
       day.getMonth()!==cursor.getMonth()?"outside":"",
       key===dateKey(selectedDate)?"selected":"",
       key===dateKey(new Date())?"today":""
     ].filter(Boolean).join(" ");
-
-    const eventHtml=events.slice(0,3).map(lesson=>{
+    const eventHtml=items.slice(0,3).map(lesson=>{
       const subject=subjectById(lesson.subjectId);
-      return `<button type="button" class="month-event" data-edit-lesson="${esc(lesson.id)}"
-        style="--event-color:${esc(subject?.color||"#5147e8")}">${esc(lessonTitle(lesson))}</button>`;
+      return `<button type="button" class="month-event" data-edit-lesson="${esc(lesson.id)}" style="--event-color:${esc(subject?.color||"#5147e8")}">${esc(lessonTitle(lesson))}</button>`;
     }).join("");
+    const more=items.length>3?`<span class="muted">+${items.length-3}</span>`:"";
 
-    const more=events.length>3?`<span class="muted">+${events.length-3}</span>`:"";
     html+=`<div class="${classes}" data-drop-date="${key}">
       <div class="day-head">
         <button type="button" class="day-num" data-select-date="${key}">${day.getDate()}</button>
@@ -732,37 +643,34 @@ function renderMonth() {
   $("monthView").querySelectorAll("[data-add-date]").forEach(button=>{
     button.addEventListener("click",()=>openLesson(null,fromDateKey(button.dataset.addDate)));
   });
-  bindEventControls($("monthView"));
+  bindLessonControls($("monthView"));
 
   $("selectedDateTitle").textContent=new Intl.DateTimeFormat(locale,{
     timeZone:displayZone(),weekday:"long",year:"numeric",month:"long",day:"numeric"
   }).format(selectedDate);
-  const selectedLessons=lessonsOn(selectedDate);
-  $("selectedDateCount").textContent=selectedLessons.length?`${selectedLessons.length} ${T.lesson}`:"";
-  $("selectedDayLessons").innerHTML=selectedLessons.length
-    ?selectedLessons.map(renderLessonCard).join("")
+  const selected=lessonsOn(selectedDate);
+  $("selectedDateCount").textContent=selected.length?`${selected.length} ${T.lesson}`:"";
+  $("selectedDayLessons").innerHTML=selected.length
+    ?selected.map(lessonCard).join("")
     :`<div class="empty">${T.noLessons} ${T.addHint}</div>`;
-  bindEventControls($("selectedDayLessons"));
+  bindLessonControls($("selectedDayLessons"));
 }
-
-function renderWeek() {
+function renderWeek(){
   const start=weekStart(cursor);
   const dates=Array.from({length:7},(_,index)=>{
     const date=new Date(start);
     date.setDate(start.getDate()+index);
     return date;
   });
-  const locale=lang==="ja"?"ja-JP":"pl-PL";
-  const end=dates[6];
+  const locale=LANG==="ja"?"ja-JP":"pl-PL";
   $("periodLabel").textContent=
     `${start.toLocaleDateString(locale,{month:"short",day:"numeric"})} – `+
-    `${end.toLocaleDateString(locale,{year:"numeric",month:"short",day:"numeric"})}`;
+    `${dates[6].toLocaleDateString(locale,{year:"numeric",month:"short",day:"numeric"})}`;
 
   let headers='<div class="week-head"></div>';
   dates.forEach((date,index)=>{
-    headers+=`<div class="week-head">${weekdays[index]}<br>${date.getMonth()+1}/${date.getDate()}</div>`;
+    headers+=`<div class="week-head">${WEEKDAYS[index]}<br>${date.getMonth()+1}/${date.getDate()}</div>`;
   });
-
   let axis='<div class="time-axis">';
   for(let hour=0;hour<24;hour++) axis+=`<span class="hour-label" style="top:${hour*56}px">${pad(hour)}:00</span>`;
   axis+="</div>";
@@ -771,12 +679,12 @@ function renderWeek() {
   dates.forEach(date=>{
     let events="";
     lessonsOn(date).forEach(lesson=>{
-      const p=zonedParts(new Date(lesson.start),displayZone());
+      const p=getParts(new Date(lesson.start));
       const minutes=Number(p.hour)*60+Number(p.minute);
       const subject=subjectById(lesson.subjectId);
-      events+=`<button type="button" class="week-event" data-edit-lesson="${esc(lesson.id)}"
-        style="top:${minutes/60*56}px;--event-color:${esc(subject?.color||"#5147e8")}">
-        <strong>${esc(formatTime(lesson.start))} ${esc(lessonTitle(lesson))}</strong><span>45 ${T.minutes}</span>
+      events+=`<button type="button" class="week-event" data-edit-lesson="${esc(lesson.id)}" style="top:${minutes/60*56}px;--event-color:${esc(subject?.color||"#5147e8")}">
+        <strong>${esc(formatTime(lesson.start))} ${esc(lessonTitle(lesson))}</strong>
+        <span>45 ${T.minutes}</span>
       </button>`;
     });
     columns+=`<div class="week-column" data-drop-date="${dateKey(date)}">${events}</div>`;
@@ -784,12 +692,12 @@ function renderWeek() {
 
   const agenda=dates.map(date=>{
     const items=lessonsOn(date);
-    const title=new Intl.DateTimeFormat(locale,{
+    const label=new Intl.DateTimeFormat(locale,{
       timeZone:displayZone(),weekday:"long",month:"long",day:"numeric"
     }).format(date);
     return `<section class="day-card" data-drop-date="${dateKey(date)}">
-      <div class="day-card-head"><b>${esc(title)}</b><button type="button" data-add-date="${dateKey(date)}">+</button></div>
-      ${items.length?items.map(renderLessonCard).join(""):`<div class="muted">${T.noLessons}</div>`}
+      <div class="day-card-head"><b>${esc(label)}</b><button type="button" data-add-date="${dateKey(date)}">+</button></div>
+      ${items.length?items.map(lessonCard).join(""):`<div class="muted">${T.noLessons}</div>`}
     </section>`;
   }).join("");
 
@@ -798,48 +706,44 @@ function renderWeek() {
   $("weekView").querySelectorAll("[data-add-date]").forEach(button=>{
     button.addEventListener("click",()=>openLesson(null,fromDateKey(button.dataset.addDate)));
   });
-  bindEventControls($("weekView"));
+  bindLessonControls($("weekView"));
 }
-function renderCalendar() {
+function renderCalendar(){
   $("monthView").classList.toggle("hidden",mode!=="month");
   $("monthAgenda").classList.toggle("hidden",mode!=="month");
   $("weekView").classList.toggle("hidden",mode!=="week");
   $("monthBtn").classList.toggle("active",mode==="month");
   $("weekBtn").classList.toggle("active",mode==="week");
-  if(mode==="month") renderMonth(); else renderWeek();
+  mode==="month"?renderMonth():renderWeek();
 }
-function renderZones() {
-  const zones=[...new Set([
-    defaultZone,deviceZone,"Europe/Warsaw","Europe/London","Europe/Paris",
-    "America/New_York","UTC",displayZone()
-  ])];
-  const options=zones.map(value=>`<option value="${esc(value)}">${esc(value)}</option>`).join("");
+
+/* Strefy i eksport JSON */
+function renderZones(){
+  const list=[...new Set([DEFAULT_ZONE,DEVICE_ZONE,"Europe/Warsaw","Europe/London","Europe/Paris","UTC",displayZone()])];
+  const options=list.map(zone=>`<option value="${esc(zone)}">${esc(zone)}</option>`).join("");
   $("displayZone").innerHTML=options;
   $("eventZone").innerHTML=options;
   $("displayZone").value=displayZone();
   $("eventZone").value=displayZone();
 }
-function refreshJson() {
+function refreshJson(){
   $("subjectsJson").value=JSON.stringify(subjects,null,2);
   $("lessonsJson").value=JSON.stringify(lessons,null,2);
   $("settingsJson").value=JSON.stringify(settings,null,2);
 }
-function renderExportChoices() {
+function renderExportChoices(){
   const box=$("exportSubjectChoices");
-  const previouslySelected=new Set(
-    [...box.querySelectorAll("[data-export-plan]:checked")].map(input=>input.value)
-  );
-  const hadOptions=box.querySelectorAll("[data-export-plan]").length>0;
-  const plans=allPlansForExport();
+  const oldChecked=new Set([...box.querySelectorAll("[data-export-plan]:checked")].map(input=>input.value));
+  const had=box.querySelectorAll("[data-export-plan]").length>0;
+  const rows=getAllPlanRows();
 
   box.innerHTML=`<div class="export-subject-list">${
-    plans.map(plan=>{
-      const s=subjectById(plan.subjectId);
-      const gradeText=plan.grade?` · ${plan.grade} ${T.class}`:"";
-      const label=`${s?.name||T.noSubject}${gradeText} · ${schoolYearLabel(plan.schoolYear)}`;
+    rows.map(row=>{
+      const subject=subjectById(row.subjectId);
+      const grade=row.grade?` · ${row.grade} ${T.class}`:"";
+      const label=`${subject?.name||T.noSubject}${grade} · ${schoolYearLabel(row.schoolYear)}`;
       return `<label class="export-subject-option">
-        <input type="checkbox" data-export-plan value="${esc(plan.key)}"
-          ${hadOptions&&previouslySelected.has(plan.key)?"checked":""}>
+        <input type="checkbox" data-export-plan value="${esc(row.key)}" ${had&&oldChecked.has(row.key)?"checked":""}>
         <span>${esc(label)}</span>
       </label>`;
     }).join("")||`<span class="muted">${T.noLessons}</span>`
@@ -854,20 +758,21 @@ function renderExportChoices() {
   });
 }
 
-function renderAdmin() {
+/* Panel administracyjny */
+function renderAdmin(){
   const oldSubject=$("lessonSubject").value;
   const oldFilter=$("attendanceFilter").value||"all";
 
-  $("lessonSubject").innerHTML=subjects.map(s=>
-    `<option value="${esc(s.id)}">${esc(s.name)}</option>`).join("");
-  if(subjects.some(s=>s.id===oldSubject)) $("lessonSubject").value=oldSubject;
+  $("lessonSubject").innerHTML=subjects.map(subject=>
+    `<option value="${esc(subject.id)}">${esc(subject.name)}</option>`).join("");
+  if(subjects.some(subject=>subject.id===oldSubject)) $("lessonSubject").value=oldSubject;
 
   $("attendanceFilter").innerHTML=`<option value="all">${T.allSubjects}</option>`+
-    subjects.map(s=>`<option value="${esc(s.id)}">${esc(s.name)}</option>`).join("");
-  if(oldFilter==="all"||subjects.some(s=>s.id===oldFilter)) $("attendanceFilter").value=oldFilter;
+    subjects.map(subject=>`<option value="${esc(subject.id)}">${esc(subject.name)}</option>`).join("");
+  $("attendanceFilter").value=oldFilter==="all"||subjects.some(subject=>subject.id===oldFilter)?oldFilter:"all";
 
-  const present=lessons.filter(l=>l.attendance==="present").length;
-  const absent=lessons.filter(l=>l.attendance==="absent").length;
+  const present=lessons.filter(lesson=>lesson.attendance==="present").length;
+  const absent=lessons.filter(lesson=>lesson.attendance==="absent").length;
   const unknown=lessons.length-present-absent;
   const decided=present+absent;
 
@@ -878,20 +783,18 @@ function renderAdmin() {
     <div class="stat"><b>${T.unknownCount}</b><br>${unknown}</div>
     <div class="stat"><b>${T.rate}</b><br>${decided?Math.round(present/decided*100)+"%":"—"}</div>`;
 
-  $("subjectList").innerHTML=subjects.map(s=>{
-    const plans=subjectPlans(s);
-    const summary=plans.length
-      ?plans.map(plan=>{
-        const count=lessonsForPlan(s.id,plan.schoolYear).length;
-        return `${schoolYearLabel(plan.schoolYear)}${plan.grade?` · ${plan.grade} ${T.class}`:""}: ${T.planned} ${plan.plannedCount||0}, ${T.entered} ${count}, ${T.remaining} ${Math.max(0,(plan.plannedCount||0)-count)}`;
-      }).join("<br>")
-      :T.noLessons;
+  $("subjectList").innerHTML=subjects.map(subject=>{
+    const plans=subjectPlans(subject);
+    const details=plans.length?plans.map(plan=>{
+      const count=lessonsForPlan(subject.id,plan.schoolYear).length;
+      return `${schoolYearLabel(plan.schoolYear)}${plan.grade?` · ${plan.grade} ${T.class}`:""}: ${T.planned} ${plan.plannedCount||0}, ${T.entered} ${count}, ${T.remaining} ${Math.max(0,(plan.plannedCount||0)-count)}`;
+    }).join("<br>"):`${T.defaultPlan}: ${subject.defaultPlannedCount||0}`;
 
     return `<div class="subject-row">
-      <div class="row-info"><b style="color:${esc(s.color)}">${esc(s.name)}</b><br><span class="muted">${summary}</span></div>
+      <div class="row-info"><b style="color:${esc(subject.color)}">${esc(subject.name)}</b><br><span class="muted">${details}</span></div>
       <div class="row-actions">
-        <button type="button" data-edit-subject="${esc(s.id)}">${T.edit}</button>
-        <button type="button" class="danger" data-delete-subject="${esc(s.id)}">${T.delete}</button>
+        <button type="button" data-edit-subject="${esc(subject.id)}">${T.edit}</button>
+        <button type="button" class="danger" data-delete-subject="${esc(subject.id)}">${T.delete}</button>
       </div>
     </div>`;
   }).join("")||`<div class="empty">${T.noSubject}</div>`;
@@ -903,30 +806,30 @@ function renderAdmin() {
     button.addEventListener("click",()=>deleteSubject(button.dataset.deleteSubject));
   });
 
-  const filter=$("attendanceFilter").value||"all";
-  const filtered=lessons.filter(l=>filter==="all"||l.subjectId===filter)
+  const filter=$("attendanceFilter").value;
+  const filtered=lessons.filter(lesson=>filter==="all"||lesson.subjectId===filter)
     .sort((a,b)=>new Date(a.start)-new Date(b.start));
 
   $("attendanceBody").innerHTML=filtered.map(lesson=>`
     <tr>
       <td>${lessonNumber(lesson)}</td>
-      <td>${esc(subject(lesson.subjectId)?.name||T.noSubject)}</td>
+      <td>${esc(subjectById(lesson.subjectId)?.name||T.noSubject)}</td>
       <td><select data-attendance="${esc(lesson.id)}">
         <option value="unknown" ${!lesson.attendance||lesson.attendance==="unknown"?"selected":""}>${T.unknown}</option>
         <option value="present" ${lesson.attendance==="present"?"selected":""}>${T.present}</option>
         <option value="absent" ${lesson.attendance==="absent"?"selected":""}>${T.absent}</option>
       </select></td>
     </tr>`).join("")||`<tr><td colspan="3">${T.noLessons}</td></tr>`;
-  bindEventControls($("attendanceBody"));
+  bindLessonControls($("attendanceBody"));
 
   const sorted=[...lessons].sort((a,b)=>new Date(a.start)-new Date(b.start));
-  selectedLessonIds=new Set([...selectedLessonIds].filter(id=>lessons.some(l=>l.id===id)));
+  selectedLessonIds=new Set([...selectedLessonIds].filter(id=>lessons.some(lesson=>lesson.id===id)));
   $("adminLessonList").innerHTML=sorted.map(lesson=>`
     <div class="lesson-admin-row">
       <div class="lesson-row-main">
         <input type="checkbox" data-select-lesson="${esc(lesson.id)}" ${selectedLessonIds.has(lesson.id)?"checked":""}>
         <div class="row-info"><b>${esc(lessonTitle(lesson))}</b><br>
-          <span class="muted">${esc(formatDate(lesson.start))} · ${esc(schoolYearLabel(lessonSchoolYear(lesson)))} · ${esc(attendanceLabel(lesson.attendance))}</span>
+          <span class="muted">${esc(formatDate(lesson.start))} · ${esc(schoolYearLabel(lessonSchoolYear(lesson)))} · ${esc(statusLabel(lesson.attendance))}</span>
         </div>
       </div>
       <div class="row-actions">
@@ -947,15 +850,14 @@ function renderAdmin() {
   });
   $("adminLessonList").querySelectorAll("[data-delete-lesson]").forEach(button=>{
     button.addEventListener("click",()=>{
-      if(confirm(T.confirmDeleteLesson)) {
-        lessons=lessons.filter(l=>l.id!==button.dataset.deleteLesson);
-        selectedLessonIds.delete(button.dataset.deleteLesson);
-        renderAll();
-      }
+      if(!confirm(T.confirmDeleteLesson)) return;
+      lessons=lessons.filter(lesson=>lesson.id!==button.dataset.deleteLesson);
+      selectedLessonIds.delete(button.dataset.deleteLesson);
+      renderAll();
     });
   });
 
-  $("selectAllLessons").checked=sorted.length>0&&sorted.every(l=>selectedLessonIds.has(l.id));
+  $("selectAllLessons").checked=sorted.length>0&&sorted.every(lesson=>selectedLessonIds.has(lesson.id));
   $("deleteSelectedLessonsBtn").disabled=selectedLessonIds.size===0;
   $("deleteSelectedLessonsBtn").textContent=selectedLessonIds.size
     ?`${T.deleteSelected} (${selectedLessonIds.size})`:T.deleteSelected;
@@ -963,13 +865,10 @@ function renderAdmin() {
   renderExportChoices();
   refreshJson();
 }
+function renderAll(){renderCalendar();renderAdmin();}
 
-function renderAll() {
-  renderCalendar();
-  renderAdmin();
-}
-
-function resetSubjectForm() {
+/* Przedmioty: jeden rekord na nazwę przedmiotu, plany roczne w yearPlans. */
+function resetSubjectForm(){
   $("subjectId").value="";
   $("subjectName").value="";
   $("subjectColor").value="#5147e8";
@@ -978,22 +877,22 @@ function resetSubjectForm() {
   $("saveSubjectBtn").textContent=T.addSubject;
   $("cancelSubjectEditBtn").classList.add("hidden");
 }
-function editSubject(id) {
-  const s=subjectById(id);
-  if(!s) return;
-  $("subjectId").value=s.id;
-  $("subjectName").value=s.name;
-  $("subjectColor").value=s.color||"#5147e8";
-  $("subjectPlanned").value=Number(s.defaultPlannedCount)||0;
+function editSubject(id){
+  const subject=subjectById(id);
+  if(!subject) return;
+  $("subjectId").value=subject.id;
+  $("subjectName").value=subject.name;
+  $("subjectColor").value=subject.color||"#5147e8";
+  $("subjectPlanned").value=Number(subject.defaultPlannedCount)||0;
   $("subjectFormTitle").textContent=T.edit;
   $("saveSubjectBtn").textContent=T.save;
   $("cancelSubjectEditBtn").classList.remove("hidden");
 }
-function saveSubject() {
+function saveSubject(){
   const name=$("subjectName").value.trim();
-  const subjectId=$("subjectId").value;
+  const id=$("subjectId").value;
   if(!name) return;
-  if(subjects.some(s=>normalizeName(s.name)===normalizeName(name)&&s.id!==subjectId)) {
+  if(subjects.some(subject=>normalizedName(subject.name)===normalizedName(name)&&subject.id!==id)){
     alert(T.duplicateSubject);
     return;
   }
@@ -1002,152 +901,183 @@ function saveSubject() {
     color:$("subjectColor").value,
     defaultPlannedCount:Math.max(0,Number($("subjectPlanned").value)||0)
   };
-  if(subjectId) Object.assign(subjectById(subjectId),data);
+  if(id) Object.assign(subjectById(id),data);
   else subjects.push({id:makeId(),...data,yearPlans:[]});
   resetSubjectForm();
   renderAll();
 }
-function deleteSubject(id) {
-  const s=subjectById(id);
-  if(!s||!confirm(T.confirmDeleteSubject)) return;
-  const relatedIds=new Set(lessons.filter(l=>l.subjectId===id).map(l=>l.id));
-  subjects=subjects.filter(item=>item.id!==id);
+function deleteSubject(id){
+  if(!subjectById(id)||!confirm(T.confirmDeleteSubject)) return;
+  const removedIds=new Set(lessons.filter(lesson=>lesson.subjectId===id).map(lesson=>lesson.id));
+  subjects=subjects.filter(subject=>subject.id!==id);
   lessons=lessons.filter(lesson=>lesson.subjectId!==id);
-  relatedIds.forEach(lessonId=>selectedLessonIds.delete(lessonId));
+  removedIds.forEach(lessonId=>selectedLessonIds.delete(lessonId));
   if($("subjectId").value===id) resetSubjectForm();
   renderAll();
 }
 
-function gradesUsedBefore(subjectId,schoolYear) {
-  const targetStart=schoolYearStart(schoolYear);
-  const used=new Set();
-  const s=subjectById(subjectId);
-  if(!s) return used;
+/* Wybór klas: ukrywa klasy przypisane do wcześniejszych lat; checkbox pozwala je pokazać. */
+function usedGradesBefore(subjectId,schoolYear){
+  const result=new Set();
+  const targetYear=schoolYearStart(schoolYear);
+  const subject=subjectById(subjectId);
+  if(!subject) return result;
 
-  subjectPlans(s).forEach(plan=>{
-    if(schoolYearStart(plan.schoolYear)<targetStart&&plan.grade) used.add(Number(plan.grade));
+  subjectPlans(subject).forEach(plan=>{
+    if(schoolYearStart(plan.schoolYear)<targetYear&&plan.grade) result.add(Number(plan.grade));
   });
-  lessons.filter(l=>l.subjectId===subjectId).forEach(l=>{
-    if(schoolYearStart(lessonSchoolYear(l))<targetStart&&lessonGrade(l)) used.add(lessonGrade(l));
+  lessons.filter(lesson=>lesson.subjectId===subjectId).forEach(lesson=>{
+    if(schoolYearStart(lessonSchoolYear(lesson))<targetYear&&lessonGrade(lesson)) {
+      result.add(lessonGrade(lesson));
+    }
   });
-  return used;
+  return result;
 }
-function updateSchoolYearLabel() {
-  const date=$("lessonDate").value;
-  if(!date) { $("schoolYearLabel").textContent=""; return; }
-  const year=getSchoolYear(date,$("eventZone").value||displayZone());
-  $("schoolYearLabel").textContent=schoolYearLabel(year);
-  populateGradeOptions(year);
-}
-function populateGradeOptions(schoolYear,preferredGrade=null) {
+function populateGradeOptions(schoolYear,preferredGrade=null){
   const subjectId=$("lessonSubject").value;
-  const currentPlan=planFor(subjectId,schoolYear);
-  const currentLessonId=$("lessonId").value;
-  const editingLesson=lessons.find(l=>l.id===currentLessonId);
-  const editingGrade=editingLesson&&lessonSchoolYear(editingLesson)===schoolYear?lessonGrade(editingLesson):null;
-  const fixedGrade=currentPlan?.grade||editingGrade;
-  const usedBefore=gradesUsedBefore(subjectId,schoolYear);
+  const existingPlan=planFor(subjectId,schoolYear);
+  const editing=lessons.find(lesson=>lesson.id===$("lessonId").value);
+  const gradeFromEditing=editing&&lessonSchoolYear(editing)===schoolYear?lessonGrade(editing):null;
+  const fixedGrade=Number(existingPlan?.grade)||Number(gradeFromEditing)||0;
+  const used=usedGradesBefore(subjectId,schoolYear);
+  const showUsed=$("showUsedGrades").checked;
 
   let allowed;
-  if(fixedGrade) {
-    allowed=[Number(fixedGrade)];
-  } else {
-    allowed=Array.from({length:8},(_,i)=>i+1).filter(grade=>!usedBefore.has(grade));
+  if(fixedGrade){
+    allowed=[fixedGrade];
+  }else{
+    allowed=Array.from({length:8},(_,index)=>index+1)
+      .filter(grade=>showUsed||!used.has(grade));
   }
 
-  const selected=Number(preferredGrade||fixedGrade||$("lessonGrade").value)||0;
-  $("lessonGrade").innerHTML=`<option value="">${T.selectGrade}</option>`+
+  const selected=Number(preferredGrade||$("lessonGrade").value)||0;
+  $("lessonGrade").innerHTML=`<option value="">${T.selectGradeOption}</option>`+
     allowed.map(grade=>`<option value="${grade}">${grade} ${T.class}</option>`).join("");
 
   if(allowed.includes(selected)) $("lessonGrade").value=String(selected);
   else if(allowed.length===1) $("lessonGrade").value=String(allowed[0]);
 
-  const plan=currentPlan;
-  if(plan?.plannedCount) $("lessonYearPlan").value=String(plan.plannedCount);
-  else if(subjectById(subjectId)?.defaultPlannedCount) $("lessonYearPlan").value=String(subjectById(subjectId).defaultPlannedCount);
+  const subject=subjectById(subjectId);
+  if(existingPlan) $("lessonYearPlan").value=String(existingPlan.plannedCount||20);
+  else if(subject?.defaultPlannedCount) $("lessonYearPlan").value=String(subject.defaultPlannedCount);
+
+  renderEarlierLessons();
 }
-function openLesson(lessonId=null,date=selectedDate) {
-  if(!subjects.length) { alert(T.chooseSubject); return; }
+function updateSchoolYear(){
+  const date=$("lessonDate").value;
+  if(!date){$("schoolYearLabel").textContent="";renderEarlierLessons();return;}
+  const schoolYear=schoolYearForDate(date,$("eventZone").value||displayZone());
+  $("schoolYearLabel").textContent=schoolYearLabel(schoolYear);
+  const currentGrade=$("lessonGrade").value;
+  populateGradeOptions(schoolYear,currentGrade);
+}
+function renderEarlierLessons(){
+  const box=$("previousGradeLessons");
+  if(!box) return;
+
+  const subjectId=$("lessonSubject").value;
+  const grade=Number($("lessonGrade").value);
+  const date=$("lessonDate").value;
+  const timeZone=$("eventZone").value||displayZone();
+
+  if(!subjectId||!grade||!date){box.textContent="";return;}
+
+  const selectedYear=schoolYearForDate(date,timeZone);
+  const selectedStart=schoolYearStart(selectedYear);
+  const earlier=lessons.filter(lesson=>
+    lesson.subjectId===subjectId&&
+    lessonGrade(lesson)===grade&&
+    schoolYearStart(lessonSchoolYear(lesson))<selectedStart
+  ).sort((a,b)=>new Date(a.start)-new Date(b.start));
+
+  if(!earlier.length){
+    box.textContent=T.earlierNone;
+    return;
+  }
+
+  box.innerHTML=`<strong>${esc(T.earlierTitle)}</strong><ul>${
+    earlier.map(lesson=>`<li>
+      ${esc(lessonTitle(lesson))} — ${esc(formatDate(lesson.start,lesson.timeZone||timeZone))}
+      — ${esc(schoolYearLabel(lessonSchoolYear(lesson)))}
+    </li>`).join("")
+  }</ul>`;
+}
+function openLesson(id=null,date=selectedDate){
+  if(!subjects.length){alert(T.chooseSubject);return;}
   $("lessonForm").reset();
-  $("lessonId").value=lessonId||"";
-  $("lessonFormTitle").textContent=lessonId?T.editLesson:T.addLesson;
+  $("lessonId").value=id||"";
+  $("lessonFormTitle").textContent=id?T.editLesson:T.addLesson;
   $("lessonAttendance").value="unknown";
   $("lessonAlarms").value="5";
+  $("showUsedGrades").checked=false;
   $("eventZone").value=displayZone();
   $("lessonDate").value=dateKey(date);
 
-  const lesson=lessons.find(item=>item.id===lessonId);
-  if(lesson) {
-    const tz=lesson.timeZone||displayZone();
-    const p=zonedParts(new Date(lesson.start),tz);
+  const lesson=lessons.find(item=>item.id===id);
+  if(lesson){
+    const timeZone=lesson.timeZone||displayZone();
+    const p=getParts(new Date(lesson.start),timeZone);
     $("lessonSubject").value=lesson.subjectId;
     $("lessonDate").value=`${p.year}-${p.month}-${p.day}`;
     $("lessonTime").value=`${p.hour}:${p.minute}`;
-    $("eventZone").value=tz;
+    $("eventZone").value=timeZone;
     $("lessonAttendance").value=lesson.attendance||"unknown";
     $("lessonNote").value=lesson.note||"";
-    const alarm=String(lesson.alarms?.[0]??5);
-    $("lessonAlarms").value=["5","10","15","30","60"].includes(alarm)?alarm:"5";
-  } else {
+    $("lessonAlarms").value=["5","10","15","30","60"].includes(String(lesson.alarms?.[0]??5))
+      ?String(lesson.alarms?.[0]??5):"5";
+  }else{
     $("lessonSubject").value=subjects[0].id;
     $("lessonTime").value="09:00";
     $("lessonNote").value="";
   }
 
-  const schoolYear=getSchoolYear($("lessonDate").value,$("eventZone").value);
+  const schoolYear=schoolYearForDate($("lessonDate").value,$("eventZone").value);
   const plan=planFor($("lessonSubject").value,schoolYear);
-  $("lessonYearPlan").value=String(
-    plan?.plannedCount||subjectById($("lessonSubject").value)?.defaultPlannedCount||20
-  );
-  updateSchoolYearLabel();
+  const subject=subjectById($("lessonSubject").value);
+  $("lessonYearPlan").value=String(plan?.plannedCount||subject?.defaultPlannedCount||20);
+  $("schoolYearLabel").textContent=schoolYearLabel(schoolYear);
 
-  if(lesson) {
-    populateGradeOptions(schoolYear,lessonGrade(lesson));
-    const currentPlan=planFor(lesson.subjectId,schoolYear);
-    $("lessonYearPlan").value=String(currentPlan?.plannedCount||20);
-  } else {
-    populateGradeOptions(schoolYear);
-  }
-
+  populateGradeOptions(schoolYear,lesson?lessonGrade(lesson):plan?.grade||null);
+  renderEarlierLessons();
   $("lessonDialog").showModal();
 }
-function saveLesson(event) {
+function saveLesson(event){
   event.preventDefault();
+
   const id=$("lessonId").value;
   const subjectId=$("lessonSubject").value;
+  const subject=subjectById(subjectId);
   const date=$("lessonDate").value;
   const time=$("lessonTime").value;
-  const s=subjectById(subjectId);
+  const timeZone=$("eventZone").value||DEFAULT_ZONE;
 
-  if(!s) { alert(T.chooseSubject); return; }
-  if(!date||!time) { alert(T.chooseDate); return; }
+  if(!subject){alert(T.chooseSubject);return;}
+  if(!date||!time){alert(T.chooseDate);return;}
 
-  const schoolYear=getSchoolYear(date,$("eventZone").value||displayZone());
-  populateGradeOptions(schoolYear,$("lessonGrade").value);
+  const schoolYear=schoolYearForDate(date,timeZone);
+  /* Celowo nie odświeżamy listy klas tutaj: nie kasujemy wybranego rocznika podczas zapisu. */
   const grade=Number($("lessonGrade").value);
   const plannedCount=Number($("lessonYearPlan").value);
 
-  if(!grade) { alert(T.chooseGrade); return; }
-  if(!Number.isInteger(plannedCount)||plannedCount<1) { alert(T.choosePlan); return; }
+  if(!grade){alert(T.chooseGrade);return;}
+  if(!Number.isInteger(plannedCount)||plannedCount<1){alert(T.choosePlan);return;}
 
   let plan=planFor(subjectId,schoolYear);
-  if(plan&&Number(plan.grade)!==grade) {
-    alert(T.chooseGrade);
-    return;
-  }
+  if(plan&&Number(plan.grade)!==grade){alert(T.chooseGrade);return;}
 
-  const zone=$("eventZone").value||defaultZone;
-  const start=zonedIso(date,time,zone);
-  const later=lessons.some(lesson=>
+  const start=zonedIso(date,time,timeZone);
+  const hasLater=lessons.some(lesson=>
     lesson.subjectId===subjectId&&
     lessonSchoolYear(lesson)===schoolYear&&
     lesson.id!==id&&new Date(lesson.start)>new Date(start)
   );
-  if(later&&!confirm(T.earlierWarning)) return;
+  if(hasLater&&!confirm(T.earlierWarning)) return;
 
-  if(!plan) {
-    s.yearPlans.push({schoolYear,grade,plannedCount});
-  } else {
+  if(!Array.isArray(subject.yearPlans)) subject.yearPlans=[];
+  if(!plan){
+    plan={schoolYear,grade,plannedCount};
+    subject.yearPlans.push(plan);
+  }else{
     plan.grade=grade;
     plan.plannedCount=plannedCount;
   }
@@ -1157,7 +1087,7 @@ function saveLesson(event) {
     id:id||makeId(),
     subjectId,
     start,
-    timeZone:zone,
+    timeZone,
     schoolYear,
     grade,
     attendance:$("lessonAttendance").value,
@@ -1176,57 +1106,56 @@ function saveLesson(event) {
 }
 
 /* Przeciąganie lekcji */
-function findDropTarget(x,y) {
+function findDropTarget(x,y){
   return document.elementFromPoint(x,y)?.closest("[data-drop-date]")||null;
 }
-function clearDragPreview() {
-  dragOver?.classList.remove("drag-over");
-  dragOver=null;
+function clearDragPreview(){
+  dragTarget?.classList.remove("drag-over");
+  dragTarget=null;
   dragPreview?.remove();
   dragPreview=null;
 }
-function updateDragPreview(x,y) {
+function updateDragPreview(x,y){
   clearDragPreview();
   const target=findDropTarget(x,y);
   if(!target) return;
-  dragOver=target;
+  dragTarget=target;
   target.classList.add("drag-over");
   const column=target.closest(".week-column");
   if(!column) return;
-
   const rect=column.getBoundingClientRect();
   let minutes=Math.round((Math.max(0,y-rect.top)/56*60)/15)*15;
-  minutes=Math.max(0,Math.min(23*60+15,minutes));
+  minutes=Math.max(0,Math.min(1395,minutes));
   dragPreview=document.createElement("div");
   dragPreview.className="week-drop-preview";
   dragPreview.style.top=`${minutes/60*56}px`;
   dragPreview.textContent=`${pad(Math.floor(minutes/60))}:${pad(minutes%60)} · 45 ${T.minutes}`;
   column.appendChild(dragPreview);
 }
-function moveLessonToTarget(lessonId,target,pointerY) {
+function moveLesson(lessonId,target,y){
   const lesson=lessons.find(item=>item.id===lessonId);
   if(!lesson||!target) return;
   const targetDate=target.dataset.dropDate;
-  const tz=displayZone();
-  const current=zonedParts(new Date(lesson.start),tz);
-  let minutes=Number(current.hour)*60+Number(current.minute);
+  const timeZone=displayZone();
+  const p=getParts(new Date(lesson.start),timeZone);
+  let minutes=Number(p.hour)*60+Number(p.minute);
   const column=target.closest(".week-column");
 
-  if(column) {
+  if(column){
     const rect=column.getBoundingClientRect();
-    minutes=Math.round((Math.max(0,pointerY-rect.top)/56*60)/15)*15;
-    minutes=Math.max(0,Math.min(23*60+15,minutes));
+    minutes=Math.round((Math.max(0,y-rect.top)/56*60)/15)*15;
+    minutes=Math.max(0,Math.min(1395,minutes));
   }
 
   const time=`${pad(Math.floor(minutes/60))}:${pad(minutes%60)}`;
-  lesson.start=zonedIso(targetDate,time,tz);
-  lesson.timeZone=tz;
-  lesson.schoolYear=getSchoolYear(targetDate,tz);
+  lesson.start=zonedIso(targetDate,time,timeZone);
+  lesson.timeZone=timeZone;
+  lesson.schoolYear=schoolYearForDate(targetDate,timeZone);
   selectedDate=fromDateKey(targetDate);
   cursor=new Date(selectedDate);
   renderAll();
 }
-function beginDrag() {
+function beginDrag(){
   if(!dragState||dragState.started) return;
   const lesson=lessons.find(item=>item.id===dragState.lessonId);
   if(!lesson) return;
@@ -1240,7 +1169,7 @@ function beginDrag() {
   dragGhost.style.top=`${dragState.y}px`;
   document.body.style.userSelect="none";
 }
-function stopDrag() {
+function stopDrag(){
   clearTimeout(dragTimer);
   dragTimer=null;
   clearDragPreview();
@@ -1249,14 +1178,14 @@ function stopDrag() {
   document.body.style.userSelect="";
   dragState=null;
 }
-function installDragging() {
+function installDragging(){
   document.addEventListener("pointerdown",event=>{
     const button=event.target.closest("[data-edit-lesson]");
     if(!button||!event.isPrimary||(event.pointerType==="mouse"&&event.button!==0)) return;
     dragState={
       lessonId:button.dataset.editLesson,
       pointerId:event.pointerId,
-      pointerType:event.pointerType,
+      type:event.pointerType,
       startX:event.clientX,
       startY:event.clientY,
       x:event.clientX,
@@ -1270,15 +1199,11 @@ function installDragging() {
     if(!dragState||event.pointerId!==dragState.pointerId) return;
     dragState.x=event.clientX;
     dragState.y=event.clientY;
-
-    if(dragState.pointerType==="mouse"&&!dragState.started&&
-      Math.hypot(event.clientX-dragState.startX,event.clientY-dragState.startY)>6) {
-      beginDrag();
-    }
+    if(dragState.type==="mouse"&&!dragState.started&&
+      Math.hypot(event.clientX-dragState.startX,event.clientY-dragState.startY)>6) beginDrag();
     if(!dragState.started) return;
-
     event.preventDefault();
-    if(dragGhost) {
+    if(dragGhost){
       dragGhost.style.left=`${event.clientX}px`;
       dragGhost.style.top=`${event.clientY}px`;
     }
@@ -1288,299 +1213,311 @@ function installDragging() {
   document.addEventListener("pointerup",event=>{
     if(!dragState||event.pointerId!==dragState.pointerId) return;
     clearTimeout(dragTimer);
-    if(dragState.started) {
+    if(dragState.started){
       const target=findDropTarget(event.clientX,event.clientY);
-      if(target) moveLessonToTarget(dragState.lessonId,target,event.clientY);
+      if(target) moveLesson(dragState.lessonId,target,event.clientY);
       suppressClickUntil=Date.now()+500;
     }
     stopDrag();
   });
   document.addEventListener("pointercancel",stopDrag);
   document.addEventListener("click",event=>{
-    if(Date.now()<suppressClickUntil&&event.target.closest("[data-edit-lesson]")) {
+    if(Date.now()<suppressClickUntil&&event.target.closest("[data-edit-lesson]")){
       event.preventDefault();
       event.stopImmediatePropagation();
     }
   },true);
 }
 
-/* Eksport ICS z zakresem dat i wyborem planu (przedmiot/klasa/rok). */
-function icsEscape(value) {
-  return String(value||"").replace(/\\/g,"\\\\").replace(/\n/g,"\\n").replace(/,/g,"\\,").replace(/;/g,"\\;");
+/* Eksport ICS: nazwa wydarzenia zawiera tylko przedmiot i numer lekcji. */
+function escapeIcs(value){
+  return String(value||"").replace(/\\/g,"\\\\").replace(/\r?\n/g,"\\n").replace(/,/g,"\\,").replace(/;/g,"\\;");
 }
-function icsUtc(iso) {
+function utcIcs(iso){
   return new Date(iso).toISOString().replace(/[-:]/g,"").replace(/\.\d{3}/,"");
 }
-function exportIcs() {
+function exportIcs(){
   const from=$("exportStartDate").value;
   const to=$("exportEndDate").value;
   const exportAll=$("exportAllSubjects").checked;
 
-  if(!from||!to) { $("icsMessage").textContent=T.chooseRange; return; }
-  if(from>to) { $("icsMessage").textContent=T.invalidRange; return; }
+  if(!from||!to){$("icsMessage").textContent=T.chooseRange;return;}
+  if(from>to){$("icsMessage").textContent=T.invalidRange;return;}
 
-  const selected=new Set(
-    [...document.querySelectorAll("[data-export-plan]:checked")].map(input=>input.value)
-  );
-  if(!exportAll&&!selected.size) {
-    $("icsMessage").textContent=T.chooseExportSubject;
-    return;
-  }
+  const selected=new Set([...document.querySelectorAll("[data-export-plan]:checked")].map(input=>input.value));
+  if(!exportAll&&!selected.size){$("icsMessage").textContent=T.chooseExportPlan;return;}
 
-  const lessonsToExport=lessons.filter(lesson=>{
+  const output=lessons.filter(lesson=>{
     const lessonDate=dateInZone(lesson.start,displayZone());
-    const key=`${lesson.subjectId}|${lessonSchoolYear(lesson)}`;
-    return lessonDate>=from&&lessonDate<=to&&(exportAll||selected.has(key));
+    const planKey=`${lesson.subjectId}|${lessonSchoolYear(lesson)}`;
+    return lessonDate>=from&&lessonDate<=to&&(exportAll||selected.has(planKey));
   });
 
-  if(!lessonsToExport.length) { $("icsMessage").textContent=T.noExportMatches; return; }
+  if(!output.length){$("icsMessage").textContent=T.noExportMatches;return;}
 
-  const lines=[
-    "BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Lesson Calendar//",
-    "CALSCALE:GREGORIAN"
-  ];
-
-  lessonsToExport.forEach(lesson=>{
+  const lines=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Lesson Calendar//","CALSCALE:GREGORIAN"];
+  output.forEach(lesson=>{
     const title=lessonTitle(lesson);
     lines.push(
       "BEGIN:VEVENT",
-      `UID:${icsEscape(lesson.uid||lesson.id)}@calendar`,
-      `DTSTAMP:${icsUtc(new Date().toISOString())}`,
-      `DTSTART:${icsUtc(lesson.start)}`,
-      `DTEND:${icsUtc(new Date(new Date(lesson.start).getTime()+45*60000).toISOString())}`,
-      `SUMMARY:${icsEscape(title)}`
+      `UID:${escapeIcs(lesson.uid||lesson.id)}@calendar`,
+      `DTSTAMP:${utcIcs(new Date().toISOString())}`,
+      `DTSTART:${utcIcs(lesson.start)}`,
+      `DTEND:${utcIcs(new Date(new Date(lesson.start).getTime()+45*60000).toISOString())}`,
+      `SUMMARY:${escapeIcs(title)}`
     );
-
     (lesson.alarms||[]).forEach(minutes=>{
-      lines.push(
-        "BEGIN:VALARM",
-        `TRIGGER:-PT${Math.max(0,Number(minutes)||0)}M`,
-        "ACTION:DISPLAY",
-        `DESCRIPTION:${icsEscape(title)}`,
-        "END:VALARM"
-      );
+      lines.push("BEGIN:VALARM",`TRIGGER:-PT${Math.max(0,Number(minutes)||0)}M`,
+        "ACTION:DISPLAY",`DESCRIPTION:${escapeIcs(title)}`,"END:VALARM");
     });
     lines.push("END:VEVENT");
   });
-
   lines.push("END:VCALENDAR");
+
   const url=URL.createObjectURL(new Blob([lines.join("\r\n")],{type:"text/calendar;charset=utf-8"}));
   const link=document.createElement("a");
   link.href=url;
   link.download=`lessons-${from}-${to}.ics`;
   link.click();
   setTimeout(()=>URL.revokeObjectURL(url),1000);
-  $("icsMessage").textContent=`${T.exported}: ${lessonsToExport.length}`;
+  $("icsMessage").textContent=`${T.exported}: ${output.length}`;
 }
 
-/* Import ICS */
-function parseIcsProperties(block) {
+/* Import ICS: obsługa łamanych linii, TZID, UTC, alarmów, UID i deduplikacji. */
+function unfoldIcs(text){
+  return text.replace(/\r?\n[ \t]/g,"");
+}
+function parseIcsEvent(block){
   const result={};
   block.split(/\r?\n/).forEach(line=>{
     const colon=line.indexOf(":");
     if(colon<0) return;
     const left=line.slice(0,colon).split(";");
     const params={};
-    left.slice(1).forEach(part=>{
-      const equals=part.indexOf("=");
-      if(equals>0) params[part.slice(0,equals).toUpperCase()]=part.slice(equals+1).replace(/^"|"$/g,"");
+    left.slice(1).forEach(item=>{
+      const equals=item.indexOf("=");
+      if(equals>0){
+        params[item.slice(0,equals).toUpperCase()]=item.slice(equals+1).replace(/^"|"$/g,"");
+      }
     });
-    result[left[0].toUpperCase()]={value:line.slice(colon+1),params};
+    const key=left[0].toUpperCase();
+    if(!result[key]) result[key]=[];
+    result[key].push({value:line.slice(colon+1),params});
   });
   return result;
 }
-function unescapeIcs(value) {
-  return String(value||"").replace(/\\n/gi,"\n").replace(/\\,/g,",").replace(/\\;/g,";").replace(/\\\\/g,"\\");
+function firstIcsValue(event,key){
+  return event[key]?.[0]||null;
 }
-function parseIcsDate(property) {
-  if(!property?.value) return null;
-  const value=property.value;
-  const tz=property.params?.TZID||displayZone();
+function unescapeIcs(value){
+  return String(value||"")
+    .replace(/\\N/gi,"\n")
+    .replace(/\\,/g,",")
+    .replace(/\\;/g,";")
+    .replace(/\\\\/g,"\\");
+}
+function parseIcsDate(prop){
+  if(!prop?.value) return null;
+  const value=prop.value;
+  const tz=prop.params?.TZID||displayZone();
 
-  if(/^\d{8}T\d{6}Z$/.test(value)) {
+  if(/^\d{8}T\d{6}Z$/.test(value)){
     return new Date(Date.UTC(
       Number(value.slice(0,4)),Number(value.slice(4,6))-1,Number(value.slice(6,8)),
       Number(value.slice(9,11)),Number(value.slice(11,13)),Number(value.slice(13,15))
     )).toISOString();
   }
-  if(/^\d{8}T\d{6}$/.test(value)) {
+  if(/^\d{8}T\d{6}$/.test(value)){
     return zonedIso(
       `${value.slice(0,4)}-${value.slice(4,6)}-${value.slice(6,8)}`,
       `${value.slice(9,11)}:${value.slice(11,13)}`,tz
     );
   }
-  if(/^\d{8}$/.test(value)) {
-    return zonedIso(`${value.slice(0,4)}-${value.slice(4,6)}-${value.slice(6,8)}`,"09:00",tz);
+  if(/^\d{8}$/.test(value)){
+    return zonedIso(
+      `${value.slice(0,4)}-${value.slice(4,6)}-${value.slice(6,8)}`,"09:00",tz
+    );
   }
   return null;
 }
-function unusedSubjectColor() {
-  const used=new Set(subjects.map(s=>(s.color||"").trim().toLowerCase()));
-  const available=palette.find(color=>!used.has(color.toLowerCase()));
+function freshColor(){
+  const used=new Set(subjects.map(subject=>String(subject.color||"").toLowerCase()));
+  const available=COLORS.find(color=>!used.has(color.toLowerCase()));
   if(available) return available;
-  for(let hue=0;hue<360;hue+=17) {
+  for(let hue=0;hue<360;hue+=17){
     const color=`hsl(${hue} 68% 45%)`;
     if(!used.has(color.toLowerCase())) return color;
   }
-  let color;
-  do {
-    color=`#${Math.floor(Math.random()*0xffffff).toString(16).padStart(6,"0")}`;
-  } while(used.has(color.toLowerCase()));
-  return color;
+  return "#5147e8";
 }
-function findOrCreateSubject(summary) {
-  const title=summary.trim();
-  const existing=[...subjects].sort((a,b)=>b.name.length-a.name.length)
-    .find(item=>title.toLowerCase().startsWith((item.name+" ").toLowerCase()));
-  if(existing) return existing;
+function findSubjectFromIcsTitle(title){
+  const clean=String(title||"").trim();
+  const sorted=[...subjects].sort((a,b)=>b.name.length-a.name.length);
+  const found=sorted.find(subject=>
+    clean.toLocaleLowerCase()===subject.name.toLocaleLowerCase()||
+    clean.toLocaleLowerCase().startsWith((subject.name+" ").toLocaleLowerCase())||
+    clean.toLocaleLowerCase().startsWith((subject.name+"-").toLocaleLowerCase())
+  );
+  if(found) return found;
 
-  const stripped=title.match(/^(.*?)[\s_-]+\d+$/)?.[1];
-  const name=(stripped||title).trim()||T.noSubject;
-  let found=subjects.find(item=>normalizeName(item.name)===normalizeName(name));
-  if(!found) {
-    found={id:makeId(),name,color:unusedSubjectColor(),defaultPlannedCount:0,yearPlans:[]};
-    subjects.push(found);
+  /* Jeśli tytuł kończy się numerem lekcji, usuń ten numer przy tworzeniu nazwy przedmiotu. */
+  const extracted=clean.replace(/[\s_-]+\d+$/,"").trim();
+  const name=extracted||clean||T.noSubject;
+  let subject=subjects.find(item=>normalizedName(item.name)===normalizedName(name));
+  if(!subject){
+    subject={id:makeId(),name,color:freshColor(),defaultPlannedCount:0,yearPlans:[]};
+    subjects.push(subject);
   }
-  return found;
+  return subject;
 }
-function inferImportGrade(subjectId,schoolYear) {
-  const earlier=subjectPlans(subjectById(subjectId))
-    .filter(plan=>schoolYearStart(plan.schoolYear)<schoolYearStart(schoolYear)&&plan.grade)
-    .sort((a,b)=>schoolYearStart(b.schoolYear)-schoolYearStart(a.schoolYear));
-  if(earlier.length) return Math.min(8,Number(earlier[0].grade)+1);
-  return Number(subjectById(subjectId)?.grade)||1;
+function inferGradeForYear(subject,schoolYear,fallbackGrade){
+  const plans=subjectPlans(subject).filter(plan=>plan.grade);
+  const target=schoolYearStart(schoolYear);
+  if(!plans.length) return Number(fallbackGrade)||1;
+
+  const closest=[...plans].sort((a,b)=>
+    Math.abs(schoolYearStart(a.schoolYear)-target)-Math.abs(schoolYearStart(b.schoolYear)-target)
+  )[0];
+  const difference=target-schoolYearStart(closest.schoolYear);
+  return Math.max(1,Math.min(8,Number(closest.grade)+difference));
 }
-async function importIcs() {
+function parseAlarmMinutes(block){
+  const alarms=[];
+  const alarmBlocks=block.match(/BEGIN:VALARM[\s\S]*?END:VALARM/gi)||[];
+  alarmBlocks.forEach(alarm=>{
+    const trigger=alarm.match(/(?:^|\r?\n)TRIGGER(?:;[^:]*)?:([^\r\n]+)/i)?.[1]||"";
+    const minutes=trigger.match(/-?PT(\d+)M/i);
+    const hours=trigger.match(/-?PT(\d+)H/i);
+    const days=trigger.match(/-?P(\d+)D/i);
+    if(minutes) alarms.push(Number(minutes[1]));
+    else if(hours) alarms.push(Number(hours[1])*60);
+    else if(days) alarms.push(Number(days[1])*1440);
+  });
+  return alarms;
+}
+async function importIcs(){
   const file=$("icsFile").files[0];
-  if(!file) { $("icsMessage").textContent=T.chooseFile; return; }
+  if(!file){$("icsMessage").textContent=T.chooseFile;return;}
 
-  try {
-    const text=(await file.text()).replace(/\r?\n[ \t]/g,"");
+  try{
+    const text=unfoldIcs(await file.text());
     const blocks=text.match(/BEGIN:VEVENT[\s\S]*?END:VEVENT/gi)||[];
-    const imported=[];
-    const existingUids=new Set(lessons.map(lesson=>lesson.uid).filter(Boolean));
+    if(!blocks.length){$("icsMessage").textContent=T.importNoEvents;return;}
 
-    for(const block of blocks) {
-      const properties=parseIcsProperties(block);
-      const start=parseIcsDate(properties.DTSTART);
+    const existingUids=new Set(lessons.map(lesson=>lesson.uid).filter(Boolean));
+    const added=[];
+    let skipped=0;
+    const fallbackGrade=Number($("icsFallbackGrade").value)||5;
+
+    for(const block of blocks){
+      const event=parseIcsEvent(block);
+      const startProp=firstIcsValue(event,"DTSTART");
+      const start=parseIcsDate(startProp);
       if(!start) continue;
 
-      const eventUid=properties.UID?.value||"";
-      if(eventUid&&existingUids.has(eventUid)) continue;
+      const uid=firstIcsValue(event,"UID")?.value||"";
+      if(uid&&existingUids.has(uid)){skipped++;continue;}
 
-      const title=unescapeIcs(properties.SUMMARY?.value||T.noSubject);
-      const s=findOrCreateSubject(title);
-      const tz=properties.DTSTART?.params?.TZID||displayZone();
-      const schoolYear=getSchoolYear(dateInZone(start,tz),tz);
-      let plan=planFor(s.id,schoolYear);
+      const title=unescapeIcs(firstIcsValue(event,"SUMMARY")?.value||T.noSubject);
+      const description=unescapeIcs(firstIcsValue(event,"DESCRIPTION")?.value||"");
+      const subject=findSubjectFromIcsTitle(title);
+      const timeZone=startProp?.params?.TZID||displayZone();
+      const date=dateInZone(start,timeZone);
+      const schoolYear=schoolYearForDate(date,timeZone);
 
-      if(!plan) {
-        const grade=inferImportGrade(s.id,schoolYear);
-        plan={schoolYear,grade,plannedCount:Number(s.defaultPlannedCount)||0};
-        s.yearPlans.push(plan);
+      let plan=planFor(subject.id,schoolYear);
+      if(!plan){
+        plan={
+          schoolYear,
+          grade:inferGradeForYear(subject,schoolYear,fallbackGrade),
+          plannedCount:Number(subject.defaultPlannedCount)||0
+        };
+        subject.yearPlans.push(plan);
       }
 
-      const alarms=[...block.matchAll(/TRIGGER\s*[:=]\s*-?PT(\d+)M/gi)]
-        .map(match=>Number(match[1])).filter(Number.isFinite);
-
-      imported.push({
+      added.push({
         id:makeId(),
-        uid:eventUid,
-        subjectId:s.id,
+        uid,
+        subjectId:subject.id,
         start,
-        timeZone:tz,
+        timeZone,
         schoolYear,
-        grade:plan.grade,
+        grade:Number(plan.grade)||fallbackGrade,
         attendance:"unknown",
-        alarms,
-        note:unescapeIcs(properties.DESCRIPTION?.value||"")
+        alarms:parseAlarmMinutes(block),
+        note:description
       });
-      if(eventUid) existingUids.add(eventUid);
+      if(uid) existingUids.add(uid);
     }
 
-    if(!imported.length) { $("icsMessage").textContent=T.noImported; return; }
-    lessons.push(...imported);
+    if(!added.length){
+      $("icsMessage").textContent=skipped
+        ?`${T.noImported} ${T.importSkipped}: ${skipped}`
+        :T.importNoEvents;
+      return;
+    }
+
+    lessons.push(...added);
     renderAll();
     $("icsFile").value="";
-    $("icsMessage").textContent=`${imported.length} ${T.imported}`;
-  } catch(error) {
+    $("icsMessage").textContent=`${added.length} ${T.imported}${skipped?` ${T.importSkipped}: ${skipped}`:""}`;
+  }catch(error){
     console.error(error);
     $("icsMessage").textContent=T.importError;
   }
 }
 
-async function loadJson(path,fallback) {
-  try {
-    const response=await fetch(path);
-    if(!response.ok) throw new Error("JSON load failed");
-    return await response.json();
-  } catch {
-    return fallback;
-  }
-}
-async function copyJson(id) {
-  try {
-    await navigator.clipboard.writeText($(id).value);
-    alert(T.copied);
-  } catch {
-    $(id).select();
-    document.execCommand("copy");
-    alert(T.copied);
-  }
-}
-
-/* Migracja starych danych: scalanie kopii tego samego przedmiotu przypisanych do klas. */
-function migrateData(loadedSubjects,loadedLessons) {
-  const oldSubjects=Array.isArray(loadedSubjects)?loadedSubjects:[];
-  const oldLessons=Array.isArray(loadedLessons)?loadedLessons:[];
+/* Migracja wcześniejszego formatu subjects.json / lessons.json. */
+function migrateData(oldSubjects,oldLessons){
+  const sourceSubjects=Array.isArray(oldSubjects)?oldSubjects:[];
+  const sourceLessons=Array.isArray(oldLessons)?oldLessons:[];
   const byName=new Map();
-  const idMap=new Map();
-  const migratedSubjects=[];
+  const oldIdToNewId=new Map();
+  const newSubjects=[];
 
-  oldSubjects.forEach(old=>{
+  sourceSubjects.forEach(old=>{
     const name=String(old.name||T.noSubject).trim();
-    const key=normalizeName(name);
+    const key=normalizedName(name);
     let current=byName.get(key);
 
-    if(!current) {
+    if(!current){
       current={
         id:old.id||makeId(),
         name,
-        color:old.color||unusedSubjectColor(),
+        color:old.color||freshColor(),
         defaultPlannedCount:Number(old.defaultPlannedCount??old.plannedCount)||0,
         yearPlans:[]
       };
       byName.set(key,current);
-      migratedSubjects.push(current);
-    } else {
-      if(!current.color&&old.color) current.color=old.color;
+      newSubjects.push(current);
+    }else{
       current.defaultPlannedCount=current.defaultPlannedCount||Number(old.defaultPlannedCount??old.plannedCount)||0;
     }
+    oldIdToNewId.set(old.id,current.id);
 
-    idMap.set(old.id,current.id);
-
-    if(Array.isArray(old.yearPlans)) {
+    if(Array.isArray(old.yearPlans)){
       old.yearPlans.forEach(plan=>{
-        const exists=current.yearPlans.some(p=>p.schoolYear===plan.schoolYear);
-        if(!exists) current.yearPlans.push({
-          schoolYear:String(plan.schoolYear),
-          grade:Number(plan.grade)||null,
-          plannedCount:Number(plan.plannedCount)||0
-        });
+        if(!current.yearPlans.some(item=>item.schoolYear===String(plan.schoolYear))){
+          current.yearPlans.push({
+            schoolYear:String(plan.schoolYear),
+            grade:Number(plan.grade)||null,
+            plannedCount:Number(plan.plannedCount)||0
+          });
+        }
       });
     }
 
-    if(old.grade) {
-      const year=String(old.schoolYear||"");
-      const matchingLessons=oldLessons.filter(l=>l.subjectId===old.id);
-      const inferredYears=year
-        ?[year]
-        :[...new Set(matchingLessons.map(l=>getSchoolYear(
-          dateInZone(l.start,l.timeZone||displayZone()),l.timeZone||displayZone()
-        )))];
+    if(old.grade){
+      const linked=sourceLessons.filter(lesson=>lesson.subjectId===old.id);
+      const years=old.schoolYear
+        ?[String(old.schoolYear)]
+        :[...new Set(linked.map(lesson=>{
+          const tz=lesson.timeZone||displayZone();
+          return schoolYearForDate(dateInZone(lesson.start,tz),tz);
+        }))];
 
-      inferredYears.forEach(schoolYear=>{
-        if(!current.yearPlans.some(p=>p.schoolYear===schoolYear)) {
+      years.forEach(schoolYear=>{
+        if(!current.yearPlans.some(plan=>plan.schoolYear===schoolYear)){
           current.yearPlans.push({
             schoolYear,
             grade:Number(old.grade),
@@ -1591,38 +1528,58 @@ function migrateData(loadedSubjects,loadedLessons) {
     }
   });
 
-  const migratedLessons=oldLessons.map(old=>{
-    const newSubjectId=idMap.get(old.subjectId)||old.subjectId;
-    const relatedOld=oldSubjects.find(s=>s.id===old.subjectId);
-    const tz=old.timeZone||displayZone();
-    const schoolYear=String(old.schoolYear||getSchoolYear(dateInZone(old.start,tz),tz));
-    const s=migratedSubjects.find(item=>item.id===newSubjectId);
-    let plan=s?.yearPlans.find(item=>item.schoolYear===schoolYear);
+  const newLessons=sourceLessons.map(old=>{
+    const subjectId=oldIdToNewId.get(old.subjectId)||old.subjectId;
+    const oldSubject=sourceSubjects.find(subject=>subject.id===old.subjectId);
+    const timeZone=old.timeZone||displayZone();
+    const schoolYear=String(old.schoolYear||schoolYearForDate(dateInZone(old.start,timeZone),timeZone));
+    const current=newSubjects.find(subject=>subject.id===subjectId);
+    let plan=current?.yearPlans.find(item=>item.schoolYear===schoolYear);
 
-    if(!plan&&s) {
+    if(!plan&&current){
       plan={
         schoolYear,
-        grade:Number(old.grade||relatedOld?.grade)||null,
-        plannedCount:Number(relatedOld?.plannedCount)||Number(s.defaultPlannedCount)||0
+        grade:Number(old.grade||oldSubject?.grade)||null,
+        plannedCount:Number(oldSubject?.plannedCount)||Number(current.defaultPlannedCount)||0
       };
-      s.yearPlans.push(plan);
+      current.yearPlans.push(plan);
     }
 
     return {
       ...old,
-      subjectId:newSubjectId,
+      subjectId,
       schoolYear,
-      grade:Number(old.grade)||Number(plan?.grade)||Number(relatedOld?.grade)||null,
-      timeZone:tz,
+      grade:Number(old.grade)||Number(plan?.grade)||Number(oldSubject?.grade)||null,
+      timeZone,
       alarms:Array.isArray(old.alarms)?old.alarms:[]
     };
   });
 
-  migratedSubjects.forEach(ensureSubjectPlans);
-  return {subjects:migratedSubjects,lessons:migratedLessons};
+  newSubjects.forEach(subject=>subjectPlans(subject));
+  return {subjects:newSubjects,lessons:newLessons};
 }
 
-/* Nawigacja i obsługa interfejsu */
+async function loadJson(path,fallback){
+  try{
+    const response=await fetch(path);
+    if(!response.ok) throw new Error("Failed to load JSON");
+    return await response.json();
+  }catch{
+    return fallback;
+  }
+}
+async function copyJson(id){
+  try{
+    await navigator.clipboard.writeText($(id).value);
+    alert(T.copied);
+  }catch{
+    $(id).select();
+    document.execCommand("copy");
+    alert(T.copied);
+  }
+}
+
+/* Przyciski i pola formularzy */
 $("prevBtn").addEventListener("click",()=>{
   if(mode==="month") cursor=new Date(cursor.getFullYear(),cursor.getMonth()-1,1);
   else cursor.setDate(cursor.getDate()-7);
@@ -1636,7 +1593,7 @@ $("nextBtn").addEventListener("click",()=>{
   renderAll();
 });
 $("todayBtn").addEventListener("click",()=>{
-  cursor=new Date(); cursor.setHours(0,0,0,0); selectedDate=new Date(cursor); renderAll();
+  cursor=new Date();cursor.setHours(0,0,0,0);selectedDate=new Date(cursor);renderAll();
 });
 $("monthBtn").addEventListener("click",()=>{mode="month";renderCalendar();});
 $("weekBtn").addEventListener("click",()=>{mode="week";renderCalendar();});
@@ -1654,18 +1611,30 @@ $("saveSubjectBtn").addEventListener("click",saveSubject);
 $("cancelSubjectEditBtn").addEventListener("click",resetSubjectForm);
 $("attendanceFilter").addEventListener("change",renderAdmin);
 $("saveDisplayZoneBtn").addEventListener("click",()=>{
-  settings.displayTimeZone=$("displayZone").value||defaultZone;
+  settings.displayTimeZone=$("displayZone").value||DEFAULT_ZONE;
   renderAll();
 });
 $("lessonSubject").addEventListener("change",()=>{
-  updateSchoolYearLabel();
-  const year=getSchoolYear($("lessonDate").value,$("eventZone").value||displayZone());
+  const year=schoolYearForDate($("lessonDate").value,$("eventZone").value||displayZone());
   const plan=planFor($("lessonSubject").value,year);
   $("lessonYearPlan").value=String(plan?.plannedCount||subjectById($("lessonSubject").value)?.defaultPlannedCount||20);
-  populateGradeOptions(year,plan?.grade);
+  populateGradeOptions(year,plan?.grade||null);
 });
-$("lessonDate").addEventListener("change",updateSchoolYearLabel);
-$("eventZone").addEventListener("change",updateSchoolYearLabel);
+$("lessonDate").addEventListener("change",()=>{
+  const year=schoolYearForDate($("lessonDate").value,$("eventZone").value||displayZone());
+  $("schoolYearLabel").textContent=schoolYearLabel(year);
+  populateGradeOptions(year,$("lessonGrade").value);
+});
+$("eventZone").addEventListener("change",()=>{
+  const year=schoolYearForDate($("lessonDate").value,$("eventZone").value||displayZone());
+  $("schoolYearLabel").textContent=schoolYearLabel(year);
+  populateGradeOptions(year,$("lessonGrade").value);
+});
+$("lessonGrade").addEventListener("change",renderEarlierLessons);
+$("showUsedGrades").addEventListener("change",()=>{
+  const year=schoolYearForDate($("lessonDate").value,$("eventZone").value||displayZone());
+  populateGradeOptions(year,$("lessonGrade").value);
+});
 $("lessonForm").addEventListener("submit",saveLesson);
 $("cancelLessonBtn").addEventListener("click",()=>$("lessonDialog").close());
 $("exportIcsBtn").addEventListener("click",exportIcs);
@@ -1678,8 +1647,8 @@ $("selectAllLessons").addEventListener("change",()=>{
   renderAdmin();
 });
 $("deleteSelectedLessonsBtn").addEventListener("click",()=>{
-  if(!selectedLessonIds.size) { alert(T.noneSelected); return; }
-  if(!confirm(T.confirmDeleteMany)) return;
+  if(!selectedLessonIds.size){alert(T.noneSelected);return;}
+  if(!confirm(T.confirmDeleteMany))return;
   lessons=lessons.filter(lesson=>!selectedLessonIds.has(lesson.id));
   selectedLessonIds.clear();
   renderAll();
@@ -1688,24 +1657,32 @@ document.querySelectorAll(".copyJson").forEach(button=>{
   button.addEventListener("click",()=>copyJson(button.dataset.target));
 });
 
-async function start() {
-  const [loadedSubjects,loadedLessons,loadedSettings]=await Promise.all([
+async function start(){
+  const [oldSubjects,oldLessons,loadedSettings]=await Promise.all([
     loadJson("./data/subjects.json",[]),
     loadJson("./data/lessons.json",[]),
-    loadJson("./data/settings.json",{displayTimeZone:defaultZone})
+    loadJson("./data/settings.json",{displayTimeZone:DEFAULT_ZONE})
   ]);
 
   settings=loadedSettings&&typeof loadedSettings==="object"
-    ?loadedSettings:{displayTimeZone:defaultZone};
-  if(!settings.displayTimeZone) settings.displayTimeZone=defaultZone;
+    ?loadedSettings:{displayTimeZone:DEFAULT_ZONE};
+  if(!settings.displayTimeZone) settings.displayTimeZone=DEFAULT_ZONE;
 
-  // Załaduj bazowe rekordy przed migracją, by dobór kolorów mógł sprawdzić istniejące kolory.
-  subjects=Array.isArray(loadedSubjects)?loadedSubjects:[];
-  const migrated=migrateData(loadedSubjects,loadedLessons);
+  const migrated=migrateData(oldSubjects,oldLessons);
   subjects=migrated.subjects;
   lessons=migrated.lessons;
 
-  renderZones();
+  const zones=[...new Set([DEFAULT_ZONE,DEVICE_ZONE,"Europe/Warsaw","Europe/London","Europe/Paris","UTC",displayZone()])];
+  const zoneOptions=zones.map(zone=>`<option value="${esc(zone)}">${esc(zone)}</option>`).join("");
+  $("displayZone").innerHTML=zoneOptions;
+  $("eventZone").innerHTML=zoneOptions;
+  $("displayZone").value=displayZone();
+  $("eventZone").value=displayZone();
+
+  $("icsFallbackGrade").innerHTML=`<option value="5">5 ${T.class}</option>`+
+    [1,2,3,4,6,7,8].map(grade=>`<option value="${grade}">${grade} ${T.class}</option>`).join("");
+  $("icsFallbackGrade").value="5";
+
   renderAll();
   $("loadMessage").textContent=T.dragHint;
 }

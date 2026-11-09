@@ -1,11 +1,1 @@
-[
-  {
-    "id": "lekcja-1",
-    "subjectId": "matematyka",
-    "start": "2026-11-10T15:00:00.000Z",
-    "timeZone": "Europe/Warsaw",
-    "attendance": "unknown",
-    "alarms": [60, 39, 10],
-    "note": ""
-  }
-]
+[]

@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#f6f7fb">
+  <title>Kalendarz lekcji</title>
+  <style>
+    :root {
+      --bg: #f6f7fb; --card: #fff; --ink: #202536; --muted: #687086;
+      --line: #e5e8f0; --accent: #5147e8; --danger: #bd2d45;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box }
+    body { margin: 0; background: var(--bg); color: var(--ink) }
+    button, input, select, textarea { font: inherit }
+    button {
+      border: 1px solid var(--line); background: white; color: var(--ink);
+      border-radius: 10px; padding: 9px 13px; cursor: pointer;
+    }
+    button:hover { border-color: var(--accent) }
+    button.primary { background: var(--accent); border-color: var(--accent); color: white }
+    button.danger { color: var(--danger) }
+    .wrap { max-width: 1100px; margin: auto; padding: 20px; padding-bottom: 50px }
+    header, .toolbar, .row, .actions { display: flex; align-items: center; gap: 10px }
+    header { justify-content: space-between; margin-bottom: 16px }
+    h1 { margin: 0; font-size: clamp(22px, 5vw, 30px) }
+    h2 { font-size: 19px; margin: 0 0 12px }
+    h3 { font-size: 16px; margin: 0 0 8px }
+    .toolbar { flex-wrap: wrap; margin-bottom: 12px }
+    .toolbar .spacer { flex: 1 }
+    .period { min-width: 180px; font-weight: 700; text-align: center }
+    .tabs { display: flex; gap: 6px }
+    .tabs button.active { background: #eeedff; color: var(--accent); border-color: #d8d5ff }
+    .panel, .calendar, .admin-card, dialog {
+      background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+    }
+    .calendar { overflow: hidden; animation: appear .18s ease-out }
+    @keyframes appear { from { opacity: .55; transform: translateY(4px) } to { opacity: 1; transform: none } }
+    .weekdays, .grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)) }
+    .weekdays { background: #fafaff; border-bottom: 1px solid var(--line) }
+    .weekday { padding: 10px 5px; text-align: center; color: var(--muted); font-size: 12px }
+    .day {
+      min-height: 112px; padding: 7px; border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line); overflow: hidden;
+    }
+    .day.outside { background: #fafbfe; color: #a0a5b3 }
+    .day.today .daynum { background: var(--accent); color: white }
+    .daynum { display: inline-grid; place-items: center; width: 27px; height: 27px; border-radius: 50%; font-size: 13px }
+    .event {
+      display: block; width: 100%; text-align: left; margin-top: 4px; padding: 4px 6px;
+      border: 0; border-left: 4px solid var(--event-color, #5147e8); border-radius: 5px;
+      background: color-mix(in srgb, var(--event-color, #5147e8) 12%, white);
+      font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .week .day { min-height: 300px }
+    .week .event { white-space: normal }
+    .section { margin-top: 18px }
+    .admin-card { padding: 16px; margin-top: 12px }
+    .admin-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px }
+    label { display: block; font-size: 13px; color: var(--muted); margin: 8px 0 4px }
+    input, select, textarea {
+      width: 100%; padding: 9px 10px; border: 1px solid var(--line); border-radius: 9px;
+      background: white; color: var(--ink);
+    }
+    textarea { min-height: 105px; font-family: ui-monospace, monospace; font-size: 12px }
+    .form-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap }
+    .muted, .hint { color: var(--muted); font-size: 13px }
+    .stats { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 }
+    .stat { background: #f2f3f9; border-radius: 10px; padding: 9px 12px; font-size: 13px }
+    .lesson-row { display: flex; justify-content: space-between; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line) }
+    .lesson-row:last-child { border-bottom: 0 }
+    dialog { width: min(500px, calc(100% - 24px)); padding: 20px; box-shadow: 0 16px 50px #20253633 }
+    dialog::backdrop { background: #171b2a66 }
+    .dialog-actions { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; margin-top: 15px }
+    .hidden { display: none !important }
+    @media (max-width: 650px) {
+      .wrap { padding: 12px }
+      .day { min-height: 82px; padding: 4px }
+      .week .day { min-height: 210px }
+      .event { font-size: 10px; padding: 3px }
+      .admin-grid { grid-template-columns: 1fr }
+      header { align-items: flex-start }
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Kalendarz lekcji</h1>
+    <button id="adminToggle" class="primary">Admin</button>
+  </header>
+
+  <main id="calendarView">
+    <div class="toolbar">
+      <button id="prevBtn" aria-label="Poprzedni okres">Wstecz</button>
+      <button id="todayBtn">Dziś</button>
+      <button id="nextBtn" aria-label="Następny okres">Dalej</button>
+      <div id="period" class="period"></div>
+      <span class="spacer"></span>
+      <div class="tabs">
+        <button id="monthBtn" class="active">Miesiąc</button>
+        <button id="weekBtn">Tydzień</button>
+      </div>
+    </div>
+    <div id="calendar" class="calendar"></div>
+    <p id="loadMessage" class="hint"></p>
+  </main>
+
+  <section id="adminView" class="hidden section">
+    <div class="row" style="justify-content:space-between">
+      <h2>Panel Admin</h2>
+      <button id="backBtn">Wróć do kalendarza</button>
+    </div>
+
+    <div class="admin-card">
+      <h3>Dodaj przedmiot</h3>
+      <div class="admin-grid">
+        <div><label for="subjectName">Nazwa przedmiotu</label><input id="subjectName" placeholder="np. Matematyka"></div>
+        <div><label for="subjectColor">Kolor</label><input id="subjectColor" type="color" value="#5147e8"></div>
+      </div>
+      <div class="form-actions"><button id="addSubjectBtn" class="primary">Dodaj przedmiot</button></div>
+      <p class="hint">Przedmioty można dodawać. Ich edycja i usuwanie nie są dostępne w tej wersji.</p>
+    </div>
+
+    <div class="admin-card">
+      <h3 id="lessonFormTitle">Dodaj lekcję</h3>
+      <input id="lessonId" type="hidden">
+      <div class="admin-grid">
+        <div><label for="lessonSubject">Przedmiot</label><select id="lessonSubject"></select></div>
+        <div><label for="lessonDate">Data</label><input id="lessonDate" type="date"></div>
+        <div><label for="lessonTime">Godzina rozpoczęcia</label><input id="lessonTime" type="time"></div>
+        <div><label for="lessonZone">Strefa czasowa lekcji</label><select id="lessonZone"></select></div>
+        <div>
+          <label for="lessonAttendance">Obecność</label>
+          <select id="lessonAttendance">
+            <option value="unknown">Nieustalona</option>
+            <option value="present">Obecność</option>
+            <option value="absent">Nieobecność</option>
+          </select>
+        </div>
+        <div><label for="lessonAlarms">Alarmy przed lekcją (minuty, po przecinku)</label><input id="lessonAlarms" value="60,39,10" placeholder="60,39,10"></div>
+      </div>
+      <label for="lessonNote">Notatka (opcjonalnie)</label>
+      <textarea id="lessonNote" rows="2"></textarea>
+      <div class="form-actions">
+        <button id="saveLessonBtn" class="primary">Dodaj lekcję</button>
+        <button id="cancelEditBtn" class="hidden">Anuluj edycję</button>
+      </div>
+      <p class="hint">Lekcja trwa 45 minut. Godziny są zapisywane jako czas UTC wraz ze strefą ustawioną dla lekcji.</p>
+    </div>
+
+    <div class="admin-card">
+      <h3>Obecność</h3>
+      <div id="stats" class="stats"></div>
+      <div id="lessonList"></div>
+    </div>
+
+    <div class="admin-card">
+      <h3>Eksport</h3>
+      <p class="hint">CSV zawiera lekcje, a plik ICS można zaimportować do kalendarza. Alarmy są dodawane do wydarzeń w ICS.</p>
+      <div class="form-actions">
+        <button id="csvBtn">Pobierz CSV</button>
+        <button id="icsBtn">Pobierz .ics</button>
+      </div>
+    </div>
+
+    <div class="admin-card">
+      <h3>Zapis zmian do repozytorium</h3>
+      <p class="hint">Skopiuj każdy JSON do wskazanego pliku w repozytorium, zatwierdź zmianę i opublikuj aktualizację. Inne urządzenia zobaczą dane po ponownym wczytaniu strony.</p>
+      <label for="subjectsJson">data/subjects.json</label><textarea id="subjectsJson" readonly></textarea>
+      <button class="copyJson" data-target="subjectsJson">Kopiuj JSON przedmiotów</button>
+      <label for="lessonsJson">data/lessons.json</label><textarea id="lessonsJson" readonly></textarea>
+      <button class="copyJson" data-target="lessonsJson">Kopiuj JSON lekcji</button>
+      <label for="settingsJson">data/settings.json</label><textarea id="settingsJson" readonly></textarea>
+      <button class="copyJson" data-target="settingsJson">Kopiuj JSON ustawień</button>
+    </div>
+  </section>
+</div>
+
+<dialog id="detailsDialog">
+  <div id="detailsContent"></div>
+  <div class="dialog-actions">
+    <button id="closeDialogBtn">Zamknij</button>
+    <button id="editFromDialogBtn" class="primary">Edytuj lekcję</button>
+  </div>
+</dialog>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const weekdays = ["Pon", "Wt", "Śr", "Czw", "Pt", "Sob", "Niedz"];
+  const zones = [...new Set([
+    Intl.DateTimeFormat().resolvedOptions().timeZone || "Europe/Warsaw",
+    "Europe/Warsaw", "Europe/London", "Europe/Paris", "America/New_York",
+    "Asia/Tokyo", "UTC"
+  ])];
+  let subjects = [], lessons = [], settings = { timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone || "Europe/Warsaw" };
+  let cursor = new Date(); cursor.setHours(0,0,0,0);
+  let mode = "month", selectedLessonId = null;
+
+  const pad = n => String(n).padStart(2, "0");
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+  })[c]);
+  const subject = id => subjects.find(s => s.id === id);
+  const startOfWeek = d => {
+    const x = new Date(d); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); x.setHours(0,0,0,0); return x;
+  };
+  const dateKey = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  const localParts = (date, zone) => {
+    const p = new Intl.DateTimeFormat("en-CA", {
+      timeZone: zone, year:"numeric", month:"2-digit", day:"2-digit",
+      hour:"2-digit", minute:"2-digit", hourCycle:"h23"
+    }).formatToParts(date);
+    return Object.fromEntries(p.map(x => [x.type, x.value]));
+  };
+  function wallTimeToIso(dateText, timeText, zone) {
+    const [y,m,d] = dateText.split("-").map(Number), [hh,mm] = timeText.split(":").map(Number);
+    const wanted = Date.UTC(y, m-1, d, hh, mm);
+    let guess = wanted;
+    for (let i=0; i<3; i++) {
+      const p = localParts(new Date(guess), zone);
+      const represented = Date.UTC(+p.year, +p.month-1, +p.day, +p.hour, +p.minute);
+      guess += wanted - represented;
+    }
+    return new Date(guess).toISOString();
+  }
+  function inZone(iso, zone) {
+    return new Intl.DateTimeFormat("pl-PL", {
+      timeZone: zone, dateStyle:"medium", timeStyle:"short"
+    }).format(new Date(iso));
+  }
+  function deviceTime(iso) {
+    return new Intl.DateTimeFormat("pl-PL", { dateStyle:"medium", timeStyle:"short" }).format(new Date(iso));
+  }
+  function startIso(l) { return l.start; }
+  function endIso(l) { return new Date(new Date(l.start).getTime() + 45*60000).toISOString(); }
+  function dayEvents(d) {
+    const key = dateKey(d);
+    return lessons.filter(l => dateKey(new Date(l.start)) === key)
+      .sort((a,b) => new Date(a.start) - new Date(b.start));
+  }
+  function refreshJson() {
+    $("subjectsJson").value = JSON.stringify(subjects, null, 2);
+    $("lessonsJson").value = JSON.stringify(lessons, null, 2);
+    $("settingsJson").value = JSON.stringify(settings, null, 2);
+  }
+  function render() {
+    const cal = $("calendar");
+    cal.className = "calendar " + (mode === "week" ? "week" : "");
+    if (mode === "month") {
+      const first = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
+      const begin = startOfWeek(first);
+      $("period").textContent = new Intl.DateTimeFormat("pl-PL", {month:"long", year:"numeric"}).format(cursor);
+      let html = `<div class="weekdays">${weekdays.map(x=>`<div class="weekday">${x}</div>`).join("")}</div><div class="grid">`;
+      for (let i=0; i<42; i++) {
+        const d = new Date(begin); d.setDate(begin.getDate()+i);
+        const cls = `day ${d.getMonth()!==cursor.getMonth()?"outside":""} ${dateKey(d)===dateKey(new Date())?"today":""}`;
+        html += `<div class="${cls}"><span class="daynum">${d.getDate()}</span>${dayEvents(d).map(eventHtml).join("")}</div>`;
+      }
+      cal.innerHTML = html + "</div>";
+    } else {
+      const begin = startOfWeek(cursor), end = new Date(begin); end.setDate(end.getDate()+6);
+      $("period").textContent = `${begin.toLocaleDateString("pl-PL",{day:"numeric",month:"short"})} – ${end.toLocaleDateString("pl-PL",{day:"numeric",month:"short",year:"numeric"})}`;
+      let html = `<div class="weekdays">${weekdays.map((x,i)=>`<div class="weekday">${x} ${new Date(begin.getFullYear(),begin.getMonth(),begin.getDate()+i).getDate()}</div>`).join("")}</div><div class="grid">`;
+      for (let i=0; i<7; i++) {
+        const d = new Date(begin); d.setDate(begin.getDate()+i);
+        html += `<div class="day ${dateKey(d)===dateKey(new Date())?"today":""}">${dayEvents(d).map(eventHtml).join("")}</div>`;
+      }
+      cal.innerHTML = html + "</div>";
+    }
+    cal.querySelectorAll("[data-event]").forEach(b => b.addEventListener("click", () => showDetails(b.dataset.event)));
+  }
+  function eventHtml(l) {
+    const s = subject(l.subjectId), color = s?.color || "#5147e8";
+    const time = new Intl.DateTimeFormat("pl-PL",{hour:"2-digit",minute:"2-digit"}).format(new Date(l.start));
+    return `<button class="event" data-event="${esc(l.id)}" style="--event-color:${esc(color)}">${time} ${esc(s?.name || "Lekcja")}</button>`;
+  }
+  function renderSubjects() {
+    $("lessonSubject").innerHTML = subjects.map(s=>`<option value="${esc(s.id)}">${esc(s.name)}</option>`).join("");
+  }
+  function renderAdmin() {
+    renderSubjects();
+    $("stats").innerHTML = subjects.map(s => {
+      const ls = lessons.filter(l=>l.subjectId===s.id);
+      const present = ls.filter(l=>l.attendance==="present").length;
+      const known = ls.filter(l=>l.attendance==="present"||l.attendance==="absent").length;
+      const pct = known ? Math.round(present/known*100) : 0;
+      return `<div class="stat"><b style="color:${esc(s.color)}">${esc(s.name)}</b>: ${present}/${known} obecności (${pct}%)</div>`;
+    }).join("") || `<span class="muted">Dodaj przedmiot, aby zobaczyć statystyki.</span>`;
+    const sorted = [...lessons].sort((a,b)=>new Date(a.start)-new Date(b.start));
+    $("lessonList").innerHTML = sorted.map(l => {
+      const s=subject(l.subjectId), att={present:"Obecność",absent:"Nieobecność",unknown:"Nieustalona"}[l.attendance]||"Nieustalona";
+      return `<div class="lesson-row"><div><b>${esc(s?.name||"Lekcja")}</b><br><span class="muted">${esc(deviceTime(l.start))} · ${att}</span></div>
+      <div class="actions"><button data-edit="${esc(l.id)}">Edytuj</button><button class="danger" data-delete="${esc(l.id)}">Usuń</button></div></div>`;
+    }).join("") || `<p class="muted">Brak lekcji.</p>`;
+    $("lessonList").querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>editLesson(b.dataset.edit));
+    $("lessonList").querySelectorAll("[data-delete]").forEach(b=>b.onclick=()=>deleteLesson(b.dataset.delete));
+    refreshJson();
+  }
+  function showDetails(id) {
+    const l=lessons.find(x=>x.id===id); if(!l) return;
+    const s=subject(l.subjectId), zone=l.timeZone||settings.timeZone;
+    const alarms=(l.alarms||[]).map(x=>`${x} min`).join(", ")||"Brak";
+    $("detailsContent").innerHTML = `<h2>${esc(s?.name||"Lekcja")}</h2>
+      <p><b>Godzina w Twoim urządzeniu:</b><br>${esc(deviceTime(l.start))} – ${esc(deviceTime(endIso(l)))}</p>
+      <p><b>Godzina w strefie ${esc(zone)}:</b><br>${esc(inZone(l.start,zone))} – ${esc(inZone(endIso(l),zone))}</p>
+      <p><b>Obecność:</b> ${esc({present:"Obecność",absent:"Nieobecność",unknown:"Nieustalona"}[l.attendance]||"Nieustalona")}</p>
+      <p><b>Alarmy:</b> ${esc(alarms)}</p>
+      ${l.note?`<p><b>Notatka:</b><br>${esc(l.note)}</p>`:""}`;
+    selectedLessonId=id;
+    $("detailsDialog").showModal();
+  }
+  function editLesson(id) {
+    const l=lessons.find(x=>x.id===id); if(!l) return;
+    const p=localParts(new Date(l.start), l.timeZone||settings.timeZone);
+    $("lessonId").value=l.id; $("lessonSubject").value=l.subjectId;
+    $("lessonDate").value=`${p.year}-${p.month}-${p.day}`;
+    $("lessonTime").value=`${p.hour}:${p.minute}`;
+    $("lessonZone").value=l.timeZone||settings.timeZone;
+    $("lessonAttendance").value=l.attendance||"unknown";
+    $("lessonAlarms").value=(l.alarms||[]).join(",");
+    $("lessonNote").value=l.note||"";
+    $("lessonFormTitle").textContent="Edytuj lekcję";
+    $("saveLessonBtn").textContent="Zapisz zmiany";
+    $("cancelEditBtn").classList.remove("hidden");
+    $("detailsDialog").close();
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
+  function resetLessonForm() {
+    $("lessonId").value=""; $("lessonDate").value=""; $("lessonTime").value="";
+    $("lessonAttendance").value="unknown"; $("lessonAlarms").value="60,39,10"; $("lessonNote").value="";
+    $("lessonFormTitle").textContent="Dodaj lekcję"; $("saveLessonBtn").textContent="Dodaj lekcję";
+    $("cancelEditBtn").classList.add("hidden");
+  }
+  function deleteLesson(id) {
+    if (!confirm("Usunąć tę lekcję?")) return;
+    lessons=lessons.filter(l=>l.id!==id); render(); renderAdmin();
+  }
+  function download(name, content, type) {
+    const blob=new Blob([content],{type});
+    const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name; a.click();
+    URL.revokeObjectURL(a.href);
+  }
+  function csvEscape(v) { return `"${String(v??"").replace(/"/g,'""')}"`; }
+  function exportCsv() {
+    const rows=[["Przedmiot","Start UTC","Koniec UTC","Strefa","Obecność","Alarmy (min)","Notatka"]];
+    lessons.forEach(l=>rows.push([subject(l.subjectId)?.name||"",l.start,endIso(l),l.timeZone||"",l.attendance||"unknown",(l.alarms||[]).join(";"),l.note||""]));
+    download("lekcje.csv","\uFEFF"+rows.map(r=>r.map(csvEscape).join(",")).join("\r\n"),"text/csv;charset=utf-8");
+  }
+  function icsEscape(s) { return String(s||"").replace(/\\/g,"\\\\").replace(/\n/g,"\\n").replace(/,/g,"\\,").replace(/;/g,"\\;"); }
+  function icsDate(iso) { return new Date(iso).toISOString().replace(/[-:]/g,"").replace(/\.\d{3}/,""); }
+  function exportIcs() {
+    const lines=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Kalendarz lekcji//PL","CALSCALE:GREGORIAN"];
+    lessons.forEach(l=>{
+      const s=subject(l.subjectId);
+      lines.push("BEGIN:VEVENT",`UID:${icsEscape(l.id)}@kalendarz-lekcji`,`DTSTAMP:${icsDate(new Date().toISOString())}`,
+        `DTSTART:${icsDate(l.start)}`,`DTEND:${icsDate(endIso(l))}`,
+        `SUMMARY:${icsEscape(s?.name||"Lekcja")}`,
+        `DESCRIPTION:${icsEscape([l.note||"",`Strefa: ${l.timeZone||""}`,`Obecność: ${l.attendance||"unknown"}`].join("\n"))}`);
+      (l.alarms||[]).forEach(min=>{
+        lines.push("BEGIN:VALARM",`TRIGGER:-PT${Math.max(0,Number(min)||0)}M`,"ACTION:DISPLAY",
+          `DESCRIPTION:${icsEscape(`Lekcja: ${s?.name||"Lekcja"}`)}`,"END:VALARM");
+      });
+      lines.push("END:VEVENT");
+    });
+    lines.push("END:VCALENDAR");
+    download("lekcje.ics",lines.join("\r\n"),"text/calendar;charset=utf-8");
+  }
+
+  $("prevBtn").onclick=()=>{ if(mode==="month") cursor.setMonth(cursor.getMonth()-1); else cursor.setDate(cursor.getDate()-7); render(); };
+  $("nextBtn").onclick=()=>{ if(mode==="month") cursor.setMonth(cursor.getMonth()+1); else cursor.setDate(cursor.getDate()+7); render(); };
+  $("todayBtn").onclick=()=>{ cursor=new Date(); cursor.setHours(0,0,0,0); render(); };
+  $("monthBtn").onclick=()=>{ mode="month"; $("monthBtn").classList.add("active"); $("weekBtn").classList.remove("active"); render(); };
+  $("weekBtn").onclick=()=>{ mode="week"; $("weekBtn").classList.add("active"); $("monthBtn").classList.remove("active"); render(); };
+  $("adminToggle").onclick=()=>{ $("calendarView").classList.add("hidden"); $("adminView").classList.remove("hidden"); renderAdmin(); };
+  $("backBtn").onclick=()=>{ $("adminView").classList.add("hidden"); $("calendarView").classList.remove("hidden"); };
+  $("closeDialogBtn").onclick=()=>$("detailsDialog").close();
+  $("editFromDialogBtn").onclick=()=>selectedLessonId&&editLesson(selectedLessonId);
+  $("addSubjectBtn").onclick=()=>{
+    const name=$("subjectName").value.trim(); if(!name) return alert("Wpisz nazwę przedmiotu.");
+    subjects.push({id:crypto.randomUUID(),name,color:$("subjectColor").value});
+    $("subjectName").value=""; renderSubjects(); renderAdmin();
+  };
+  $("saveLessonBtn").onclick=()=>{
+    const id=$("lessonId").value, date=$("lessonDate").value, time=$("lessonTime").value;
+    if(!subjects.length) return alert("Najpierw dodaj przedmiot.");
+    if(!date||!time) return alert("Wybierz datę i godzinę.");
+    const zone=$("lessonZone").value;
+    const alarms=$("lessonAlarms").value.split(",").map(x=>Number(x.trim())).filter(x=>Number.isFinite(x)&&x>=0);
+    const item={id:id||crypto.randomUUID(),subjectId:$("lessonSubject").value,start:wallTimeToIso(date,time,zone),
+      timeZone:zone,attendance:$("lessonAttendance").value,alarms,note:$("lessonNote").value.trim()};
+    if(id) lessons=lessons.map(l=>l.id===id?item:l); else lessons.push(item);
+    resetLessonForm(); render(); renderAdmin();
+  };
+  $("cancelEditBtn").onclick=resetLessonForm;
+  $("csvBtn").onclick=exportCsv; $("icsBtn").onclick=exportIcs;
+  document.querySelectorAll(".copyJson").forEach(b=>b.onclick=async()=>{
+    const text=$(b.dataset.target).value;
+    try { await navigator.clipboard.writeText(text); alert("Skopiowano JSON."); }
+    catch { $(b.dataset.target).select(); document.execCommand("copy"); alert("Skopiowano JSON."); }
+  });
+  $("lessonZone").innerHTML=zones.map(z=>`<option value="${esc(z)}">${esc(z)}</option>`).join("");
+  $("lessonZone").value=settings.timeZone;
+
+  async function loadJson(path, fallback) {
+    try { const r=await fetch(path); if(!r.ok) throw Error(); return await r.json(); }
+    catch { return fallback; }
+  }
+  Promise.all([
+    loadJson("./data/subjects.json",[]),
+    loadJson("./data/lessons.json",[]),
+    loadJson("./data/settings.json",{timeZone:settings.timeZone})
+  ]).then(([s,l,cfg])=>{
+    subjects=Array.isArray(s)?s:[];
+    lessons=Array.isArray(l)?l:[];
+    settings=cfg&&typeof cfg==="object"?cfg:settings;
+    if(!settings.timeZone) settings.timeZone=Intl.DateTimeFormat().resolvedOptions().timeZone||"Europe/Warsaw";
+    if(!zones.includes(settings.timeZone)) {
+      const option=document.createElement("option"); option.value=settings.timeZone; option.textContent=settings.timeZone; $("lessonZone").append(option);
+    }
+    $("lessonZone").value=settings.timeZone;
+    render(); renderAdmin();
+    $("loadMessage").textContent="Dane wczytano z plików JSON. Zmiany nie zapisują się automatycznie do repozytorium.";
+  });
+})();
+</script>
+</body>
+</html>

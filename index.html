@@ -3,458 +3,156 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="theme-color" content="#f5f6fa">
-  <title>Mój kalendarz lekcji</title>
+  <title>カレンダー / Kalendarz lekcji</title>
 
   <style>
     :root {
-      --bg: #f5f6fa;
-      --card: #fff;
-      --text: #202437;
-      --muted: #687087;
-      --line: #e2e5ed;
-      --primary: #5147e8;
-      --primary-soft: #eeedff;
-      --green: #168451;
-      --red: #bd3045;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --bg:#f5f6fa;
+      --card:#fff;
+      --text:#202437;
+      --muted:#687087;
+      --line:#e2e5ed;
+      --primary:#5147e8;
+      --primary-soft:#eeedff;
+      --green:#168451;
+      --red:#bd3045;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
     }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      padding-bottom: env(safe-area-inset-bottom);
-      background: var(--bg);
-      color: var(--text);
-    }
-
-    button, input, select, textarea { font: inherit; }
-
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; background:var(--bg); color:var(--text); }
+    button,input,select,textarea { font:inherit; }
     button {
-      min-height: 44px;
-      padding: 9px 12px;
-      border: 1px solid var(--line);
-      border-radius: 11px;
-      background: #fff;
-      color: var(--text);
-      cursor: pointer;
-      touch-action: manipulation;
+      min-height:42px; padding:8px 12px; border:1px solid var(--line);
+      border-radius:10px; background:#fff; color:var(--text); cursor:pointer;
+      touch-action:manipulation;
     }
-
-    button:focus-visible, input:focus-visible, select:focus-visible,
-    textarea:focus-visible {
-      outline: 3px solid #aaa5ff;
-      outline-offset: 2px;
+    button.primary { background:var(--primary); color:white; border-color:var(--primary); }
+    button.danger { color:var(--red); }
+    button.active { color:var(--primary); background:var(--primary-soft); }
+    input,select,textarea {
+      width:100%; min-height:42px; padding:8px 10px;
+      border:1px solid var(--line); border-radius:9px; background:white; color:var(--text);
     }
-
-    button.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
-    button.danger { color: var(--red); }
-
-    .app {
-      width: min(100%, 1000px);
-      margin: auto;
-      padding: 14px;
-      padding-top: max(14px, env(safe-area-inset-top));
-    }
-
-    .topbar, .toolbar, .row, .button-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .topbar { justify-content: space-between; margin-bottom: 15px; }
-    h1 { margin: 0; font-size: clamp(21px, 6vw, 29px); }
-    h2 { margin: 0 0 12px; font-size: 20px; }
-    h3 { margin: 0 0 10px; font-size: 16px; }
-
-    .toolbar { flex-wrap: wrap; margin-bottom: 12px; }
-    .period {
-      flex: 1 1 100%;
-      order: 2;
-      padding: 5px 0;
-      text-align: center;
-      font-weight: 700;
-    }
-
-    .view-switch { display: flex; gap: 5px; order: 3; margin-left: auto; }
-    .view-switch button.active {
-      color: var(--primary);
-      background: var(--primary-soft);
-      border-color: #d5d2ff;
-      font-weight: 700;
-    }
-
-    .card, .calendar-card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-    }
-
-    /* Miesiąc */
-    .month-calendar { overflow: hidden; }
-    .weekday-row, .month-grid {
-      display: grid;
-      grid-template-columns: repeat(7, minmax(0, 1fr));
-    }
-
-    .weekday {
-      padding: 9px 2px;
-      background: #fafaff;
-      border-bottom: 1px solid var(--line);
-      text-align: center;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
+    input[type="checkbox"] { width:20px; min-height:20px; }
+    input[type="color"] { padding:4px; }
+    textarea { min-height:90px; }
+    label { display:block; margin:8px 0 5px; color:var(--muted); font-size:13px; }
+    h1,h2,h3 { margin:0 0 10px; }
+    h1 { font-size:clamp(21px,5vw,28px); }
+    h2 { font-size:20px; }
+    h3 { font-size:16px; }
+    .app { max-width:1000px; margin:auto; padding:14px; }
+    .topbar,.toolbar,.row,.actions { display:flex; align-items:center; gap:8px; }
+    .topbar { justify-content:space-between; margin-bottom:14px; }
+    .toolbar { flex-wrap:wrap; margin-bottom:12px; }
+    .period { flex:1; text-align:center; font-weight:700; }
+    .views { display:flex; gap:5px; }
+    .card,.calendar { background:var(--card); border:1px solid var(--line); border-radius:15px; }
+    .calendar { overflow:hidden; }
+    .weekdays,.month-grid { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); }
+    .weekday { padding:8px 2px; text-align:center; color:var(--muted); background:#fafaff; border-bottom:1px solid var(--line); font-size:12px; }
     .month-day {
-      min-width: 0;
-      min-height: 78px;
-      padding: 4px 3px;
-      border: 0;
-      border-right: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-      border-radius: 0;
-      background: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      gap: 3px;
+      min-width:0; min-height:78px; padding:4px 3px; display:flex; flex-direction:column;
+      gap:3px; border:0; border-right:1px solid var(--line);
+      border-bottom:1px solid var(--line); border-radius:0; background:white;
     }
-
-    .month-day:nth-child(7n) { border-right: 0; }
-    .month-day.outside { color: #a3a8b5; background: #fafbfe; }
-    .month-day.selected { background: var(--primary-soft); }
-    .month-day.today .day-number { background: var(--primary); color: #fff; }
-    .day-head { display: flex; justify-content: space-between; align-items: center; gap: 2px; }
-
-    .day-number {
-      display: grid;
-      place-items: center;
-      width: 25px;
-      height: 25px;
-      padding: 0;
-      border: 0;
-      border-radius: 50%;
-      background: transparent;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .add-day {
-      min-height: 25px;
-      width: 27px;
-      padding: 0;
-      border: 0;
-      color: var(--primary);
-      background: transparent;
-      font-size: 20px;
-      line-height: 1;
-    }
-
-    .month-events { display: grid; gap: 3px; min-width: 0; }
-
+    .month-day:nth-child(7n) { border-right:0; }
+    .month-day.outside { background:#fafbfe; color:#a3a8b5; }
+    .month-day.selected { background:var(--primary-soft); }
+    .month-day.today .day-num { background:var(--primary); color:white; }
+    .day-head { display:flex; justify-content:space-between; align-items:center; }
+    .day-num,.add-day { min-height:26px; width:28px; padding:0; border:0; background:transparent; }
+    .day-num { border-radius:50%; font-weight:700; }
+    .add-day { color:var(--primary); font-size:19px; }
+    .month-events { display:grid; gap:3px; }
     .month-event {
-      display: block;
-      width: 100%;
-      min-height: 22px;
-      overflow: hidden;
-      padding: 3px 4px;
-      border: 0;
-      border-left: 3px solid var(--event-color, var(--primary));
-      border-radius: 4px;
-      background: color-mix(in srgb, var(--event-color, var(--primary)) 16%, white);
-      color: #202437;
-      text-align: left;
-      font-size: 10px;
-      font-weight: 700;
-      line-height: 1.2;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+      width:100%; min-height:21px; overflow:hidden; padding:3px;
+      border:0; border-left:3px solid var(--event-color,var(--primary));
+      border-radius:4px; background:color-mix(in srgb,var(--event-color,var(--primary)) 16%,white);
+      text-align:left; font-size:10px; font-weight:700;
+      white-space:nowrap; text-overflow:ellipsis;
     }
-
-    .month-more { color: var(--muted); font-size: 9px; text-align: left; }
-
-    .section-heading {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      margin: 18px 2px 10px;
-    }
-
-    .section-heading h2 { margin: 0; }
-    .event-list, .week-days { display: grid; gap: 9px; }
-
-    .day-card {
-      padding: 12px;
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 15px;
-    }
-
-    .day-card-heading {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 9px;
-    }
-
+    .section-heading { display:flex; justify-content:space-between; align-items:center; margin:16px 2px 9px; }
+    .section-heading h2 { margin:0; }
+    .event-list,.week-days { display:grid; gap:8px; }
+    .day-card { padding:11px; border:1px solid var(--line); border-radius:13px; background:white; }
+    .day-card-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
     .lesson-card {
-      padding: 10px;
-      border: 0;
-      border-left: 6px solid var(--lesson-color, var(--primary));
-      border-radius: 10px;
-      background: color-mix(in srgb, var(--lesson-color, var(--primary)) 9%, white);
+      padding:9px; border-left:6px solid var(--lesson-color,var(--primary));
+      border-radius:9px; background:color-mix(in srgb,var(--lesson-color,var(--primary)) 9%,white);
     }
+    .lesson-main { width:100%; min-height:36px; padding:0; border:0; background:transparent; text-align:left; }
+    .lesson-line { display:flex; justify-content:space-between; gap:8px; font-weight:700; }
+    .muted { color:var(--muted); font-size:13px; }
+    .attendance { margin-top:6px; }
+    .hidden { display:none!important; }
+    .empty { padding:14px; border:1px dashed var(--line); border-radius:10px; color:var(--muted); text-align:center; }
 
-    .lesson-main {
-      display: block;
-      width: 100%;
-      min-height: 36px;
-      padding: 0;
-      border: 0;
-      border-radius: 0;
-      background: transparent;
-      text-align: left;
+    .week-scroll { overflow:auto; border-radius:12px; background:white; }
+    .week-grid { display:grid; grid-template-columns:48px repeat(7,128px); min-width:944px; }
+    .week-head { position:sticky; top:0; z-index:2; min-height:48px; padding:6px; border:1px solid var(--line); background:#fafaff; text-align:center; font-size:12px; }
+    .time-axis,.week-column {
+      position:relative; height:1344px;
+      background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 55px,var(--line) 55px,var(--line) 56px);
     }
-
-    .lesson-topline {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      font-weight: 700;
-    }
-
-    .lesson-subline { margin-top: 3px; color: var(--muted); font-size: 12px; }
-
-    .attendance-select {
-      width: 100%;
-      min-height: 38px;
-      margin-top: 7px;
-      padding: 5px 8px;
-      border-radius: 9px;
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .attendance-select.present { color: #126b42; background: #e5f5ec; border-color: #a6d8ba; }
-    .attendance-select.absent { color: #a12639; background: #fde9ec; border-color: #efb6bf; }
-    .empty {
-      padding: 16px 12px;
-      border: 1px dashed var(--line);
-      border-radius: 12px;
-      color: var(--muted);
-      text-align: center;
-    }
-
-    /* Tydzień i oś godzinowa */
-    .week-scroll {
-      overflow-x: auto;
-      overscroll-behavior-x: contain;
-      border-radius: 15px;
-      background: #fff;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .week-grid {
-      display: grid;
-      grid-template-columns: 48px repeat(7, 128px);
-      min-width: 944px;
-    }
-
-    .week-head {
-      position: sticky;
-      top: 0;
-      z-index: 3;
-      min-height: 52px;
-      padding: 7px 3px;
-      border-right: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-      background: #fafaff;
-      text-align: center;
-      font-size: 12px;
-    }
-
-    .week-head.time-head { left: 0; z-index: 4; }
-    .week-day-name { display: block; font-weight: 700; }
-    .week-date { display: block; margin-top: 2px; color: var(--muted); }
-
-    .time-axis, .week-column {
-      position: relative;
-      height: 1344px;
-      background-image: repeating-linear-gradient(
-        to bottom,
-        transparent 0,
-        transparent 55px,
-        var(--line) 55px,
-        var(--line) 56px
-      );
-    }
-
-    .time-axis {
-      position: sticky;
-      left: 0;
-      z-index: 2;
-      border-right: 1px solid var(--line);
-      background-color: #fafaff;
-    }
-
-    .hour-label {
-      position: absolute;
-      right: 4px;
-      transform: translateY(-7px);
-      color: var(--muted);
-      font-size: 10px;
-    }
-
-    .week-column { border-right: 1px solid var(--line); background-color: #fff; }
-
+    .time-axis { position:sticky; left:0; z-index:1; background-color:#fafaff; }
+    .hour-label { position:absolute; right:3px; transform:translateY(-7px); color:var(--muted); font-size:10px; }
+    .week-column { border-right:1px solid var(--line); background-color:white; }
     .week-event {
-      position: absolute;
-      left: 3px;
-      right: 3px;
-      min-height: 42px;
-      overflow: hidden;
-      padding: 4px;
-      border: 0;
-      border-left: 4px solid var(--event-color, var(--primary));
-      border-radius: 6px;
-      background: color-mix(in srgb, var(--event-color, var(--primary)) 18%, white);
-      text-align: left;
-      font-size: 10px;
-      line-height: 1.25;
+      position:absolute; left:3px; right:3px; height:42px; overflow:hidden; padding:4px;
+      border:0; border-left:4px solid var(--event-color,var(--primary)); border-radius:6px;
+      background:color-mix(in srgb,var(--event-color,var(--primary)) 18%,white);
+      text-align:left; font-size:10px;
     }
-
-    .week-event strong, .week-event span { display: block; overflow-wrap: anywhere; }
-    .week-event span { margin-top: 2px; }
-
-    /* Przeciąganie i podgląd miejsca upuszczenia */
-    .month-event, .week-event, .lesson-main { touch-action: none; cursor: grab; }
-    .month-event:active, .week-event:active, .lesson-main:active { cursor: grabbing; }
-
+    .week-event strong,.week-event span { display:block; }
+    .month-event,.week-event,.lesson-main { touch-action:none; cursor:grab; }
     .drag-ghost {
-      position: fixed;
-      z-index: 99999;
-      pointer-events: none;
-      padding: 9px 12px;
-      border-left: 5px solid var(--drag-color, var(--primary));
-      border-radius: 8px;
-      background: #fff;
-      box-shadow: 0 8px 24px #0003;
-      font-size: 13px;
-      font-weight: 700;
-      opacity: .92;
-      transform: translate(12px, 12px);
+      position:fixed; z-index:9999; pointer-events:none; padding:8px 10px;
+      border-left:5px solid var(--drag-color,var(--primary)); border-radius:8px;
+      background:white; box-shadow:0 5px 20px #0003; font-size:13px; font-weight:700;
+      transform:translate(10px,10px);
     }
-
-    .drag-over {
-      outline: 3px dashed var(--primary) !important;
-      outline-offset: -4px;
-      background-color: var(--primary-soft) !important;
-    }
-
+    .drag-over { outline:3px dashed var(--primary)!important; outline-offset:-4px; background-color:var(--primary-soft)!important; }
     .week-drop-preview {
-      position: absolute;
-      z-index: 10;
-      left: 3px;
-      right: 3px;
-      min-height: 42px;
-      pointer-events: none;
-      padding: 5px;
-      border: 2px dashed var(--primary);
-      border-radius: 7px;
-      background: #eeedffdd;
-      color: #3029a8;
-      font-size: 11px;
-      font-weight: 700;
+      position:absolute; z-index:10; left:3px; right:3px; min-height:42px;
+      pointer-events:none; padding:5px; border:2px dashed var(--primary); border-radius:7px;
+      background:#eeedffdd; color:#3029a8; font-size:11px; font-weight:700;
     }
 
-    /* Panel Admin */
-    .admin-card { margin: 12px 0; padding: 15px; }
-    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .admin-card { margin:12px 0; padding:14px; }
+    .form-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; }
+    .stats { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin:10px 0; }
+    .stat { padding:9px; border-radius:9px; background:#f5f6fb; font-size:13px; }
+    .subject-row,.lesson-admin-row { display:flex; justify-content:space-between; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--line); }
+    .subject-row:last-child,.lesson-admin-row:last-child { border-bottom:0; }
+    .row-info { min-width:0; overflow-wrap:anywhere; }
+    .row-actions { display:flex; gap:5px; flex-shrink:0; }
+    .row-actions button { min-height:36px; padding:5px 8px; }
+    .lesson-row-main { display:flex; align-items:center; gap:9px; min-width:0; }
+    .bulk-actions { display:flex; align-items:center; flex-wrap:wrap; gap:10px; margin:9px 0; }
+    .bulk-select-label { display:flex; align-items:center; gap:7px; margin:0; }
+    .bulk-select-label input { width:20px; min-height:20px; }
+    .table-wrap { overflow:auto; }
+    table { width:100%; min-width:420px; border-collapse:collapse; }
+    th,td { padding:8px; border:1px solid #ddd; text-align:left; font-size:14px; }
+    th { background:#f1f2f6; }
+    dialog { width:min(540px,calc(100% - 20px)); max-height:88vh; overflow:auto; padding:17px; border:1px solid var(--line); border-radius:16px; }
+    dialog::backdrop { background:#13172788; }
+    .dialog-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:14px; }
+    .check-row { display:flex; align-items:center; gap:8px; }
+    .check-row input { width:20px; min-height:20px; }
 
-    label { display: block; margin: 8px 0 5px; color: var(--muted); font-size: 13px; }
-
-    input, select, textarea {
-      width: 100%;
-      min-height: 44px;
-      padding: 9px 10px;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      background: #fff;
-      color: var(--text);
+    @media(min-width:720px) {
+      .app { padding:22px; }
+      .stats { grid-template-columns:repeat(3,minmax(0,1fr)); }
     }
-
-    input[type="color"] { padding: 4px; }
-    textarea { min-height: 80px; resize: vertical; }
-    .button-row { flex-wrap: wrap; margin-top: 11px; }
-    .hint, .small-muted { color: var(--muted); font-size: 13px; line-height: 1.5; }
-    .stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 10px 0; }
-    .stat { padding: 10px; border-radius: 11px; background: #f5f6fb; font-size: 13px; }
-
-    .subject-row, .lesson-admin-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .subject-row:last-child, .lesson-admin-row:last-child { border-bottom: 0; }
-    .row-info { min-width: 0; overflow-wrap: anywhere; }
-    .row-actions { display: flex; gap: 5px; flex-shrink: 0; }
-    .row-actions button { min-height: 38px; padding: 6px 9px; }
-    .table-wrap { overflow-x: auto; }
-    table { width: 100%; min-width: 450px; border-collapse: collapse; background: #fff; }
-    th, td { padding: 10px 9px; border: 1px solid #d7d9df; text-align: left; font-size: 14px; }
-    th { background: #f1f2f6; color: #303548; font-weight: 700; }
-    tbody tr:nth-child(even) { background: #fafbfe; }
-    .status-text { font-weight: 700; }
-    .status-text.present { color: var(--green); }
-    .status-text.absent { color: var(--red); }
-    .status-text.unknown { color: var(--muted); }
-    .hidden { display: none !important; }
-
-    dialog {
-      width: min(540px, calc(100% - 22px));
-      max-height: 88vh;
-      overflow: auto;
-      padding: 18px;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      color: var(--text);
-      box-shadow: 0 20px 70px #14182d40;
-    }
-
-    dialog::backdrop { background: #1317278c; }
-    .dialog-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
-    .check-row { display: flex; align-items: center; gap: 9px; margin: 10px 0; }
-    .check-row input { width: 20px; min-height: 20px; }
-    .class-field { max-width: 220px; }
-
-    @media (min-width: 720px) {
-      .app { padding: 22px; }
-      .toolbar { flex-wrap: nowrap; }
-      .period { flex: initial; order: initial; min-width: 190px; }
-      .view-switch { order: initial; margin-left: 0; }
-      .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    }
-
-    @media (max-width: 430px) {
-      .app { padding: 10px; }
-      button { padding: 8px 10px; }
-      .month-day { min-height: 66px; padding: 3px 2px; }
-      .month-event { padding: 3px 2px; font-size: 9px; }
-      .form-grid { grid-template-columns: 1fr; gap: 4px; }
-      .subject-row, .lesson-admin-row { align-items: flex-start; flex-direction: column; }
+    @media(max-width:430px) {
+      .app { padding:9px; }
+      .month-day { min-height:66px; padding:3px 2px; }
+      .month-event { font-size:9px; }
+      .form-grid { grid-template-columns:1fr; gap:3px; }
+      .subject-row,.lesson-admin-row { align-items:flex-start; flex-direction:column; }
     }
   </style>
 </head>
@@ -462,152 +160,155 @@
 <body>
 <div class="app">
   <header class="topbar">
-    <h1>Mój kalendarz lekcji</h1>
-    <button id="adminToggle" class="primary" type="button">Panel Admin</button>
+    <h1 data-i18n="appTitle">Kalendarz lekcji</h1>
+    <button id="adminToggle" class="primary" data-i18n="admin">Panel Admin</button>
   </header>
 
   <main id="calendarView">
     <div class="toolbar">
-      <button id="prevBtn" type="button">Wstecz</button>
-      <button id="todayBtn" type="button">Dziś</button>
-      <button id="nextBtn" type="button">Dalej</button>
+      <button id="prevBtn" data-i18n="back">Wstecz</button>
+      <button id="todayBtn" data-i18n="today">Dziś</button>
+      <button id="nextBtn" data-i18n="next">Dalej</button>
       <div id="periodLabel" class="period"></div>
-      <div class="view-switch">
-        <button id="monthBtn" class="active" type="button">Miesiąc</button>
-        <button id="weekBtn" type="button">Tydzień</button>
+      <div class="views">
+        <button id="monthBtn" class="active" data-i18n="month">Miesiąc</button>
+        <button id="weekBtn" data-i18n="week">Tydzień</button>
       </div>
     </div>
 
-    <section id="monthView" class="calendar-card month-calendar"></section>
-
+    <section id="monthView" class="calendar"></section>
     <section id="monthAgenda">
       <div class="section-heading">
-        <h2 id="selectedDateTitle">Lekcje</h2>
-        <span id="selectedDateCount" class="small-muted"></span>
+        <h2 id="selectedDateTitle"></h2>
+        <span id="selectedDateCount" class="muted"></span>
       </div>
       <div id="selectedDayLessons" class="event-list"></div>
     </section>
-
     <section id="weekView" class="hidden"></section>
-    <p id="loadMessage" class="hint"></p>
+    <p id="loadMessage" class="muted"></p>
   </main>
 
   <main id="adminView" class="hidden">
     <div class="row" style="justify-content:space-between">
-      <h2>Panel Admin</h2>
-      <button id="backCalendarBtn" type="button">Kalendarz</button>
+      <h2 data-i18n="admin">Panel Admin</h2>
+      <button id="backCalendarBtn" data-i18n="calendar">Kalendarz</button>
     </div>
 
     <section class="card admin-card">
-      <h3 id="subjectFormTitle">Dodaj przedmiot</h3>
+      <h3 id="subjectFormTitle" data-i18n="addSubject">Dodaj przedmiot</h3>
       <input id="subjectId" type="hidden">
-
       <div class="form-grid">
         <div>
-          <label for="subjectName">Nazwa przedmiotu</label>
-          <input id="subjectName" maxlength="60" placeholder="np. Matematyka">
+          <label data-i18n="subjectNameLabel" for="subjectName">Nazwa przedmiotu</label>
+          <input id="subjectName" maxlength="60">
         </div>
         <div>
-          <label for="subjectColor">Kolor</label>
+          <label data-i18n="color" for="subjectColor">Kolor</label>
           <input id="subjectColor" type="color" value="#5147e8">
         </div>
         <div>
-          <label for="subjectPlanned">Plan lekcji na cały rok szkolny</label>
-          <input id="subjectPlanned" type="number" min="0" step="1" value="0">
+          <label data-i18n="plannedLessons" for="subjectPlanned">Plan lekcji na rok szkolny</label>
+          <input id="subjectPlanned" type="number" min="0" value="0">
+        </div>
+        <div>
+          <label data-i18n="grade" for="subjectGrade">Klasa</label>
+          <select id="subjectGrade">
+            <option value="" data-i18n="unassigned">Nieprzypisana</option>
+            <option value="1">1</option><option value="2">2</option>
+            <option value="3">3</option><option value="4">4</option>
+            <option value="5">5</option><option value="6">6</option>
+            <option value="7">7</option><option value="8">8</option>
+          </select>
         </div>
       </div>
-
-      <div class="button-row">
-        <button id="saveSubjectBtn" class="primary" type="button">Dodaj przedmiot</button>
-        <button id="cancelSubjectEditBtn" class="hidden" type="button">Anuluj edycję</button>
+      <div class="actions" style="margin-top:10px">
+        <button id="saveSubjectBtn" class="primary" data-i18n="addSubject">Dodaj przedmiot</button>
+        <button id="cancelSubjectEditBtn" class="hidden" data-i18n="cancel">Anuluj</button>
       </div>
-
-      <p class="hint">Możesz edytować nazwę, kolor i roczny plan przedmiotu.</p>
       <div id="subjectList"></div>
     </section>
 
     <section class="card admin-card">
-      <h3>Strefa czasowa kalendarza</h3>
-      <label for="displayZone">Strefa, według której wyświetlać daty i godziny</label>
+      <h3 data-i18n="timezoneTitle">Strefa czasowa</h3>
+      <label data-i18n="timezoneLabel" for="displayZone">Strefa wyświetlania</label>
       <select id="displayZone"></select>
-      <div class="button-row">
-        <button id="saveDisplayZoneBtn" class="primary" type="button">Zapisz strefę wyświetlania</button>
-      </div>
-      <p class="hint">Domyślna strefa kalendarza i nowych wydarzeń: Asia/Tokyo.</p>
+      <button id="saveDisplayZoneBtn" class="primary" data-i18n="saveTimezone">Zapisz strefę</button>
+      <p class="muted" data-i18n="tokyoDefault">Domyślna strefa: Tokio (Asia/Tokyo).</p>
     </section>
 
     <section class="card admin-card">
-      <h3>Obecności</h3>
-      <label for="attendanceFilter">Przedmiot wyświetlany w tabeli</label>
+      <h3 data-i18n="attendanceTitle">Obecności</h3>
+      <label data-i18n="attendanceFilterLabel" for="attendanceFilter">Filtr przedmiotu</label>
       <select id="attendanceFilter"></select>
       <div id="overallStats" class="stats"></div>
       <div class="table-wrap">
         <table>
-          <thead>
-            <tr><th>Numer lekcji</th><th>Przedmiot</th><th>Obecność</th></tr>
-          </thead>
+          <thead><tr>
+            <th data-i18n="lessonNumber">Numer lekcji</th>
+            <th data-i18n="subject">Przedmiot</th>
+            <th data-i18n="attendance">Obecność</th>
+          </tr></thead>
           <tbody id="attendanceBody"></tbody>
         </table>
       </div>
     </section>
 
     <section class="card admin-card">
-      <h3>Wszystkie lekcje</h3>
+      <h3 data-i18n="allLessons">Wszystkie lekcje</h3>
+      <div class="bulk-actions">
+        <label class="bulk-select-label">
+          <input id="selectAllLessons" type="checkbox">
+          <span data-i18n="selectAll">Zaznacz wszystkie lekcje</span>
+        </label>
+        <button id="deleteSelectedLessonsBtn" class="danger" disabled data-i18n="deleteSelected">
+          Usuń wybrane lekcje
+        </button>
+      </div>
       <div id="adminLessonList"></div>
     </section>
 
     <section class="card admin-card">
-      <h3>Import i eksport ICS</h3>
-      <p class="hint">
-        Import rozpoznaje tytuły, np. „Matematyka 1”. Nazwa przedmiotu dopasowuje kolor wydarzenia.
-        Jeśli przedmiot nie istnieje, zostanie dodany z wolnym kolorem.
-      </p>
-      <div class="button-row">
-        <button id="exportIcsBtn" type="button">Eksportuj .ics</button>
+      <h3 data-i18n="icsTitle">Import i eksport ICS</h3>
+      <div class="actions">
+        <button id="exportIcsBtn" data-i18n="exportIcs">Eksportuj ICS</button>
         <input id="icsFile" type="file" accept=".ics,text/calendar">
-        <button id="importIcsBtn" type="button">Importuj .ics</button>
+        <button id="importIcsBtn" data-i18n="importIcs">Importuj ICS</button>
       </div>
-      <p id="icsMessage" class="hint" aria-live="polite"></p>
+      <p id="icsMessage" class="muted"></p>
     </section>
 
     <section class="card admin-card">
-      <h3>Zapis do repozytorium</h3>
-      <p class="hint">
-        Po zmianach skopiuj JSON-y do plików w repozytorium i opublikuj aktualizację.
-        Zmiany nie zapisują się automatycznie. Dane na publicznej stronie GitHub Pages mogą być publiczne.
-      </p>
-
+      <h3 data-i18n="saveRepo">Zapis do repozytorium</h3>
+      <p class="muted" data-i18n="repoHint">Skopiuj JSON-y i zapisz je w repozytorium, aby zachować zmiany.</p>
       <label for="subjectsJson">data/subjects.json</label>
-      <textarea id="subjectsJson" class="json" readonly></textarea>
-      <button class="copyJson" data-target="subjectsJson" type="button">Kopiuj JSON przedmiotów</button>
-
+      <textarea id="subjectsJson" readonly></textarea>
+      <button class="copyJson" data-target="subjectsJson" data-i18n="copySubjects">Kopiuj JSON przedmiotów</button>
       <label for="lessonsJson">data/lessons.json</label>
-      <textarea id="lessonsJson" class="json" readonly></textarea>
-      <button class="copyJson" data-target="lessonsJson" type="button">Kopiuj JSON lekcji</button>
-
+      <textarea id="lessonsJson" readonly></textarea>
+      <button class="copyJson" data-target="lessonsJson" data-i18n="copyLessons">Kopiuj JSON lekcji</button>
       <label for="settingsJson">data/settings.json</label>
-      <textarea id="settingsJson" class="json" readonly></textarea>
-      <button class="copyJson" data-target="settingsJson" type="button">Kopiuj JSON ustawień</button>
+      <textarea id="settingsJson" readonly></textarea>
+      <button class="copyJson" data-target="settingsJson" data-i18n="copySettings">Kopiuj JSON ustawień</button>
     </section>
   </main>
 </div>
 
 <dialog id="lessonDialog">
   <form id="lessonForm">
-    <h2 id="lessonFormTitle">Dodaj lekcję</h2>
+    <h2 id="lessonFormTitle"></h2>
     <input id="lessonId" type="hidden">
     <input id="lessonDate" type="hidden">
 
-    <label for="lessonSubject">Przedmiot</label>
+    <label data-i18n="subject" for="lessonSubject">Przedmiot</label>
     <select id="lessonSubject" required></select>
 
     <div class="form-grid">
       <div>
-        <label for="lessonTime">Godzina rozpoczęcia</label>
+        <label data-i18n="startTime" for="lessonTime">Godzina rozpoczęcia</label>
         <input id="lessonTime" type="time" required>
       </div>
       <div>
-        <label for="eventZone">Strefa czasowa wydarzenia</label>
+        <label data-i18n="eventTimezone" for="eventZone">Strefa czasowa lekcji</label>
         <select id="eventZone"></select>
       </div>
     </div>
@@ -615,36 +316,44 @@
     <div id="firstLessonArea">
       <label class="check-row">
         <input id="isFirstLesson" type="checkbox">
-        <span>To pierwsza lekcja tego przedmiotu</span>
+        <span data-i18n="newGradeFirst">To pierwsza lekcja nowej klasy / rocznika</span>
       </label>
-      <div id="classArea" class="class-field hidden">
-        <label for="schoolClass">Klasa</label>
+      <div id="classArea" class="hidden">
+        <label data-i18n="grade" for="schoolClass">Klasa</label>
         <select id="schoolClass">
-          <option value="">Wybierz klasę</option>
+          <option value="" data-i18n="chooseGrade">Wybierz klasę</option>
           <option value="1">1</option><option value="2">2</option>
           <option value="3">3</option><option value="4">4</option>
           <option value="5">5</option><option value="6">6</option>
           <option value="7">7</option><option value="8">8</option>
         </select>
+        <label data-i18n="yearPlanCount" for="schoolYearLessonCount">Liczba lekcji w roku szkolnym</label>
+        <input id="schoolYearLessonCount" type="number" min="1" value="20">
       </div>
     </div>
 
-    <label for="lessonAttendance">Obecność</label>
+    <label data-i18n="attendance" for="lessonAttendance">Obecność</label>
     <select id="lessonAttendance">
-      <option value="unknown">Nieustalona</option>
-      <option value="present">Obecny / obecna</option>
-      <option value="absent">Nieobecny / nieobecna</option>
+      <option value="unknown" data-i18n="unknown">Nieustalona</option>
+      <option value="present" data-i18n="present">Obecny / obecna</option>
+      <option value="absent" data-i18n="absent">Nieobecny / nieobecna</option>
     </select>
 
-    <label for="lessonAlarms">Alarmy (minuty przed lekcją, oddziel przecinkami)</label>
-    <input id="lessonAlarms" value="60,39,10" placeholder="60,39,10">
+    <label data-i18n="alarm" for="lessonAlarms">Alarm przed lekcją</label>
+    <select id="lessonAlarms">
+      <option value="5" selected data-i18n="alarm5">5 minut</option>
+      <option value="10" data-i18n="alarm10">10 minut</option>
+      <option value="15" data-i18n="alarm15">15 minut</option>
+      <option value="30" data-i18n="alarm30">30 minut</option>
+      <option value="60" data-i18n="alarm60">1 godzina</option>
+    </select>
 
-    <label for="lessonNote">Notatka</label>
+    <label data-i18n="note" for="lessonNote">Notatka</label>
     <textarea id="lessonNote" maxlength="1000"></textarea>
 
     <div class="dialog-actions">
-      <button id="cancelLessonBtn" type="button">Anuluj</button>
-      <button id="saveLessonBtn" class="primary" type="submit">Zapisz lekcję</button>
+      <button id="cancelLessonBtn" type="button" data-i18n="cancel">Anuluj</button>
+      <button id="saveLessonBtn" class="primary" type="submit" data-i18n="save">Zapisz</button>
     </div>
   </form>
 </dialog>
@@ -654,20 +363,109 @@
   "use strict";
 
   const $ = id => document.getElementById(id);
-  const weekdays = ["Pon", "Wt", "Śr", "Czw", "Pt", "Sob", "Niedz"];
-  const deviceZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "Europe/Warsaw";
   const defaultZone = "Asia/Tokyo";
-  const colorPalette = ["#5147e8", "#168451", "#e06a24", "#bd3045", "#147a9e", "#a13e9b"];
+  const deviceZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "Europe/Warsaw";
+  const lang = (navigator.languages?.[0] || navigator.language || "pl").toLowerCase().startsWith("ja")
+    ? "ja" : "pl";
+
+  const T = {
+    pl: {
+      appTitle:"Kalendarz lekcji", admin:"Panel Admin", back:"Wstecz", today:"Dziś", next:"Dalej",
+      month:"Miesiąc", week:"Tydzień", calendar:"Kalendarz", addSubject:"Dodaj przedmiot",
+      subjectNameLabel:"Nazwa przedmiotu", color:"Kolor", plannedLessons:"Plan lekcji na rok szkolny",
+      grade:"Klasa", unassigned:"Nieprzypisana", cancel:"Anuluj", timezoneTitle:"Strefa czasowa",
+      timezoneLabel:"Strefa wyświetlania", saveTimezone:"Zapisz strefę",
+      tokyoDefault:"Domyślna strefa: Tokio (Asia/Tokyo).", attendanceTitle:"Obecności",
+      attendanceFilterLabel:"Filtr przedmiotu", lessonNumber:"Numer lekcji", subject:"Przedmiot",
+      attendance:"Obecność", allLessons:"Wszystkie lekcje", selectAll:"Zaznacz wszystkie lekcje",
+      deleteSelected:"Usuń wybrane lekcje", icsTitle:"Import i eksport ICS",
+      exportIcs:"Eksportuj ICS", importIcs:"Importuj ICS", saveRepo:"Zapis do repozytorium",
+      repoHint:"Skopiuj JSON-y i zapisz je w repozytorium, aby zachować zmiany.",
+      copySubjects:"Kopiuj JSON przedmiotów", copyLessons:"Kopiuj JSON lekcji",
+      copySettings:"Kopiuj JSON ustawień", startTime:"Godzina rozpoczęcia",
+      eventTimezone:"Strefa czasowa lekcji", newGradeFirst:"To pierwsza lekcja nowej klasy / rocznika",
+      chooseGrade:"Wybierz klasę", yearPlanCount:"Liczba lekcji w roku szkolnym",
+      unknown:"Nieustalona", present:"Obecny / obecna", absent:"Nieobecny / nieobecna",
+      alarm:"Alarm przed lekcją", alarm5:"5 minut", alarm10:"10 minut", alarm15:"15 minut",
+      alarm30:"30 minut", alarm60:"1 godzina", note:"Notatka", save:"Zapisz",
+      addLesson:"Dodaj lekcję", editLesson:"Edytuj lekcję", noLessons:"Brak lekcji.",
+      addHint:"Naciśnij +, aby dodać lekcję.", minutes:"min", noSubject:"Przedmiot",
+      allSubjects:"Wszystkie przedmioty", lessons:"lekcji", lesson:"lekcja",
+      planned:"Plan", entered:"Wpisano", remaining:"Pozostało", classLabel:"klasa",
+      edit:"Edytuj", delete:"Usuń", confirmDelete:"Usunąć tę lekcję?",
+      confirmMany:"Usunąć zaznaczone lekcje?", noneSelected:"Nie wybrano lekcji.",
+      chooseSubject:"Wybierz przedmiot.", chooseDateTime:"Wybierz dzień i godzinę.",
+      chooseGradeError:"Wybierz klasę od 1 do 8.", countError:"Wpisz roczną liczbę lekcji większą od zera.",
+      duplicateGrade:"Przedmiot dla tej klasy już istnieje. Wybierz go z listy.",
+      chooseFirst:"Zaznacz pierwszą lekcję nowej klasy i wybierz klasę oraz plan.",
+      earlierWarning:"Uwaga: ta lekcja jest wcześniejsza niż późniejsza lekcja tego przedmiotu. Zapisać mimo to?",
+      copied:"Skopiowano JSON.", imported:"Zaimportowano wydarzenia.", noImported:"Nie znaleziono nowych wydarzeń.",
+      chooseFile:"Wybierz plik ICS.", importError:"Nie udało się odczytać pliku ICS.",
+      dragHint:"Przytrzymaj i przeciągnij lekcję. W tygodniu można zmienić godzinę.",
+      attendanceRate:"Frekwencja", attendanceCount:"Obecności", absenceCount:"Nieobecności",
+      unknownCount:"Nieustalone", presentOption:"Obecny / obecna", absentOption:"Nieobecny / nieobecna",
+      yes:"Tak", no:"Nie", firstLesson:"Pierwsza lekcja"
+    },
+    ja: {
+      appTitle:"レッスンカレンダー", admin:"管理パネル", back:"戻る", today:"今日", next:"次へ",
+      month:"月", week:"週", calendar:"カレンダー", addSubject:"科目を追加",
+      subjectNameLabel:"科目名", color:"色", plannedLessons:"年間予定授業数",
+      grade:"学年", unassigned:"未設定", cancel:"キャンセル", timezoneTitle:"タイムゾーン",
+      timezoneLabel:"表示タイムゾーン", saveTimezone:"タイムゾーンを保存",
+      tokyoDefault:"既定のタイムゾーン: 東京 (Asia/Tokyo)", attendanceTitle:"出欠",
+      attendanceFilterLabel:"科目で絞り込む", lessonNumber:"授業番号", subject:"科目",
+      attendance:"出欠状況", allLessons:"すべての授業", selectAll:"すべての授業を選択",
+      deleteSelected:"選択した授業を削除", icsTitle:"ICSのインポート / エクスポート",
+      exportIcs:"ICSをエクスポート", importIcs:"ICSをインポート", saveRepo:"リポジトリに保存",
+      repoHint:"変更を保存するには、JSONをコピーしてリポジトリに保存してください。",
+      copySubjects:"科目JSONをコピー", copyLessons:"授業JSONをコピー",
+      copySettings:"設定JSONをコピー", startTime:"開始時刻",
+      eventTimezone:"授業のタイムゾーン", newGradeFirst:"新しい学年の最初の授業",
+      chooseGrade:"学年を選択", yearPlanCount:"年間の授業数",
+      unknown:"未設定", present:"出席", absent:"欠席",
+      alarm:"授業前の通知", alarm5:"5分前", alarm10:"10分前", alarm15:"15分前",
+      alarm30:"30分前", alarm60:"1時間前", note:"メモ", save:"保存",
+      addLesson:"授業を追加", editLesson:"授業を編集", noLessons:"授業はありません。",
+      addHint:"+を押して授業を追加してください。", minutes:"分", noSubject:"科目",
+      allSubjects:"すべての科目", lessons:"授業", lesson:"授業",
+      planned:"予定", entered:"登録済み", remaining:"残り", classLabel:"年",
+      edit:"編集", delete:"削除", confirmDelete:"この授業を削除しますか？",
+      confirmMany:"選択した授業を削除しますか？", noneSelected:"授業が選択されていません。",
+      chooseSubject:"科目を選択してください。", chooseDateTime:"日付と時刻を選択してください。",
+      chooseGradeError:"1〜8年を選択してください。", countError:"年間授業数を1以上で入力してください。",
+      duplicateGrade:"この学年の科目は既にあります。リストから選択してください。",
+      chooseFirst:"新しい学年の最初の授業を選び、学年と年間授業数を入力してください。",
+      earlierWarning:"注意: この授業は同じ科目の既存授業より前の日付です。このまま保存しますか？",
+      copied:"JSONをコピーしました。", imported:"件の予定をインポートしました。",
+      noImported:"新しくインポートする予定はありません。", chooseFile:"ICSファイルを選択してください。",
+      importError:"ICSファイルを読み込めませんでした。", dragHint:"長押しして授業を移動できます。週表示では時刻も変更できます。",
+      attendanceRate:"出席率", attendanceCount:"出席", absenceCount:"欠席",
+      unknownCount:"未設定", presentOption:"出席", absentOption:"欠席",
+      yes:"はい", no:"いいえ", firstLesson:"最初の授業"
+    }
+  }[lang];
+
+  document.documentElement.lang = lang;
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const key = el.dataset.i18n;
+    if (T[key]) el.textContent = T[key];
+  });
+
+  const weekdays = lang === "ja"
+    ? ["月","火","水","木","金","土","日"]
+    : ["Pon","Wt","Śr","Czw","Pt","Sob","Niedz"];
+
+  const palette = ["#5147e8","#168451","#e06a24","#bd3045","#147a9e","#a13e9b"];
 
   let subjects = [];
   let lessons = [];
   let settings = { displayTimeZone: defaultZone };
   let mode = "month";
   let cursor = new Date();
-  cursor.setHours(0, 0, 0, 0);
+  cursor.setHours(0,0,0,0);
   let selectedDate = new Date(cursor);
   let editingId = null;
-
+  let selectedLessonIds = new Set();
   let dragState = null;
   let dragTimer = null;
   let dragGhost = null;
@@ -676,1471 +474,638 @@
   let suppressClickUntil = 0;
 
   function esc(value) {
-    return String(value ?? "").replace(/[&<>"']/g, char => ({
-      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-    })[char]);
+    return String(value ?? "").replace(/[&<>"']/g, c =>
+      ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" })[c]);
   }
-
-  function makeId() {
-    return window.crypto?.randomUUID?.() ||
-      `id-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  function id() {
+    return crypto.randomUUID?.() || `id-${Date.now()}-${Math.random().toString(16).slice(2)}`;
   }
-
-  function pad(value) { return String(value).padStart(2, "0"); }
-
-  function dateKey(date) {
-    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+  function pad(n) { return String(n).padStart(2,"0"); }
+  function dateKey(d) { return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
+  function fromKey(key) {
+    const [y,m,d] = key.split("-").map(Number);
+    return new Date(y,m-1,d);
   }
-
-  function parseDateKey(key) {
-    const [year, month, day] = key.split("-").map(Number);
-    return new Date(year, month - 1, day);
+  function startWeek(d) {
+    const x = new Date(d);
+    x.setDate(x.getDate()-((x.getDay()+6)%7));
+    x.setHours(0,0,0,0);
+    return x;
   }
-
-  function startOfWeek(date) {
-    const result = new Date(date);
-    result.setDate(result.getDate() - ((result.getDay() + 6) % 7));
-    result.setHours(0, 0, 0, 0);
-    return result;
+  function zone() { return settings.displayTimeZone || defaultZone; }
+  function parts(date, tz) {
+    return Object.fromEntries(new Intl.DateTimeFormat("en-CA", {
+      timeZone:tz, year:"numeric",month:"2-digit",day:"2-digit",
+      hour:"2-digit",minute:"2-digit",hourCycle:"h23"
+    }).formatToParts(date).map(p => [p.type,p.value]));
   }
-
-  function zoneParts(date, zone) {
-    const parts = new Intl.DateTimeFormat("en-CA", {
-      timeZone: zone,
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      hourCycle: "h23"
-    }).formatToParts(date);
-
-    return Object.fromEntries(parts.map(part => [part.type, part.value]));
-  }
-
-  function dateKeyInZone(iso, zone) {
-    const parts = zoneParts(new Date(iso), zone);
-    return `${parts.year}-${parts.month}-${parts.day}`;
-  }
-
-  function zonedTimeToIso(dateText, timeText, zone) {
-    const [year, month, day] = dateText.split("-").map(Number);
-    const [hour, minute] = timeText.split(":").map(Number);
-    const wanted = Date.UTC(year, month - 1, day, hour, minute);
+  function zonedIso(dateText,timeText,tz) {
+    const [y,m,d] = dateText.split("-").map(Number);
+    const [h,min] = timeText.split(":").map(Number);
+    const wanted = Date.UTC(y,m-1,d,h,min);
     let guess = wanted;
-
-    for (let i = 0; i < 4; i++) {
-      const parts = zoneParts(new Date(guess), zone);
-      const represented = Date.UTC(
-        Number(parts.year), Number(parts.month) - 1, Number(parts.day),
-        Number(parts.hour), Number(parts.minute)
-      );
-      guess += wanted - represented;
+    for (let i=0;i<4;i++) {
+      const p = parts(new Date(guess),tz);
+      guess += wanted - Date.UTC(+p.year,+p.month-1,+p.day,+p.hour,+p.minute);
     }
-
     return new Date(guess).toISOString();
   }
-
-  function displayZone() {
-    return settings.displayTimeZone || defaultZone;
-  }
-
-  function formatDateTime(iso, zone = displayZone()) {
-    return new Intl.DateTimeFormat("pl-PL", {
-      timeZone: zone,
-      dateStyle: "medium",
-      timeStyle: "short"
+  function fmtDate(iso,tz=zone()) {
+    return new Intl.DateTimeFormat(lang==="ja"?"ja-JP":"pl-PL", {
+      timeZone:tz, dateStyle:"medium", timeStyle:"short"
     }).format(new Date(iso));
   }
-
-  function formatTime(iso, zone = displayZone()) {
-    return new Intl.DateTimeFormat("pl-PL", {
-      timeZone: zone,
-      hour: "2-digit",
-      minute: "2-digit"
+  function fmtTime(iso,tz=zone()) {
+    return new Intl.DateTimeFormat(lang==="ja"?"ja-JP":"pl-PL", {
+      timeZone:tz,hour:"2-digit",minute:"2-digit"
     }).format(new Date(iso));
   }
-
-  function endIso(lesson) {
-    return new Date(new Date(lesson.start).getTime() + 45 * 60000).toISOString();
+  function subjectById(subjectId) { return subjects.find(s => s.id===subjectId); }
+  function subjectLabel(s) {
+    if (!s) return T.noSubject;
+    return s.grade ? `${s.name} (${s.grade}${T.classLabel})` : s.name;
+  }
+  function subjectLessons(subjectId) {
+    return lessons.filter(l=>l.subjectId===subjectId).sort((a,b)=>new Date(a.start)-new Date(b.start));
+  }
+  function lessonNum(l) { return subjectLessons(l.subjectId).findIndex(x=>x.id===l.id)+1; }
+  function lessonTitle(l) {
+    const s=subjectById(l.subjectId);
+    return `${s?.name || T.noSubject} ${lessonNum(l)}${s?.grade ? ` (${s.grade}${T.classLabel})` : ""}`;
+  }
+  function attendanceText(status) {
+    return status==="present" ? T.present : status==="absent" ? T.absent : T.unknown;
+  }
+  function lessonsOn(date) {
+    const key=dateKey(date);
+    return lessons.filter(l=>{
+      const p=parts(new Date(l.start),zone());
+      return `${p.year}-${p.month}-${p.day}`===key;
+    }).sort((a,b)=>new Date(a.start)-new Date(b.start));
   }
 
-  function subjectById(id) {
-    return subjects.find(subject => subject.id === id);
+  function renderLessonCard(l) {
+    const s=subjectById(l.subjectId);
+    return `<article class="lesson-card" style="--lesson-color:${esc(s?.color||"#5147e8")}">
+      <button type="button" class="lesson-main" data-edit-lesson="${esc(l.id)}">
+        <span class="lesson-line"><span>${esc(fmtTime(l.start))}</span><span>${esc(lessonTitle(l))}</span></span>
+        <span class="muted">45 ${T.minutes}</span>
+      </button>
+      <select class="attendance" data-attendance="${esc(l.id)}" aria-label="${esc(T.attendance)}">
+        <option value="unknown" ${!l.attendance||l.attendance==="unknown"?"selected":""}>${T.unknown}</option>
+        <option value="present" ${l.attendance==="present"?"selected":""}>${T.presentOption}</option>
+        <option value="absent" ${l.attendance==="absent"?"selected":""}>${T.absentOption}</option>
+      </select>
+    </article>`;
   }
 
-  function lessonsForSubject(subjectId) {
-    return lessons
-      .filter(lesson => lesson.subjectId === subjectId)
-      .sort((a, b) => new Date(a.start) - new Date(b.start));
-  }
-
-  function lessonNumber(lesson) {
-    return lessonsForSubject(lesson.subjectId)
-      .findIndex(item => item.id === lesson.id) + 1;
-  }
-
-  function lessonTitle(lesson) {
-    const name = subjectById(lesson.subjectId)?.name || "Lekcja";
-    return `${name} ${lessonNumber(lesson)}`;
-  }
-
-  function attendanceLabel(status) {
-    if (status === "present") return "Obecny / obecna";
-    if (status === "absent") return "Nieobecny / nieobecna";
-    return "Nieustalona";
-  }
-
-  function lessonsOnDate(date) {
-    const key = dateKey(date);
-    return lessons
-      .filter(lesson => dateKeyInZone(lesson.start, displayZone()) === key)
-      .sort((a, b) => new Date(a.start) - new Date(b.start));
-  }
-
-  function eventCard(lesson) {
-    const subject = subjectById(lesson.subjectId);
-
-    return `
-      <article class="lesson-card" style="--lesson-color:${esc(subject?.color || "#5147e8")}">
-        <button type="button" class="lesson-main" data-edit-lesson="${esc(lesson.id)}">
-          <span class="lesson-topline">
-            <span>${esc(formatTime(lesson.start))}</span>
-            <span>${esc(lessonTitle(lesson))}</span>
-          </span>
-          <span class="lesson-subline">45 minut · kliknij, aby edytować</span>
-        </button>
-        <select class="attendance-select ${esc(lesson.attendance || "unknown")}"
-          data-attendance="${esc(lesson.id)}" aria-label="Ustaw obecność">
-          <option value="unknown" ${!lesson.attendance || lesson.attendance === "unknown" ? "selected" : ""}>Nieustalona</option>
-          <option value="present" ${lesson.attendance === "present" ? "selected" : ""}>Obecny / obecna</option>
-          <option value="absent" ${lesson.attendance === "absent" ? "selected" : ""}>Nieobecny / nieobecna</option>
-        </select>
-      </article>`;
-  }
-
-  function bindEventControls(container) {
-    container.querySelectorAll("[data-edit-lesson]").forEach(button => {
-      button.addEventListener("click", () => openLessonForm(button.dataset.editLesson));
-    });
-
-    container.querySelectorAll("[data-attendance]").forEach(select => {
-      select.addEventListener("change", () => {
-        const lesson = lessons.find(item => item.id === select.dataset.attendance);
-        if (lesson) {
-          lesson.attendance = select.value;
-          renderAll();
-        }
-      });
-    });
+  function bindEvents(root) {
+    root.querySelectorAll("[data-edit-lesson]").forEach(b =>
+      b.addEventListener("click",()=>openLesson(b.dataset.editLesson)));
+    root.querySelectorAll("[data-attendance]").forEach(sel =>
+      sel.addEventListener("change",()=>{
+        const l=lessons.find(x=>x.id===sel.dataset.attendance);
+        if(l){ l.attendance=sel.value; renderAll(); }
+      }));
   }
 
   function renderMonth() {
-    const first = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
-    const begin = startOfWeek(first);
-
-    $("periodLabel").textContent = new Intl.DateTimeFormat("pl-PL", {
-      month: "long", year: "numeric"
+    const first=new Date(cursor.getFullYear(),cursor.getMonth(),1);
+    const begin=startWeek(first);
+    $("periodLabel").textContent=new Intl.DateTimeFormat(lang==="ja"?"ja-JP":"pl-PL",{
+      month:"long",year:"numeric"
     }).format(cursor);
 
-    let html = `
-      <div class="weekday-row">
-        ${weekdays.map(day => `<div class="weekday">${day}</div>`).join("")}
-      </div>
-      <div class="month-grid">`;
-
-    for (let i = 0; i < 42; i++) {
-      const day = new Date(begin);
-      day.setDate(begin.getDate() + i);
-
-      const key = dateKey(day);
-      const events = lessonsOnDate(day);
-      const classes = [
-        "month-day",
-        day.getMonth() !== cursor.getMonth() ? "outside" : "",
-        key === dateKey(selectedDate) ? "selected" : "",
-        key === dateKey(new Date()) ? "today" : ""
-      ].filter(Boolean).join(" ");
-
-      const eventButtons = events.slice(0, 3).map(lesson => {
-        const subject = subjectById(lesson.subjectId);
-        return `<button type="button" class="month-event"
-          style="--event-color:${esc(subject?.color || "#5147e8")}"
-          data-edit-lesson="${esc(lesson.id)}"
-          title="${esc(lessonTitle(lesson))}">${esc(lessonTitle(lesson))}</button>`;
+    let html=`<div class="weekdays">${weekdays.map(d=>`<div class="weekday">${d}</div>`).join("")}</div><div class="month-grid">`;
+    for(let i=0;i<42;i++){
+      const d=new Date(begin); d.setDate(begin.getDate()+i);
+      const key=dateKey(d), events=lessonsOn(d);
+      const cls=["month-day",d.getMonth()!==cursor.getMonth()?"outside":"",
+        key===dateKey(selectedDate)?"selected":"",
+        key===dateKey(new Date())?"today":""].filter(Boolean).join(" ");
+      const eventHtml=events.slice(0,3).map(l=>{
+        const s=subjectById(l.subjectId);
+        return `<button type="button" class="month-event" data-edit-lesson="${esc(l.id)}"
+          style="--event-color:${esc(s?.color||"#5147e8")}">${esc(lessonTitle(l))}</button>`;
       }).join("");
-
-      const more = events.length > 3
-        ? `<span class="month-more">+${events.length - 3} więcej</span>`
-        : "";
-
-      html += `
-        <div class="${classes}" data-drop-date="${key}">
-          <div class="day-head">
-            <button type="button" class="day-number" data-select-date="${key}">${day.getDate()}</button>
-            <button type="button" class="add-day" data-add-date="${key}"
-              aria-label="Dodaj lekcję" title="Dodaj lekcję">+</button>
-          </div>
-          <div class="month-events">${eventButtons}${more}</div>
-        </div>`;
+      html+=`<div class="${cls}" data-drop-date="${key}">
+        <div class="day-head">
+          <button class="day-num" data-select-date="${key}">${d.getDate()}</button>
+          <button class="add-day" data-add-date="${key}" aria-label="+">+</button>
+        </div><div class="month-events">${eventHtml}</div>
+      </div>`;
     }
+    $("monthView").innerHTML=html+"</div>";
+    $("monthView").querySelectorAll("[data-select-date]").forEach(b=>b.addEventListener("click",()=>{
+      selectedDate=fromKey(b.dataset.selectDate); cursor=new Date(selectedDate); renderCalendar();
+    }));
+    $("monthView").querySelectorAll("[data-add-date]").forEach(b=>b.addEventListener("click",()=>{
+      selectedDate=fromKey(b.dataset.addDate); openLesson(null,selectedDate);
+    }));
+    bindEvents($("monthView"));
 
-    $("monthView").innerHTML = html + "</div>";
-
-    $("monthView").querySelectorAll("[data-select-date]").forEach(button => {
-      button.addEventListener("click", () => {
-        selectedDate = parseDateKey(button.dataset.selectDate);
-        cursor = new Date(selectedDate);
-        renderCalendar();
-      });
-    });
-
-    $("monthView").querySelectorAll("[data-add-date]").forEach(button => {
-      button.addEventListener("click", () => {
-        selectedDate = parseDateKey(button.dataset.addDate);
-        openLessonForm(null, selectedDate);
-      });
-    });
-
-    bindEventControls($("monthView"));
-
-    const items = lessonsOnDate(selectedDate);
-    $("selectedDateTitle").textContent = new Intl.DateTimeFormat("pl-PL", {
-      timeZone: displayZone(),
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-      year: "numeric"
+    $("selectedDateTitle").textContent=new Intl.DateTimeFormat(lang==="ja"?"ja-JP":"pl-PL",{
+      timeZone:zone(),weekday:"long",year:"numeric",month:"long",day:"numeric"
     }).format(selectedDate);
-
-    $("selectedDateCount").textContent = items.length ? `${items.length} lekcji` : "";
-    $("selectedDayLessons").innerHTML = items.length
-      ? items.map(eventCard).join("")
-      : `<div class="empty">Brak lekcji. Użyj przycisku + przy dniu, aby ją dodać.</div>`;
-
-    bindEventControls($("selectedDayLessons"));
+    const dayLessons=lessonsOn(selectedDate);
+    $("selectedDateCount").textContent=dayLessons.length ? `${dayLessons.length} ${T.lessons}` : "";
+    $("selectedDayLessons").innerHTML=dayLessons.length
+      ? dayLessons.map(renderLessonCard).join("")
+      : `<div class="empty">${T.noLessons} ${T.addHint}</div>`;
+    bindEvents($("selectedDayLessons"));
   }
 
   function renderWeek() {
-    const start = startOfWeek(cursor);
-    const dates = Array.from({ length: 7 }, (_, index) => {
-      const date = new Date(start);
-      date.setDate(start.getDate() + index);
-      return date;
-    });
+    const start=startWeek(cursor);
+    const dates=Array.from({length:7},(_,i)=>{const d=new Date(start);d.setDate(start.getDate()+i);return d;});
+    const end=dates[6];
+    const locale=lang==="ja"?"ja-JP":"pl-PL";
+    $("periodLabel").textContent=`${start.toLocaleDateString(locale,{month:"short",day:"numeric"})} – ${end.toLocaleDateString(locale,{year:"numeric",month:"short",day:"numeric"})}`;
 
-    const end = dates[6];
-    $("periodLabel").textContent =
-      `${start.toLocaleDateString("pl-PL", { day: "numeric", month: "short" })} – ` +
-      `${end.toLocaleDateString("pl-PL", { day: "numeric", month: "short", year: "numeric" })}`;
+    let heads='<div class="week-head"></div>';
+    dates.forEach((d,i)=>heads+=`<div class="week-head">${weekdays[i]}<br>${d.getMonth()+1}/${d.getDate()}</div>`);
+    let axis='<div class="time-axis">';
+    for(let h=0;h<24;h++) axis+=`<span class="hour-label" style="top:${h*56}px">${pad(h)}:00</span>`;
+    axis+='</div>';
 
-    let headers = `<div class="week-head time-head"></div>`;
-    dates.forEach((date, index) => {
-      headers += `<div class="week-head">
-        <span class="week-day-name">${weekdays[index]}</span>
-        <span class="week-date">${date.getDate()}.${pad(date.getMonth() + 1)}</span>
-      </div>`;
-    });
-
-    let timeAxis = `<div class="time-axis">`;
-    for (let hour = 0; hour < 24; hour++) {
-      timeAxis += `<span class="hour-label" style="top:${hour * 56}px">${pad(hour)}:00</span>`;
-    }
-    timeAxis += `</div>`;
-
-    let columns = "";
-    dates.forEach(date => {
-      let events = "";
-
-      lessonsOnDate(date).forEach(lesson => {
-        const parts = zoneParts(new Date(lesson.start), displayZone());
-        const minutes = Number(parts.hour) * 60 + Number(parts.minute);
-        const top = minutes / 60 * 56;
-        const subject = subjectById(lesson.subjectId);
-
-        events += `<button type="button" class="week-event"
-          data-edit-lesson="${esc(lesson.id)}"
-          style="top:${top}px;height:42px;--event-color:${esc(subject?.color || "#5147e8")}">
-          <strong>${esc(formatTime(lesson.start))} ${esc(lessonTitle(lesson))}</strong>
-          <span>45 min</span>
+    let cols="";
+    dates.forEach(d=>{
+      let ev="";
+      lessonsOn(d).forEach(l=>{
+        const p=parts(new Date(l.start),zone()), mins=+p.hour*60 + +p.minute;
+        const s=subjectById(l.subjectId);
+        ev+=`<button class="week-event" data-edit-lesson="${esc(l.id)}"
+          style="top:${mins/60*56}px;--event-color:${esc(s?.color||"#5147e8")}">
+          <strong>${esc(fmtTime(l.start))} ${esc(lessonTitle(l))}</strong><span>45 ${T.minutes}</span>
         </button>`;
       });
-
-      columns += `<div class="week-column" data-drop-date="${dateKey(date)}">${events}</div>`;
+      cols+=`<div class="week-column" data-drop-date="${dateKey(d)}">${ev}</div>`;
     });
 
-    const agendas = dates.map(date => {
-      const items = lessonsOnDate(date);
-      const title = new Intl.DateTimeFormat("pl-PL", {
-        timeZone: displayZone(),
-        weekday: "long",
-        day: "numeric",
-        month: "long"
-      }).format(date);
-
-      return `<section class="day-card" data-drop-date="${dateKey(date)}">
-        <div class="day-card-heading">
-          <b>${esc(title)}</b>
-          <button type="button" data-add-date="${dateKey(date)}"
-            aria-label="Dodaj lekcję" style="color:var(--primary);font-size:20px">+</button>
-        </div>
-        <div class="event-list">
-          ${items.length ? items.map(eventCard).join("") : '<div class="small-muted">Brak lekcji</div>'}
-        </div>
+    const agenda=dates.map(d=>{
+      const items=lessonsOn(d);
+      const title=new Intl.DateTimeFormat(locale,{timeZone:zone(),weekday:"long",month:"long",day:"numeric"}).format(d);
+      return `<section class="day-card" data-drop-date="${dateKey(d)}">
+        <div class="day-card-head"><b>${esc(title)}</b>
+          <button data-add-date="${dateKey(d)}">+</button></div>
+        ${items.length?items.map(renderLessonCard).join(""):`<div class="muted">${T.noLessons}</div>`}
       </section>`;
     }).join("");
 
-    $("weekView").innerHTML = `
-      <div class="week-scroll">
-        <div class="week-grid">${headers}${timeAxis}${columns}</div>
-      </div>
-      <div class="section-heading"><h2>Lekcje tygodnia</h2></div>
-      <div class="week-days">${agendas}</div>`;
-
-    $("weekView").querySelectorAll("[data-add-date]").forEach(button => {
-      button.addEventListener("click", () =>
-        openLessonForm(null, parseDateKey(button.dataset.addDate))
-      );
-    });
-
-    bindEventControls($("weekView"));
+    $("weekView").innerHTML=`<div class="week-scroll"><div class="week-grid">${heads}${axis}${cols}</div></div>
+      <div class="section-heading"><h2>${T.allLessons}</h2></div><div class="week-days">${agenda}</div>`;
+    $("weekView").querySelectorAll("[data-add-date]").forEach(b=>b.addEventListener("click",()=>openLesson(null,fromKey(b.dataset.addDate))));
+    bindEvents($("weekView"));
   }
 
   function renderCalendar() {
-    $("monthView").classList.toggle("hidden", mode !== "month");
-    $("monthAgenda").classList.toggle("hidden", mode !== "month");
-    $("weekView").classList.toggle("hidden", mode !== "week");
-    $("monthBtn").classList.toggle("active", mode === "month");
-    $("weekBtn").classList.toggle("active", mode === "week");
-
-    if (mode === "month") renderMonth();
-    else renderWeek();
+    $("monthView").classList.toggle("hidden",mode!=="month");
+    $("monthAgenda").classList.toggle("hidden",mode!=="month");
+    $("weekView").classList.toggle("hidden",mode!=="week");
+    $("monthBtn").classList.toggle("active",mode==="month");
+    $("weekBtn").classList.toggle("active",mode==="week");
+    mode==="month"?renderMonth():renderWeek();
   }
 
-  function renderZoneLists() {
-    const zones = [...new Set([
-      defaultZone,
-      deviceZone,
-      "Europe/Warsaw",
-      "Europe/London",
-      "Europe/Paris",
-      "America/New_York",
-      "Asia/Tokyo",
-      "UTC",
-      settings.displayTimeZone || defaultZone
-    ])];
-
-    const options = zones.map(zone =>
-      `<option value="${esc(zone)}">${esc(zone)}</option>`).join("");
-
-    $("displayZone").innerHTML = options;
-    $("eventZone").innerHTML = options;
-    $("displayZone").value = settings.displayTimeZone || defaultZone;
-    $("eventZone").value = settings.displayTimeZone || defaultZone;
+  function renderZones() {
+    const zones=[...new Set([defaultZone,deviceZone,"Europe/Warsaw","Europe/London","Europe/Paris","UTC",zone()])];
+    const options=zones.map(z=>`<option value="${esc(z)}">${esc(z)}</option>`).join("");
+    $("displayZone").innerHTML=options;
+    $("eventZone").innerHTML=options;
+    $("displayZone").value=zone();
+    $("eventZone").value=zone();
   }
 
   function refreshJson() {
-    $("subjectsJson").value = JSON.stringify(subjects, null, 2);
-    $("lessonsJson").value = JSON.stringify(lessons, null, 2);
-    $("settingsJson").value = JSON.stringify(settings, null, 2);
+    $("subjectsJson").value=JSON.stringify(subjects,null,2);
+    $("lessonsJson").value=JSON.stringify(lessons,null,2);
+    $("settingsJson").value=JSON.stringify(settings,null,2);
   }
 
   function renderAdmin() {
-    const currentSubject = $("lessonSubject").value;
+    const chosen=$("lessonSubject").value;
+    $("lessonSubject").innerHTML=subjects.map(s=>`<option value="${esc(s.id)}">${esc(subjectLabel(s))}</option>`).join("");
+    if(subjects.some(s=>s.id===chosen)) $("lessonSubject").value=chosen;
 
-    $("lessonSubject").innerHTML = subjects.map(subject =>
-      `<option value="${esc(subject.id)}">${esc(subject.name)}</option>`).join("");
+    const oldFilter=$("attendanceFilter").value||"all";
+    $("attendanceFilter").innerHTML=`<option value="all">${T.allSubjects}</option>`+
+      subjects.map(s=>`<option value="${esc(s.id)}">${esc(subjectLabel(s))}</option>`).join("");
+    $("attendanceFilter").value=oldFilter;
 
-    if (subjects.some(subject => subject.id === currentSubject)) {
-      $("lessonSubject").value = currentSubject;
-    }
+    const present=lessons.filter(l=>l.attendance==="present").length;
+    const absent=lessons.filter(l=>l.attendance==="absent").length;
+    const unknown=lessons.length-present-absent;
+    const decided=present+absent;
 
-    const currentFilter = $("attendanceFilter").value || "all";
-    $("attendanceFilter").innerHTML =
-      `<option value="all">Wszystkie przedmioty</option>` +
-      subjects.map(subject =>
-        `<option value="${esc(subject.id)}">${esc(subject.name)}</option>`).join("");
+    $("overallStats").innerHTML=`
+      <div class="stat"><b>${T.allLessons}</b><br>${lessons.length}</div>
+      <div class="stat"><b>${T.attendanceCount}</b><br>${present}</div>
+      <div class="stat"><b>${T.absenceCount}</b><br>${absent}</div>
+      <div class="stat"><b>${T.unknownCount}</b><br>${unknown}</div>
+      <div class="stat"><b>${T.attendanceRate}</b><br>${decided?Math.round(present/decided*100)+"%":"—"}</div>`;
 
-    if (currentFilter === "all" || subjects.some(subject => subject.id === currentFilter)) {
-      $("attendanceFilter").value = currentFilter;
-    }
-
-    const present = lessons.filter(lesson => lesson.attendance === "present").length;
-    const absent = lessons.filter(lesson => lesson.attendance === "absent").length;
-    const unknown = lessons.length - present - absent;
-    const known = present + absent;
-
-    $("overallStats").innerHTML = `
-      <div class="stat"><b>Wpisane lekcje</b><br>${lessons.length}</div>
-      <div class="stat"><b>Obecności</b><br><span style="color:var(--green)">${present}</span></div>
-      <div class="stat"><b>Nieobecności</b><br><span style="color:var(--red)">${absent}</span></div>
-      <div class="stat"><b>Nieustalone</b><br>${unknown}</div>
-      <div class="stat"><b>Frekwencja</b><br>${known ? Math.round(present / known * 100) + "%" : "Brak danych"}</div>`;
-
-    $("subjectList").innerHTML = subjects.length ? subjects.map(subject => {
-      const count = lessons.filter(lesson => lesson.subjectId === subject.id).length;
-      const planned = Number(subject.plannedCount) || 0;
-      const remaining = Math.max(0, planned - count);
-
+    $("subjectList").innerHTML=subjects.map(s=>{
+      const count=lessons.filter(l=>l.subjectId===s.id).length;
+      const planned=Number(s.plannedCount)||0;
       return `<div class="subject-row">
-        <div class="row-info">
-          <b style="color:${esc(subject.color)}">${esc(subject.name)}</b><br>
-          <span class="small-muted">
-            Klasa: ${subject.grade ? esc(subject.grade) : "nieustalona"} ·
-            Plan: ${planned} · Wpisano: ${count} · Pozostało: ${remaining}
-          </span>
+        <div class="row-info"><b style="color:${esc(s.color)}">${esc(subjectLabel(s))}</b><br>
+        <span class="muted">${T.planned}: ${planned} · ${T.entered}: ${count} · ${T.remaining}: ${Math.max(0,planned-count)}</span></div>
+        <button data-edit-subject="${esc(s.id)}">${T.edit}</button>
+      </div>`;
+    }).join("") || `<div class="empty">${T.noSubject}</div>`;
+
+    $("subjectList").querySelectorAll("[data-edit-subject]").forEach(b=>b.addEventListener("click",()=>editSubject(b.dataset.editSubject)));
+
+    const filtered=lessons.filter(l=>oldFilter==="all"||l.subjectId===oldFilter);
+    $("attendanceBody").innerHTML=filtered.length?filtered.map(l=>`
+      <tr><td>${lessonNum(l)}</td><td>${esc(subjectLabel(subjectById(l.subjectId)))}</td>
+      <td><select data-attendance="${esc(l.id)}">
+        <option value="unknown" ${!l.attendance||l.attendance==="unknown"?"selected":""}>${T.unknown}</option>
+        <option value="present" ${l.attendance==="present"?"selected":""}>${T.presentOption}</option>
+        <option value="absent" ${l.attendance==="absent"?"selected":""}>${T.absentOption}</option>
+      </select></td></tr>`).join(""):`<tr><td colspan="3">${T.noLessons}</td></tr>`;
+    bindEvents($("attendanceBody"));
+
+    const sorted=[...lessons].sort((a,b)=>new Date(a.start)-new Date(b.start));
+    selectedLessonIds=new Set([...selectedLessonIds].filter(x=>lessons.some(l=>l.id===x)));
+    $("adminLessonList").innerHTML=sorted.map(l=>`
+      <div class="lesson-admin-row">
+        <div class="lesson-row-main">
+          <input type="checkbox" data-select-lesson="${esc(l.id)}" ${selectedLessonIds.has(l.id)?"checked":""}>
+          <div class="row-info"><b>${esc(lessonTitle(l))}</b><br><span class="muted">${esc(fmtDate(l.start))}</span></div>
         </div>
         <div class="row-actions">
-          <button type="button" data-edit-subject="${esc(subject.id)}">Edytuj</button>
+          <button data-edit-lesson="${esc(l.id)}">${T.edit}</button>
+          <button class="danger" data-delete-lesson="${esc(l.id)}">${T.delete}</button>
         </div>
-      </div>`;
-    }).join("") : `<p class="small-muted">Nie dodano jeszcze przedmiotów.</p>`;
+      </div>`).join("")||`<div class="empty">${T.noLessons}</div>`;
 
-    $("subjectList").querySelectorAll("[data-edit-subject]").forEach(button => {
-      button.addEventListener("click", () => editSubject(button.dataset.editSubject));
-    });
+    $("adminLessonList").querySelectorAll("[data-select-lesson]").forEach(box=>box.addEventListener("change",()=>{
+      box.checked?selectedLessonIds.add(box.dataset.selectLesson):selectedLessonIds.delete(box.dataset.selectLesson);
+      renderAdmin();
+    }));
+    $("adminLessonList").querySelectorAll("[data-edit-lesson]").forEach(b=>b.addEventListener("click",()=>openLesson(b.dataset.editLesson)));
+    $("adminLessonList").querySelectorAll("[data-delete-lesson]").forEach(b=>b.addEventListener("click",()=>{
+      if(confirm(T.confirmDelete)){ lessons=lessons.filter(l=>l.id!==b.dataset.deleteLesson); renderAll(); }
+    }));
 
-    const filter = $("attendanceFilter").value || "all";
-    const attendanceRows = lessons
-      .filter(lesson => filter === "all" || lesson.subjectId === filter)
-      .sort((a, b) => {
-        const nameOrder = (subjectById(a.subjectId)?.name || "")
-          .localeCompare(subjectById(b.subjectId)?.name || "");
-        return nameOrder || lessonNumber(a) - lessonNumber(b);
-      });
-
-    $("attendanceBody").innerHTML = attendanceRows.length
-      ? attendanceRows.map(lesson => {
-          const status = lesson.attendance || "unknown";
-          return `<tr>
-            <td>${lessonNumber(lesson)}</td>
-            <td>${esc(subjectById(lesson.subjectId)?.name || "Lekcja")}</td>
-            <td>
-              <select class="attendance-select ${esc(status)}" data-attendance="${esc(lesson.id)}">
-                <option value="unknown" ${status === "unknown" ? "selected" : ""}>Nieustalona</option>
-                <option value="present" ${status === "present" ? "selected" : ""}>Obecny / obecna</option>
-                <option value="absent" ${status === "absent" ? "selected" : ""}>Nieobecny / nieobecna</option>
-              </select>
-            </td>
-          </tr>`;
-        }).join("")
-      : `<tr><td colspan="3">Brak lekcji dla wybranego przedmiotu.</td></tr>`;
-
-    $("attendanceBody").querySelectorAll("[data-attendance]").forEach(select => {
-      select.addEventListener("change", () => {
-        const lesson = lessons.find(item => item.id === select.dataset.attendance);
-        if (lesson) {
-          lesson.attendance = select.value;
-          renderAll();
-        }
-      });
-    });
-
-    const sorted = [...lessons].sort((a, b) => new Date(a.start) - new Date(b.start));
-
-    $("adminLessonList").innerHTML = sorted.length
-      ? sorted.map(lesson => `<div class="lesson-admin-row">
-          <div class="row-info">
-            <b>${esc(lessonTitle(lesson))}</b><br>
-            <span class="small-muted">
-              ${esc(formatDateTime(lesson.start))} · ${esc(attendanceLabel(lesson.attendance))}
-            </span>
-          </div>
-          <div class="row-actions">
-            <button type="button" data-edit-lesson="${esc(lesson.id)}">Edytuj</button>
-            <button type="button" class="danger" data-delete-lesson="${esc(lesson.id)}">Usuń</button>
-          </div>
-        </div>`).join("")
-      : `<div class="empty">Brak lekcji.</div>`;
-
-    $("adminLessonList").querySelectorAll("[data-edit-lesson]").forEach(button => {
-      button.addEventListener("click", () => openLessonForm(button.dataset.editLesson));
-    });
-
-    $("adminLessonList").querySelectorAll("[data-delete-lesson]").forEach(button => {
-      button.addEventListener("click", () => {
-        if (!confirm("Usunąć tę lekcję?")) return;
-        lessons = lessons.filter(lesson => lesson.id !== button.dataset.deleteLesson);
-        renderAll();
-      });
-    });
+    $("selectAllLessons").checked=sorted.length>0&&sorted.every(l=>selectedLessonIds.has(l.id));
+    $("deleteSelectedLessonsBtn").disabled=!selectedLessonIds.size;
+    $("deleteSelectedLessonsBtn").textContent=selectedLessonIds.size
+      ? `${T.deleteSelected} (${selectedLessonIds.size})` : T.deleteSelected;
 
     refreshJson();
   }
 
-  function renderAll() {
-    renderCalendar();
-    renderAdmin();
-  }
+  function renderAll(){ renderCalendar(); renderAdmin(); }
 
-  function resetSubjectForm() {
-    $("subjectId").value = "";
-    $("subjectName").value = "";
-    $("subjectColor").value = "#5147e8";
-    $("subjectPlanned").value = "0";
-    $("subjectFormTitle").textContent = "Dodaj przedmiot";
-    $("saveSubjectBtn").textContent = "Dodaj przedmiot";
+  function resetSubjectForm(){
+    $("subjectId").value=""; $("subjectName").value="";
+    $("subjectColor").value="#5147e8"; $("subjectPlanned").value="0";
+    $("subjectGrade").value="";
+    $("subjectFormTitle").textContent=T.addSubject;
+    $("saveSubjectBtn").textContent=T.addSubject;
     $("cancelSubjectEditBtn").classList.add("hidden");
   }
 
-  function editSubject(id) {
-    const subject = subjectById(id);
-    if (!subject) return;
-
-    $("subjectId").value = subject.id;
-    $("subjectName").value = subject.name;
-    $("subjectColor").value = subject.color || "#5147e8";
-    $("subjectPlanned").value = Number(subject.plannedCount) || 0;
-    $("subjectFormTitle").textContent = "Edytuj przedmiot";
-    $("saveSubjectBtn").textContent = "Zapisz zmiany";
+  function editSubject(subjectId){
+    const s=subjectById(subjectId); if(!s)return;
+    $("subjectId").value=s.id; $("subjectName").value=s.name;
+    $("subjectColor").value=s.color||"#5147e8";
+    $("subjectPlanned").value=Number(s.plannedCount)||0;
+    $("subjectGrade").value=s.grade?String(s.grade):"";
+    $("subjectFormTitle").textContent=T.edit;
+    $("saveSubjectBtn").textContent=T.save;
     $("cancelSubjectEditBtn").classList.remove("hidden");
-    $("subjectName").focus();
   }
 
-  function saveSubject() {
-    const name = $("subjectName").value.trim();
-    const id = $("subjectId").value;
-
-    if (!name) {
-      alert("Wpisz nazwę przedmiotu.");
-      return;
+  function saveSubject(){
+    const name=$("subjectName").value.trim(), sid=$("subjectId").value;
+    const grade=$("subjectGrade").value?Number($("subjectGrade").value):null;
+    if(!name)return;
+    if(subjects.some(s=>s.name.toLowerCase()===name.toLowerCase()&&Number(s.grade||0)===Number(grade||0)&&s.id!==sid)){
+      alert(T.duplicateGrade); return;
     }
-
-    if (subjects.some(subject =>
-      subject.name.toLowerCase() === name.toLowerCase() && subject.id !== id
-    )) {
-      alert("Przedmiot o takiej nazwie już istnieje.");
-      return;
-    }
-
-    const data = {
-      name,
-      color: $("subjectColor").value,
-      plannedCount: Math.max(0, parseInt($("subjectPlanned").value, 10) || 0)
-    };
-
-    if (id) {
-      const subject = subjectById(id);
-      if (subject) Object.assign(subject, data);
-    } else {
-      subjects.push({ id: makeId(), ...data, grade: null });
-    }
-
-    resetSubjectForm();
-    renderAll();
+    const data={name,color:$("subjectColor").value,plannedCount:+$("subjectPlanned").value||0,grade};
+    if(sid) Object.assign(subjectById(sid),data);
+    else subjects.push({id:id(),...data});
+    resetSubjectForm(); renderAll();
   }
 
-  function updateFirstLessonControl() {
-    const subjectId = $("lessonSubject").value;
-    const hasOtherLessons = lessons.some(lesson =>
-      lesson.subjectId === subjectId && lesson.id !== editingId
-    );
-
-    $("isFirstLesson").checked = !hasOtherLessons;
-    $("isFirstLesson").disabled = hasOtherLessons;
-    $("classArea").classList.toggle("hidden", !$("isFirstLesson").checked);
-
-    const grade = subjectById(subjectId)?.grade;
-    if (grade) $("schoolClass").value = String(grade);
+  function updateFirstLesson(){
+    const s=subjectById($("lessonSubject").value);
+    $("classArea").classList.toggle("hidden",!$("isFirstLesson").checked);
+    if(s){
+      $("schoolClass").value=s.grade?String(s.grade):"";
+      $("schoolYearLessonCount").value=String(Number(s.plannedCount)||20);
+    }
   }
 
-  function openLessonForm(id = null, date = selectedDate) {
-    if (!subjects.length) {
-      alert("Najpierw dodaj przedmiot w panelu Admin.");
-      return;
-    }
-
-    editingId = id;
+  function openLesson(lessonId=null,date=selectedDate){
+    if(!subjects.length){alert(T.chooseSubject);return;}
+    editingId=lessonId;
     $("lessonForm").reset();
-    $("lessonId").value = id || "";
-    $("lessonDate").value = dateKey(date);
-    $("lessonFormTitle").textContent = id ? "Edytuj lekcję" : "Dodaj lekcję";
-    $("saveLessonBtn").textContent = id ? "Zapisz zmiany" : "Dodaj lekcję";
-    $("lessonAttendance").value = "unknown";
-    $("lessonAlarms").value = "60,39,10";
-    $("eventZone").value = displayZone();
+    $("lessonId").value=lessonId||"";
+    $("lessonDate").value=dateKey(date);
+    $("lessonFormTitle").textContent=lessonId?T.editLesson:T.addLesson;
+    $("lessonAttendance").value="unknown";
+    $("lessonAlarms").value="5";
+    $("schoolClass").value="";
+    $("schoolYearLessonCount").value="20";
+    $("eventZone").value=zone();
     $("firstLessonArea").classList.remove("hidden");
     $("classArea").classList.add("hidden");
 
-    const lesson = lessons.find(item => item.id === id);
-
-    if (lesson) {
-      const zone = lesson.timeZone || displayZone();
-      const parts = zoneParts(new Date(lesson.start), zone);
-
-      $("lessonSubject").value = lesson.subjectId;
-      $("lessonDate").value = `${parts.year}-${parts.month}-${parts.day}`;
-      $("lessonTime").value = `${parts.hour}:${parts.minute}`;
-      $("eventZone").value = zone;
-      $("lessonAttendance").value = lesson.attendance || "unknown";
-      $("lessonAlarms").value = (lesson.alarms || []).join(",");
-      $("lessonNote").value = lesson.note || "";
+    const l=lessons.find(x=>x.id===lessonId);
+    if(l){
+      const z=l.timeZone||zone(), p=parts(new Date(l.start),z);
+      $("lessonSubject").value=l.subjectId;
+      $("lessonDate").value=`${p.year}-${p.month}-${p.day}`;
+      $("lessonTime").value=`${p.hour}:${p.minute}`;
+      $("eventZone").value=z;
+      $("lessonAttendance").value=l.attendance||"unknown";
+      $("lessonNote").value=l.note||"";
+      const alarm=String(l.alarms?.[0]??5);
+      $("lessonAlarms").value=["5","10","15","30","60"].includes(alarm)?alarm:"5";
       $("firstLessonArea").classList.add("hidden");
     } else {
-      $("lessonSubject").value = subjects[0].id;
-      updateFirstLessonControl();
+      $("lessonSubject").value=subjects[0].id;
+      updateFirstLesson();
     }
-
     $("lessonDialog").showModal();
   }
 
-  function saveLesson(event) {
-    event.preventDefault();
+  function saveLesson(e){
+    e.preventDefault();
+    const lessonId=$("lessonId").value;
+    let subject=subjectById($("lessonSubject").value);
+    let subjectId=subject?.id;
+    const date=$("lessonDate").value,time=$("lessonTime").value;
+    if(!date||!time){alert(T.chooseDateTime);return;}
+    if(!subject){alert(T.chooseSubject);return;}
 
-    const id = $("lessonId").value;
-    const subjectId = $("lessonSubject").value;
-    const date = $("lessonDate").value;
-    const time = $("lessonTime").value;
+    if(!lessonId&&$("isFirstLesson").checked){
+      const grade=Number($("schoolClass").value);
+      const planned=Number($("schoolYearLessonCount").value);
+      if(!grade||grade>8){alert(T.chooseGradeError);return;}
+      if(!Number.isInteger(planned)||planned<1){alert(T.countError);return;}
 
-    if (!date || !time) {
-      alert("Wybierz dzień i godzinę.");
-      return;
-    }
+      let variant=subjects.find(s=>s.name.toLowerCase()===subject.name.toLowerCase()&&Number(s.grade||0)===grade);
+      if(variant&&variant.id!==subject.id){alert(T.duplicateGrade);return;}
 
-    const subject = subjectById(subjectId);
-    const hasOtherLessons = lessons.some(lesson =>
-      lesson.subjectId === subjectId && lesson.id !== id
-    );
-
-    if (!id && $("isFirstLesson").checked) {
-      if (!$("schoolClass").value) {
-        alert("Wybierz klasę od 1 do 8.");
-        return;
+      if(!variant&&subject.grade&&subject.grade!==grade){
+        variant={id:id(),name:subject.name,color:subject.color,grade,plannedCount:planned};
+        subjects.push(variant);
+        subject=variant; subjectId=variant.id;
+      } else {
+        subject.grade=grade;
+        subject.plannedCount=planned;
       }
-      if (subject) subject.grade = Number($("schoolClass").value);
-    } else if (!id && !hasOtherLessons && subject && !subject.grade) {
-      alert("Zaznacz pierwszą lekcję i wybierz klasę.");
-      return;
+    } else if(!lessonId&&!subject.grade&&!lessons.some(l=>l.subjectId===subject.id)){
+      alert(T.chooseFirst);return;
     }
 
-    const zone = $("eventZone").value || defaultZone;
-    const start = zonedTimeToIso(date, time, zone);
+    const tz=$("eventZone").value||defaultZone;
+    const start=zonedIso(date,time,tz);
+    const later=lessons.some(l=>l.subjectId===subjectId&&l.id!==lessonId&&new Date(l.start)>new Date(start));
+    if(later&&!confirm(T.earlierWarning))return;
 
-    const laterLesson = lessons
-      .filter(lesson =>
-        lesson.subjectId === subjectId &&
-        lesson.id !== id &&
-        new Date(lesson.start) > new Date(start)
-      )
-      .sort((a, b) => new Date(a.start) - new Date(b.start))[0];
-
-    if (laterLesson) {
-      const enteredDate = formatDateTime(start, displayZone());
-      const existingDate = formatDateTime(laterLesson.start, displayZone());
-      const subjectName = subject?.name || "tego przedmiotu";
-
-      const confirmed = confirm(
-        `Uwaga: data tej lekcji (${enteredDate}) jest wcześniejsza niż data już wpisanej ` +
-        `lekcji przedmiotu „${subjectName}” (${existingDate}). Numery lekcji zostaną ` +
-        `ustalone według chronologii. Czy zapisać mimo to?`
-      );
-
-      if (!confirmed) return;
-    }
-
-    const oldLesson = lessons.find(lesson => lesson.id === id);
-    const alarms = $("lessonAlarms").value
-      .split(",")
-      .map(value => Number(value.trim()))
-      .filter(value => Number.isFinite(value) && value >= 0);
-
-    const newLesson = {
-      id: id || makeId(),
-      subjectId,
-      start,
-      timeZone: zone,
-      attendance: $("lessonAttendance").value,
-      alarms,
-      note: $("lessonNote").value.trim(),
-      uid: oldLesson?.uid || ""
+    const old=lessons.find(l=>l.id===lessonId);
+    const updated={
+      id:lessonId||id(),subjectId,start,timeZone:tz,
+      attendance:$("lessonAttendance").value,
+      alarms:[Number($("lessonAlarms").value)||5],
+      note:$("lessonNote").value.trim(),uid:old?.uid||""
     };
+    if(lessonId) lessons=lessons.map(l=>l.id===lessonId?updated:l);
+    else lessons.push(updated);
+    selectedDate=new Date(start); cursor=new Date(selectedDate);
+    $("lessonDialog").close(); renderAll();
+  }
 
-    if (id) {
-      lessons = lessons.map(lesson => lesson.id === id ? newLesson : lesson);
-    } else {
-      lessons.push(newLesson);
+  function findDrop(x,y){return document.elementFromPoint(x,y)?.closest("[data-drop-date]")||null;}
+  function clearDrag(){
+    dragOverElement?.classList.remove("drag-over"); dragOverElement=null;
+    dragPreview?.remove(); dragPreview=null;
+  }
+  function previewDrag(x,y){
+    clearDrag();
+    const target=findDrop(x,y); if(!target)return;
+    dragOverElement=target; target.classList.add("drag-over");
+    const col=target.closest(".week-column");
+    if(!col)return;
+    const r=col.getBoundingClientRect();
+    let mins=Math.round((Math.max(0,y-r.top)/56*60)/15)*15;
+    mins=Math.max(0,Math.min(1395,mins));
+    dragPreview=document.createElement("div");
+    dragPreview.className="week-drop-preview";
+    dragPreview.style.top=`${mins/60*56}px`;
+    dragPreview.textContent=`${pad(Math.floor(mins/60))}:${pad(mins%60)} · 45 ${T.minutes}`;
+    col.appendChild(dragPreview);
+  }
+  function moveLesson(lessonId,target,y){
+    const l=lessons.find(x=>x.id===lessonId); if(!l)return;
+    const tz=zone(), col=target.closest(".week-column");
+    const p=parts(new Date(l.start),tz);
+    let mins=+p.hour*60 + +p.minute;
+    if(col){
+      const r=col.getBoundingClientRect();
+      mins=Math.round((Math.max(0,y-r.top)/56*60)/15)*15;
+      mins=Math.max(0,Math.min(1395,mins));
     }
-
-    selectedDate = new Date(start);
-    cursor = new Date(selectedDate);
-    $("lessonDialog").close();
+    l.start=zonedIso(target.dataset.dropDate,`${pad(Math.floor(mins/60))}:${pad(mins%60)}`,tz);
+    l.timeZone=tz;
+    selectedDate=fromKey(target.dataset.dropDate); cursor=new Date(selectedDate);
     renderAll();
-  }
-
-  /* Przeciąganie lekcji */
-  function findDropTarget(x, y) {
-    const element = document.elementFromPoint(x, y);
-    return element?.closest("[data-drop-date]") || null;
-  }
-
-  function clearDragHighlight() {
-    if (dragOverElement) {
-      dragOverElement.classList.remove("drag-over");
-      dragOverElement = null;
-    }
-
-    if (dragPreview) {
-      dragPreview.remove();
-      dragPreview = null;
-    }
-  }
-
-  function updateDragHighlight(x, y) {
-    clearDragHighlight();
-
-    const target = findDropTarget(x, y);
-    if (!target) return;
-
-    dragOverElement = target;
-    target.classList.add("drag-over");
-
-    const weekColumn = target.closest(".week-column");
-    if (!weekColumn || !dragState) return;
-
-    const lesson = lessons.find(item => item.id === dragState.lessonId);
-    if (!lesson) return;
-
-    const rect = weekColumn.getBoundingClientRect();
-    const minutesFromTop = Math.max(0, y - rect.top);
-    let minutes = Math.round((minutesFromTop / 56 * 60) / 15) * 15;
-    minutes = Math.max(0, Math.min(23 * 60 + 15, minutes));
-
-    const hour = Math.floor(minutes / 60);
-    const minute = minutes % 60;
-
-    dragPreview = document.createElement("div");
-    dragPreview.className = "week-drop-preview";
-    dragPreview.style.top = `${minutes / 60 * 56}px`;
-    dragPreview.textContent = `${pad(hour)}:${pad(minute)} · 45 min`;
-    weekColumn.appendChild(dragPreview);
-  }
-
-  function moveLessonToDrop(lessonId, target, pointerY) {
-    const lesson = lessons.find(item => item.id === lessonId);
-    if (!lesson || !target) return;
-
-    const targetDate = target.dataset.dropDate;
-    if (!targetDate) return;
-
-    const weekColumn = target.closest(".week-column");
-    const zone = displayZone();
-    const currentParts = zoneParts(new Date(lesson.start), zone);
-    let minutes = Number(currentParts.hour) * 60 + Number(currentParts.minute);
-
-    // Tylko upuszczenie w kolumnie osi tygodnia ustawia nową godzinę.
-    if (weekColumn) {
-      const rect = weekColumn.getBoundingClientRect();
-      const minutesFromTop = Math.max(0, pointerY - rect.top);
-
-      // Zaokrąglamy czas do najbliższych 15 minut.
-      minutes = Math.round((minutesFromTop / 56 * 60) / 15) * 15;
-      minutes = Math.max(0, Math.min(23 * 60 + 15, minutes));
-    }
-
-    const hour = Math.floor(minutes / 60);
-    const minute = minutes % 60;
-    const time = `${pad(hour)}:${pad(minute)}`;
-
-    lesson.start = zonedTimeToIso(targetDate, time, zone);
-    lesson.timeZone = zone;
-    selectedDate = parseDateKey(targetDate);
-    cursor = new Date(selectedDate);
-
-    renderAll();
-
-    // Po przesunięciu przewiń do samej lekcji w widoku kalendarza.
-    requestAnimationFrame(() => {
-      const visibleLesson = [...document.querySelectorAll("[data-edit-lesson]")]
-        .find(element =>
-          element.dataset.editLesson === lessonId &&
-          element.getClientRects().length > 0
-        );
-
-      visibleLesson?.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-        inline: "center"
-      });
+    requestAnimationFrame(()=>{
+      [...document.querySelectorAll("[data-edit-lesson]")].find(el=>
+        el.dataset.editLesson===lessonId&&el.getClientRects().length
+      )?.scrollIntoView({behavior:"smooth",block:"center",inline:"center"});
     });
   }
-
-  function beginDrag() {
-    if (!dragState || dragState.started) return;
-
-    const lesson = lessons.find(item => item.id === dragState.lessonId);
-    if (!lesson) return;
-
-    dragState.started = true;
-
-    const subject = subjectById(lesson.subjectId);
-    dragGhost = document.createElement("div");
-    dragGhost.className = "drag-ghost";
-    dragGhost.style.setProperty("--drag-color", subject?.color || "#5147e8");
-    dragGhost.textContent = lessonTitle(lesson);
+  function beginDrag(){
+    if(!dragState||dragState.started)return;
+    const l=lessons.find(x=>x.id===dragState.id); if(!l)return;
+    dragState.started=true;
+    dragGhost=document.createElement("div"); dragGhost.className="drag-ghost";
+    dragGhost.textContent=lessonTitle(l);
+    dragGhost.style.setProperty("--drag-color",subjectById(l.subjectId)?.color||"#5147e8");
     document.body.appendChild(dragGhost);
-
-    dragGhost.style.left = `${dragState.x}px`;
-    dragGhost.style.top = `${dragState.y}px`;
-    document.body.style.userSelect = "none";
+    document.body.style.userSelect="none";
   }
-
-  function stopDrag() {
-    clearTimeout(dragTimer);
-    dragTimer = null;
-    clearDragHighlight();
-
-    if (dragGhost) {
-      dragGhost.remove();
-      dragGhost = null;
-    }
-
-    document.body.style.userSelect = "";
-    dragState = null;
+  function stopDrag(){
+    clearTimeout(dragTimer); dragTimer=null; clearDrag();
+    dragGhost?.remove(); dragGhost=null;
+    document.body.style.userSelect=""; dragState=null;
   }
-
-  function installDragging() {
-    document.addEventListener("pointerdown", event => {
-      const button = event.target.closest("[data-edit-lesson]");
-      if (!button || !event.isPrimary) return;
-      if (event.pointerType === "mouse" && event.button !== 0) return;
-
-      const lessonId = button.dataset.editLesson;
-      if (!lessons.some(lesson => lesson.id === lessonId)) return;
-
-      dragState = {
-        lessonId,
-        pointerId: event.pointerId,
-        pointerType: event.pointerType,
-        startX: event.clientX,
-        startY: event.clientY,
-        x: event.clientX,
-        y: event.clientY,
-        started: false
-      };
-
-      // Na ekranie dotykowym rozpocznij przeciąganie po krótkim przytrzymaniu.
-      if (event.pointerType === "touch") {
-        dragTimer = setTimeout(beginDrag, 350);
-      }
+  function installDragging(){
+    document.addEventListener("pointerdown",e=>{
+      const button=e.target.closest("[data-edit-lesson]");
+      if(!button||!e.isPrimary||(e.pointerType==="mouse"&&e.button!==0))return;
+      if(!lessons.some(l=>l.id===button.dataset.editLesson))return;
+      dragState={id:button.dataset.editLesson,pointer:e.pointerId,type:e.pointerType,
+        x:e.clientX,y:e.clientY,sx:e.clientX,sy:e.clientY,started:false};
+      if(e.pointerType==="touch")dragTimer=setTimeout(beginDrag,350);
     });
-
-    document.addEventListener("pointermove", event => {
-      if (!dragState || event.pointerId !== dragState.pointerId) return;
-
-      dragState.x = event.clientX;
-      dragState.y = event.clientY;
-
-      if (dragState.pointerType === "mouse" && !dragState.started) {
-        const distance = Math.hypot(
-          event.clientX - dragState.startX,
-          event.clientY - dragState.startY
-        );
-
-        if (distance > 6) beginDrag();
-      }
-
-      if (!dragState.started) return;
-
-      event.preventDefault();
-
-      if (dragGhost) {
-        dragGhost.style.left = `${event.clientX}px`;
-        dragGhost.style.top = `${event.clientY}px`;
-      }
-
-      updateDragHighlight(event.clientX, event.clientY);
-    }, { passive: false });
-
-    document.addEventListener("pointerup", event => {
-      if (!dragState || event.pointerId !== dragState.pointerId) return;
-
+    document.addEventListener("pointermove",e=>{
+      if(!dragState||e.pointerId!==dragState.pointer)return;
+      dragState.x=e.clientX; dragState.y=e.clientY;
+      if(dragState.type==="mouse"&&!dragState.started&&Math.hypot(e.clientX-dragState.sx,e.clientY-dragState.sy)>6)beginDrag();
+      if(!dragState.started)return;
+      e.preventDefault();
+      if(dragGhost){dragGhost.style.left=`${e.clientX}px`;dragGhost.style.top=`${e.clientY}px`;}
+      previewDrag(e.clientX,e.clientY);
+    },{passive:false});
+    document.addEventListener("pointerup",e=>{
+      if(!dragState||e.pointerId!==dragState.pointer)return;
       clearTimeout(dragTimer);
-      dragTimer = null;
-
-      if (dragState.started) {
-        event.preventDefault();
-
-        const target = findDropTarget(event.clientX, event.clientY);
-        if (target) {
-          moveLessonToDrop(dragState.lessonId, target, event.clientY);
-        }
-
-        // Nie otwieraj edycji po upuszczeniu.
-        suppressClickUntil = Date.now() + 500;
-        setTimeout(() => { suppressClickUntil = 0; }, 550);
+      if(dragState.started){
+        const target=findDrop(e.clientX,e.clientY);
+        if(target)moveLesson(dragState.id,target,e.clientY);
+        suppressClickUntil=Date.now()+500;
       }
-
       stopDrag();
     });
-
-    document.addEventListener("pointercancel", stopDrag);
-
-    document.addEventListener("click", event => {
-      if (Date.now() < suppressClickUntil && event.target.closest("[data-edit-lesson]")) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
+    document.addEventListener("pointercancel",stopDrag);
+    document.addEventListener("click",e=>{
+      if(Date.now()<suppressClickUntil&&e.target.closest("[data-edit-lesson]")){
+        e.preventDefault();e.stopImmediatePropagation();
       }
-    }, true);
+    },true);
   }
 
-  /* Eksport ICS */
-  function escapeIcs(value) {
-    return String(value || "")
-      .replace(/\\/g, "\\\\")
-      .replace(/\n/g, "\\n")
-      .replace(/,/g, "\\,")
-      .replace(/;/g, "\\;");
+  function colorUsed(color){return subjects.some(s=>(s.color||"").toLowerCase()===color.toLowerCase());}
+  function unusedColor(){
+    const free=palette.find(c=>!colorUsed(c)); if(free)return free;
+    for(let h=0;h<360;h+=17){
+      const c=`hsl(${h} 68% 45%)`;
+      if(!colorUsed(c))return c;
+    }
+    let c;
+    do{c="#"+Math.floor(Math.random()*0xffffff).toString(16).padStart(6,"0");}while(colorUsed(c));
+    return c;
   }
-
-  function icsUtcDate(iso) {
-    return new Date(iso).toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
-  }
-
-  function downloadFile(filename, content, mime) {
-    const url = URL.createObjectURL(new Blob([content], { type: mime }));
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = filename;
-    link.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-  }
-
-  function exportIcs() {
-    const lines = [
-      "BEGIN:VCALENDAR",
-      "VERSION:2.0",
-      "PRODID:-//Moj kalendar lekcji//PL",
-      "CALSCALE:GREGORIAN"
-    ];
-
-    lessons.forEach(lesson => {
-      const title = lessonTitle(lesson);
-      const description = [
-        lesson.note || "",
-        `Obecność: ${attendanceLabel(lesson.attendance)}`,
-        `Strefa wydarzenia: ${lesson.timeZone || ""}`
-      ].filter(Boolean).join("\n");
-
-      lines.push(
-        "BEGIN:VEVENT",
-        `UID:${escapeIcs(lesson.uid || lesson.id)}@moj-kalendarz`,
-        `DTSTAMP:${icsUtcDate(new Date().toISOString())}`,
-        `DTSTART:${icsUtcDate(lesson.start)}`,
-        `DTEND:${icsUtcDate(endIso(lesson))}`,
-        `SUMMARY:${escapeIcs(title)}`,
-        `DESCRIPTION:${escapeIcs(description)}`
-      );
-
-      (lesson.alarms || []).forEach(minutes => {
-        const value = Math.max(0, Number(minutes) || 0);
-        lines.push(
-          "BEGIN:VALARM",
-          `TRIGGER:-PT${value}M`,
-          "ACTION:DISPLAY",
-          `DESCRIPTION:${escapeIcs(title)}`,
-          "END:VALARM"
-        );
-      });
-
-      lines.push("END:VEVENT");
+  function unfoldIcs(s){return s.replace(/\r?\n[ \t]/g,"");}
+  function unescapeIcs(s){return String(s||"").replace(/\\n/gi,"\n").replace(/\\,/g,",").replace(/\\;/g,";").replace(/\\\\/g,"\\");}
+  function parseProps(block){
+    const out={};
+    block.split(/\r?\n/).forEach(line=>{
+      const i=line.indexOf(":"); if(i<0)return;
+      const left=line.slice(0,i).split(";"),params={};
+      left.slice(1).forEach(x=>{const n=x.indexOf("=");if(n>0)params[x.slice(0,n).toUpperCase()]=x.slice(n+1).replace(/^"|"$/g,"");});
+      out[left[0].toUpperCase()]={value:line.slice(i+1),params};
     });
-
-    lines.push("END:VCALENDAR");
-    downloadFile("moje-lekcje.ics", lines.join("\r\n"), "text/calendar;charset=utf-8");
+    return out;
   }
-
-  /* Import ICS: istniejący sposób importu zachowany; zmieniono tylko dobór koloru nowego przedmiotu. */
-  function unfoldIcs(text) {
-    return text.replace(/\r?\n[ \t]/g, "");
-  }
-
-  function parseIcsProperties(block) {
-    const result = {};
-
-    block.split(/\r?\n/).forEach(line => {
-      const colon = line.indexOf(":");
-      if (colon < 0) return;
-
-      const left = line.slice(0, colon).split(";");
-      const params = {};
-
-      left.slice(1).forEach(part => {
-        const equals = part.indexOf("=");
-        if (equals > 0) {
-          params[part.slice(0, equals).toUpperCase()] =
-            part.slice(equals + 1).replace(/^"|"$/g, "");
-        }
-      });
-
-      result[left[0].toUpperCase()] = {
-        value: line.slice(colon + 1),
-        params
-      };
-    });
-
-    return result;
-  }
-
-  function unescapeIcs(value) {
-    return String(value || "")
-      .replace(/\\n/gi, "\n")
-      .replace(/\\,/g, ",")
-      .replace(/\\;/g, ";")
-      .replace(/\\\\/g, "\\");
-  }
-
-  function parseIcsDate(property) {
-    if (!property?.value) return null;
-
-    const value = property.value;
-    const zone = property.params?.TZID || displayZone();
-
-    if (/^\d{8}T\d{6}Z$/.test(value)) {
-      return new Date(Date.UTC(
-        Number(value.slice(0, 4)),
-        Number(value.slice(4, 6)) - 1,
-        Number(value.slice(6, 8)),
-        Number(value.slice(9, 11)),
-        Number(value.slice(11, 13)),
-        Number(value.slice(13, 15))
-      )).toISOString();
+  function parseIcsDate(prop){
+    if(!prop?.value)return null;
+    const v=prop.value,tz=prop.params?.TZID||zone();
+    if(/^\d{8}T\d{6}Z$/.test(v)){
+      return new Date(Date.UTC(+v.slice(0,4),+v.slice(4,6)-1,+v.slice(6,8),+v.slice(9,11),+v.slice(11,13),+v.slice(13,15))).toISOString();
     }
-
-    if (/^\d{8}T\d{6}$/.test(value)) {
-      const date = `${value.slice(0, 4)}-${value.slice(4, 6)}-${value.slice(6, 8)}`;
-      const time = `${value.slice(9, 11)}:${value.slice(11, 13)}`;
-      return zonedTimeToIso(date, time, zone);
+    if(/^\d{8}T\d{6}$/.test(v)){
+      return zonedIso(`${v.slice(0,4)}-${v.slice(4,6)}-${v.slice(6,8)}`,`${v.slice(9,11)}:${v.slice(11,13)}`,tz);
     }
-
-    if (/^\d{8}$/.test(value)) {
-      const date = `${value.slice(0, 4)}-${value.slice(4, 6)}-${value.slice(6, 8)}`;
-      return zonedTimeToIso(date, "09:00", zone);
-    }
-
+    if(/^\d{8}$/.test(v))return zonedIso(`${v.slice(0,4)}-${v.slice(4,6)}-${v.slice(6,8)}`,"09:00",tz);
     return null;
   }
-
-  function normalizeColor(color) {
-    return String(color || "").trim().toLowerCase();
+  function findOrCreateSubject(title){
+    const match=[...subjects].sort((a,b)=>b.name.length-a.name.length)
+      .find(s=>title.toLowerCase().startsWith((s.name+" ").toLowerCase()));
+    if(match)return match;
+    const base=(title.match(/^(.*?)[\s_-]+\d+$/)?.[1]||title).trim()||T.noSubject;
+    let s=subjects.find(x=>x.name.toLowerCase()===base.toLowerCase());
+    if(!s){s={id:id(),name:base,color:unusedColor(),plannedCount:0,grade:null};subjects.push(s);}
+    return s;
   }
-
-  function getUnusedSubjectColor() {
-    const used = new Set(subjects.map(subject => normalizeColor(subject.color)));
-
-    // Najpierw wykorzystaj kolor z palety, jeśli nie ma go jeszcze żaden przedmiot.
-    const available = colorPalette.find(color => !used.has(normalizeColor(color)));
-    if (available) return available;
-
-    // Gdy paleta jest wyczerpana, wygeneruj nowy kolor i sprawdź, czy jest wolny.
-    for (let hue = 0; hue < 360; hue += 17) {
-      const color = `hsl(${hue} 68% 45%)`;
-      if (!used.has(normalizeColor(color))) return color;
-    }
-
-    // Zapasowy, bardzo mało prawdopodobny przypadek.
-    let color;
-    do {
-      color = `#${Math.floor(Math.random() * 0xffffff).toString(16).padStart(6, "0")}`;
-    } while (used.has(normalizeColor(color)));
-
-    return color;
-  }
-
-  function findOrCreateSubject(summary) {
-    const title = summary.trim();
-
-    const matchingSubject = [...subjects]
-      .sort((a, b) => b.name.length - a.name.length)
-      .find(subject =>
-        title.toLowerCase().startsWith(subject.name.toLowerCase() + " ")
-      );
-
-    if (matchingSubject) return matchingSubject;
-
-    const match = title.match(/^(.*?)[\s_-]+\d+$/);
-    const name = (match ? match[1] : title).trim() || "Importowane";
-    let subject = subjects.find(item => item.name.toLowerCase() === name.toLowerCase());
-
-    if (!subject) {
-      subject = {
-        id: makeId(),
-        name,
-        color: getUnusedSubjectColor(),
-        plannedCount: 0,
-        grade: null
-      };
-      subjects.push(subject);
-    }
-
-    return subject;
-  }
-
-  async function importIcs() {
-    const file = $("icsFile").files[0];
-
-    if (!file) {
-      $("icsMessage").textContent = "Wybierz plik .ics.";
-      return;
-    }
-
-    try {
-      const text = unfoldIcs(await file.text());
-      const blocks = text.match(/BEGIN:VEVENT[\s\S]*?END:VEVENT/gi) || [];
-      const imported = [];
-      const existingUids = new Set(lessons.map(lesson => lesson.uid).filter(Boolean));
-
-      for (const block of blocks) {
-        const properties = parseIcsProperties(block);
-        const start = parseIcsDate(properties.DTSTART);
-        if (!start) continue;
-
-        const uid = properties.UID?.value || "";
-        if (uid && existingUids.has(uid)) continue;
-
-        const title = unescapeIcs(properties.SUMMARY?.value || "Importowane");
-        const subject = findOrCreateSubject(title);
-        const alarms = [...block.matchAll(/TRIGGER\s*[:=]\s*-?PT(\d+)M/gi)]
-          .map(match => Number(match[1]))
-          .filter(Number.isFinite);
-
-        imported.push({
-          id: makeId(),
-          uid,
-          subjectId: subject.id,
-          start,
-          timeZone: properties.DTSTART?.params?.TZID || displayZone(),
-          attendance: "unknown",
-          alarms,
-          note: unescapeIcs(properties.DESCRIPTION?.value || "")
-        });
-
-        if (uid) existingUids.add(uid);
+  async function importIcs(){
+    const file=$("icsFile").files[0];
+    if(!file){$("icsMessage").textContent=T.chooseFile;return;}
+    try{
+      const blocks=unfoldIcs(await file.text()).match(/BEGIN:VEVENT[\s\S]*?END:VEVENT/gi)||[];
+      const known=new Set(lessons.map(l=>l.uid).filter(Boolean)), added=[];
+      for(const block of blocks){
+        const p=parseProps(block), start=parseIcsDate(p.DTSTART); if(!start)continue;
+        const uid=p.UID?.value||""; if(uid&&known.has(uid))continue;
+        const title=unescapeIcs(p.SUMMARY?.value||T.noSubject), s=findOrCreateSubject(title);
+        const alarms=[...block.matchAll(/TRIGGER\s*[:=]\s*-?PT(\d+)M/gi)].map(m=>+m[1]).filter(Number.isFinite);
+        added.push({id:id(),uid,subjectId:s.id,start,timeZone:p.DTSTART?.params?.TZID||zone(),attendance:"unknown",alarms,note:unescapeIcs(p.DESCRIPTION?.value||"")});
+        if(uid)known.add(uid);
       }
-
-      if (!imported.length) {
-        $("icsMessage").textContent = "Nie znaleziono nowych wydarzeń do importu.";
-        return;
-      }
-
-      lessons.push(...imported);
-      renderAll();
-      $("icsFile").value = "";
-      $("icsMessage").textContent =
-        `Zaimportowano ${imported.length} wydarzeń. Numery lekcji są liczone chronologicznie.`;
-    } catch (error) {
-      console.error(error);
-      $("icsMessage").textContent = "Nie udało się odczytać pliku ICS.";
-    }
+      if(!added.length){$("icsMessage").textContent=T.noImported;return;}
+      lessons.push(...added);renderAll();$("icsFile").value="";
+      $("icsMessage").textContent=`${added.length} ${T.imported}`;
+    }catch(err){console.error(err);$("icsMessage").textContent=T.importError;}
+  }
+  function icsEscape(s){return String(s||"").replace(/\\/g,"\\\\").replace(/\n/g,"\\n").replace(/,/g,"\\,").replace(/;/g,"\\;");}
+  function icsTime(iso){return new Date(iso).toISOString().replace(/[-:]/g,"").replace(/\.\d{3}/,"");}
+  function exportIcs(){
+    const lines=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Lesson Calendar//","CALSCALE:GREGORIAN"];
+    lessons.forEach(l=>{
+      lines.push("BEGIN:VEVENT",`UID:${icsEscape(l.uid||l.id)}@calendar`,`DTSTAMP:${icsTime(new Date().toISOString())}`,
+        `DTSTART:${icsTime(l.start)}`,`DTEND:${icsTime(new Date(new Date(l.start).getTime()+45*60000).toISOString())}`,
+        `SUMMARY:${icsEscape(lessonTitle(l))}`);
+      (l.alarms||[]).forEach(a=>lines.push("BEGIN:VALARM",`TRIGGER:-PT${+a||5}M`,"ACTION:DISPLAY",
+        `DESCRIPTION:${icsEscape(lessonTitle(l))}`,"END:VALARM"));
+      lines.push("END:VEVENT");
+    });
+    lines.push("END:VCALENDAR");
+    const link=document.createElement("a");
+    link.href=URL.createObjectURL(new Blob([lines.join("\r\n")],{type:"text/calendar"}));
+    link.download="lessons.ics";link.click();setTimeout(()=>URL.revokeObjectURL(link.href),1000);
+  }
+  async function loadJson(path,fallback){
+    try{const r=await fetch(path);if(!r.ok)throw 0;return await r.json();}catch{return fallback;}
+  }
+  async function copyJson(idValue){
+    try{await navigator.clipboard.writeText($(idValue).value);alert(T.copied);}
+    catch{$(idValue).select();document.execCommand("copy");alert(T.copied);}
   }
 
-  async function loadJson(path, fallback) {
-    try {
-      const response = await fetch(path);
-      if (!response.ok) throw new Error("Nie można wczytać JSON");
-      return await response.json();
-    } catch {
-      return fallback;
-    }
-  }
+  $("prevBtn").onclick=()=>{if(mode==="month")cursor=new Date(cursor.getFullYear(),cursor.getMonth()-1,1);else cursor.setDate(cursor.getDate()-7);selectedDate=new Date(cursor);renderAll();};
+  $("nextBtn").onclick=()=>{if(mode==="month")cursor=new Date(cursor.getFullYear(),cursor.getMonth()+1,1);else cursor.setDate(cursor.getDate()+7);selectedDate=new Date(cursor);renderAll();};
+  $("todayBtn").onclick=()=>{cursor=new Date();cursor.setHours(0,0,0,0);selectedDate=new Date(cursor);renderAll();};
+  $("monthBtn").onclick=()=>{mode="month";renderCalendar();};
+  $("weekBtn").onclick=()=>{mode="week";renderCalendar();};
+  $("adminToggle").onclick=()=>{$("calendarView").classList.add("hidden");$("adminView").classList.remove("hidden");renderAdmin();};
+  $("backCalendarBtn").onclick=()=>{$("adminView").classList.add("hidden");$("calendarView").classList.remove("hidden");renderAll();};
+  $("saveSubjectBtn").onclick=saveSubject;
+  $("cancelSubjectEditBtn").onclick=resetSubjectForm;
+  $("attendanceFilter").onchange=renderAdmin;
+  $("saveDisplayZoneBtn").onclick=()=>{settings.displayTimeZone=$("displayZone").value||defaultZone;renderAll();};
+  $("lessonSubject").onchange=updateFirstLesson;
+  $("isFirstLesson").onchange=updateFirstLesson;
+  $("lessonForm").onsubmit=saveLesson;
+  $("cancelLessonBtn").onclick=()=>$("lessonDialog").close();
+  $("importIcsBtn").onclick=importIcs;
+  $("exportIcsBtn").onclick=exportIcs;
 
-  async function copyJson(id) {
-    try {
-      await navigator.clipboard.writeText($(id).value);
-      alert("Skopiowano JSON.");
-    } catch {
-      $(id).select();
-      document.execCommand("copy");
-      alert("Skopiowano JSON.");
-    }
-  }
-
-  $("prevBtn").addEventListener("click", () => {
-    if (mode === "month") cursor = new Date(cursor.getFullYear(), cursor.getMonth() - 1, 1);
-    else cursor.setDate(cursor.getDate() - 7);
-    selectedDate = new Date(cursor);
-    renderAll();
-  });
-
-  $("nextBtn").addEventListener("click", () => {
-    if (mode === "month") cursor = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1);
-    else cursor.setDate(cursor.getDate() + 7);
-    selectedDate = new Date(cursor);
-    renderAll();
-  });
-
-  $("todayBtn").addEventListener("click", () => {
-    cursor = new Date();
-    cursor.setHours(0, 0, 0, 0);
-    selectedDate = new Date(cursor);
-    renderAll();
-  });
-
-  $("monthBtn").addEventListener("click", () => {
-    mode = "month";
-    renderCalendar();
-  });
-
-  $("weekBtn").addEventListener("click", () => {
-    mode = "week";
-    renderCalendar();
-  });
-
-  $("adminToggle").addEventListener("click", () => {
-    $("calendarView").classList.add("hidden");
-    $("adminView").classList.remove("hidden");
+  $("selectAllLessons").onchange=()=>{
+    if($("selectAllLessons").checked)lessons.forEach(l=>selectedLessonIds.add(l.id));
+    else selectedLessonIds.clear();
     renderAdmin();
-    window.scrollTo(0, 0);
-  });
+  };
+  $("deleteSelectedLessonsBtn").onclick=()=>{
+    if(!selectedLessonIds.size){alert(T.noneSelected);return;}
+    if(!confirm(T.confirmMany))return;
+    lessons=lessons.filter(l=>!selectedLessonIds.has(l.id));
+    selectedLessonIds.clear();renderAll();
+  };
+  document.querySelectorAll(".copyJson").forEach(b=>b.onclick=()=>copyJson(b.dataset.target));
 
-  $("backCalendarBtn").addEventListener("click", () => {
-    $("adminView").classList.add("hidden");
-    $("calendarView").classList.remove("hidden");
-    renderAll();
-  });
-
-  $("saveSubjectBtn").addEventListener("click", saveSubject);
-  $("cancelSubjectEditBtn").addEventListener("click", resetSubjectForm);
-  $("attendanceFilter").addEventListener("change", renderAdmin);
-
-  $("saveDisplayZoneBtn").addEventListener("click", () => {
-    settings.displayTimeZone = $("displayZone").value || defaultZone;
-    renderAll();
-  });
-
-  $("lessonSubject").addEventListener("change", updateFirstLessonControl);
-  $("isFirstLesson").addEventListener("change", () => {
-    $("classArea").classList.toggle("hidden", !$("isFirstLesson").checked);
-  });
-
-  $("lessonForm").addEventListener("submit", saveLesson);
-  $("cancelLessonBtn").addEventListener("click", () => $("lessonDialog").close());
-  $("exportIcsBtn").addEventListener("click", exportIcs);
-  $("importIcsBtn").addEventListener("click", importIcs);
-
-  document.querySelectorAll(".copyJson").forEach(button => {
-    button.addEventListener("click", () => copyJson(button.dataset.target));
-  });
-
-  function findDropTarget(x, y) {
-    const element = document.elementFromPoint(x, y);
-    return element?.closest("[data-drop-date]") || null;
-  }
-
-  function clearDragHighlight() {
-    if (dragOverElement) {
-      dragOverElement.classList.remove("drag-over");
-      dragOverElement = null;
-    }
-
-    if (dragPreview) {
-      dragPreview.remove();
-      dragPreview = null;
-    }
-  }
-
-  function updateDragHighlight(x, y) {
-    clearDragHighlight();
-    const target = findDropTarget(x, y);
-    if (!target) return;
-
-    dragOverElement = target;
-    target.classList.add("drag-over");
-
-    const weekColumn = target.closest(".week-column");
-    if (!weekColumn || !dragState) return;
-
-    const rect = weekColumn.getBoundingClientRect();
-    const minutesFromTop = Math.max(0, y - rect.top);
-    let minutes = Math.round((minutesFromTop / 56 * 60) / 15) * 15;
-    minutes = Math.max(0, Math.min(23 * 60 + 15, minutes));
-
-    dragPreview = document.createElement("div");
-    dragPreview.className = "week-drop-preview";
-    dragPreview.style.top = `${minutes / 60 * 56}px`;
-    dragPreview.textContent =
-      `${pad(Math.floor(minutes / 60))}:${pad(minutes % 60)} · 45 min`;
-    weekColumn.appendChild(dragPreview);
-  }
-
-  function moveLessonToDrop(lessonId, target, pointerY) {
-    const lesson = lessons.find(item => item.id === lessonId);
-    if (!lesson || !target) return;
-
-    const targetDate = target.dataset.dropDate;
-    if (!targetDate) return;
-
-    const weekColumn = target.closest(".week-column");
-    const zone = displayZone();
-    const currentParts = zoneParts(new Date(lesson.start), zone);
-    let minutes = Number(currentParts.hour) * 60 + Number(currentParts.minute);
-
-    if (weekColumn) {
-      const rect = weekColumn.getBoundingClientRect();
-      const minutesFromTop = Math.max(0, pointerY - rect.top);
-      minutes = Math.round((minutesFromTop / 56 * 60) / 15) * 15;
-      minutes = Math.max(0, Math.min(23 * 60 + 15, minutes));
-    }
-
-    const time = `${pad(Math.floor(minutes / 60))}:${pad(minutes % 60)}`;
-    lesson.start = zonedTimeToIso(targetDate, time, zone);
-    lesson.timeZone = zone;
-
-    selectedDate = parseDateKey(targetDate);
-    cursor = new Date(selectedDate);
-    renderAll();
-
-    requestAnimationFrame(() => {
-      const lessonElement = [...document.querySelectorAll("[data-edit-lesson]")]
-        .find(element =>
-          element.dataset.editLesson === lessonId &&
-          element.getClientRects().length > 0
-        );
-
-      lessonElement?.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-        inline: "center"
-      });
-    });
-  }
-
-  function beginDrag() {
-    if (!dragState || dragState.started) return;
-
-    const lesson = lessons.find(item => item.id === dragState.lessonId);
-    if (!lesson) return;
-
-    dragState.started = true;
-    const subject = subjectById(lesson.subjectId);
-
-    dragGhost = document.createElement("div");
-    dragGhost.className = "drag-ghost";
-    dragGhost.style.setProperty("--drag-color", subject?.color || "#5147e8");
-    dragGhost.textContent = lessonTitle(lesson);
-    document.body.appendChild(dragGhost);
-
-    dragGhost.style.left = `${dragState.x}px`;
-    dragGhost.style.top = `${dragState.y}px`;
-    document.body.style.userSelect = "none";
-  }
-
-  function stopDrag() {
-    clearTimeout(dragTimer);
-    dragTimer = null;
-    clearDragHighlight();
-
-    if (dragGhost) {
-      dragGhost.remove();
-      dragGhost = null;
-    }
-
-    document.body.style.userSelect = "";
-    dragState = null;
-  }
-
-  function installDragging() {
-    document.addEventListener("pointerdown", event => {
-      const button = event.target.closest("[data-edit-lesson]");
-      if (!button || !event.isPrimary) return;
-      if (event.pointerType === "mouse" && event.button !== 0) return;
-
-      const lessonId = button.dataset.editLesson;
-      if (!lessons.some(lesson => lesson.id === lessonId)) return;
-
-      dragState = {
-        lessonId,
-        pointerId: event.pointerId,
-        pointerType: event.pointerType,
-        startX: event.clientX,
-        startY: event.clientY,
-        x: event.clientX,
-        y: event.clientY,
-        started: false
-      };
-
-      if (event.pointerType === "touch") {
-        dragTimer = setTimeout(beginDrag, 350);
-      }
-    });
-
-    document.addEventListener("pointermove", event => {
-      if (!dragState || event.pointerId !== dragState.pointerId) return;
-
-      dragState.x = event.clientX;
-      dragState.y = event.clientY;
-
-      if (dragState.pointerType === "mouse" && !dragState.started) {
-        const distance = Math.hypot(
-          event.clientX - dragState.startX,
-          event.clientY - dragState.startY
-        );
-        if (distance > 6) beginDrag();
-      }
-
-      if (!dragState.started) return;
-      event.preventDefault();
-
-      if (dragGhost) {
-        dragGhost.style.left = `${event.clientX}px`;
-        dragGhost.style.top = `${event.clientY}px`;
-      }
-
-      updateDragHighlight(event.clientX, event.clientY);
-    }, { passive: false });
-
-    document.addEventListener("pointerup", event => {
-      if (!dragState || event.pointerId !== dragState.pointerId) return;
-
-      clearTimeout(dragTimer);
-      dragTimer = null;
-
-      if (dragState.started) {
-        event.preventDefault();
-        const target = findDropTarget(event.clientX, event.clientY);
-
-        if (target) {
-          moveLessonToDrop(dragState.lessonId, target, event.clientY);
-        }
-
-        suppressClickUntil = Date.now() + 500;
-        setTimeout(() => { suppressClickUntil = 0; }, 550);
-      }
-
-      stopDrag();
-    });
-
-    document.addEventListener("pointercancel", stopDrag);
-
-    document.addEventListener("click", event => {
-      if (Date.now() < suppressClickUntil && event.target.closest("[data-edit-lesson]")) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-      }
-    }, true);
-  }
-
-  async function start() {
-    const [loadedSubjects, loadedLessons, loadedSettings] = await Promise.all([
-      loadJson("./data/subjects.json", []),
-      loadJson("./data/lessons.json", []),
-      loadJson("./data/settings.json", { displayTimeZone: defaultZone })
+  async function start(){
+    const [s,l,c]=await Promise.all([
+      loadJson("./data/subjects.json",[]),
+      loadJson("./data/lessons.json",[]),
+      loadJson("./data/settings.json",{displayTimeZone:defaultZone})
     ]);
-
-    subjects = Array.isArray(loadedSubjects) ? loadedSubjects : [];
-    lessons = Array.isArray(loadedLessons) ? loadedLessons : [];
-    settings = loadedSettings && typeof loadedSettings === "object"
-      ? loadedSettings
-      : { displayTimeZone: defaultZone };
-
-    if (!settings.displayTimeZone) {
-      settings.displayTimeZone = defaultZone;
-    }
-
-    renderZoneLists();
+    subjects=Array.isArray(s)?s:[];
+    lessons=Array.isArray(l)?l:[];
+    settings=c&&typeof c==="object"?c:{displayTimeZone:defaultZone};
+    if(!settings.displayTimeZone)settings.displayTimeZone=defaultZone;
+    renderZones();
     renderAll();
-
-    $("loadMessage").textContent =
-      "Dane są wczytywane z plików JSON. Zmiany trzeba skopiować do repozytorium, aby je zachować.";
+    $("loadMessage").textContent=T.dragHint;
   }
 
   installDragging();

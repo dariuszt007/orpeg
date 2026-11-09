@@ -2,15 +2,15 @@
 <html lang="pl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f6fa">
 <title>Kalendarz lekcji</title>
 <style>
-:root {
-  --bg:#f5f6fa; --card:#fff; --text:#202437; --muted:#687087;
-  --line:#e2e5ed; --primary:#5147e8; --soft:#eeedff; --red:#bd3045;
-  --hour-height:40px;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+:root{
+  --bg:#f5f6fa;--card:#fff;--text:#202437;--muted:#687087;
+  --line:#e2e5ed;--primary:#5147e8;--soft:#eeedff;--red:#bd3045;
+  --hour-height:48px;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif
 }
 *{box-sizing:border-box}
 body{margin:0;min-height:100vh;background:var(--bg);color:var(--text)}
@@ -26,9 +26,7 @@ input[type=color]{padding:4px}
 textarea{min-height:85px;resize:vertical}
 label{display:block;margin:8px 0 5px;color:var(--muted);font-size:13px}
 h1,h2,h3,h4{margin:0 0 10px}
-h1{font-size:clamp(21px,5vw,28px)}
-h2{font-size:20px}
-h3{font-size:16px}
+h1{font-size:clamp(21px,5vw,28px)}h2{font-size:20px}h3{font-size:16px}
 .app{max-width:1000px;margin:auto;padding:14px}
 .topbar,.toolbar,.row,.actions{display:flex;align-items:center;gap:8px}
 .topbar{justify-content:space-between;margin-bottom:14px}
@@ -63,26 +61,25 @@ h3{font-size:16px}
 .hidden{display:none!important}
 .empty{padding:14px;border:1px dashed var(--line);border-radius:10px;color:var(--muted);text-align:center}
 
-/* Wysokość siatki tygodniowej: 24 razy zmienna wyliczona z wysokości ekranu. */
 .week-scroll{overflow-x:auto;overflow-y:hidden;border-radius:12px;background:#fff}
 .week-grid{display:grid;grid-template-columns:48px repeat(7,minmax(90px,1fr));min-width:760px}
 .week-head{height:48px;min-height:48px;padding:6px;border:1px solid var(--line);background:#fafaff;text-align:center;font-size:12px}
 .time-axis,.week-column{
   position:relative;
-  height:calc(var(--hour-height) * 24);
+  height:1152px;
   background-image:repeating-linear-gradient(
     to bottom,
     transparent 0,
-    transparent calc(var(--hour-height) - 1px),
-    var(--line) calc(var(--hour-height) - 1px),
-    var(--line) var(--hour-height)
+    transparent 47px,
+    var(--line) 47px,
+    var(--line) 48px
   );
 }
 .time-axis{position:sticky;left:0;z-index:1;background-color:#fafaff}
 .hour-label{position:absolute;right:3px;transform:translateY(-50%);color:var(--muted);font-size:10px}
 .week-column{border-right:1px solid var(--line);background-color:#fff}
-.week-event{position:absolute;left:2px;right:2px;overflow:hidden;padding:2px 3px;border:0;border-left:3px solid var(--event-color,var(--primary));border-radius:5px;background:color-mix(in srgb,var(--event-color,var(--primary)) 18%,white);text-align:left;font-size:10px;line-height:1.15}
-.week-event strong,.week-event span{display:block;overflow:hidden}
+.week-event{position:absolute;left:2px;right:2px;height:36px;overflow:hidden;padding:2px 3px;border:0;border-left:3px solid var(--event-color,var(--primary));border-radius:5px;background:color-mix(in srgb,var(--event-color,var(--primary)) 18%,white);text-align:left;font-size:10px;line-height:1.15}
+.week-event strong{display:block;overflow:hidden}
 .admin-card{margin:12px 0;padding:14px}
 .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
 .stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0}
@@ -117,21 +114,13 @@ dialog::backdrop{background:#13172788}
 </head>
 <body>
 <div class="app">
-<header class="topbar">
-  <h1>Kalendarz lekcji</h1>
-  <button id="adminToggle" class="primary">Panel Admin</button>
-</header>
+<header class="topbar"><h1>Kalendarz lekcji</h1><button id="adminToggle" class="primary">Panel Admin</button></header>
 
 <main id="calendarView">
   <div class="toolbar">
-    <button id="prevBtn">Wstecz</button>
-    <button id="todayBtn">Dziś</button>
-    <button id="nextBtn">Dalej</button>
+    <button id="prevBtn">Wstecz</button><button id="todayBtn">Dziś</button><button id="nextBtn">Dalej</button>
     <div id="periodLabel" class="period"></div>
-    <div class="views">
-      <button id="monthBtn" class="active">Miesiąc</button>
-      <button id="weekBtn">Tydzień</button>
-    </div>
+    <div class="views"><button id="monthBtn" class="active">Miesiąc</button><button id="weekBtn">Tydzień</button></div>
   </div>
   <section id="monthView" class="calendar"></section>
   <section id="monthAgenda">
@@ -146,24 +135,18 @@ dialog::backdrop{background:#13172788}
   <div class="row" style="justify-content:space-between"><h2>Panel Admin</h2><button id="backCalendarBtn">Kalendarz</button></div>
 
   <section class="card admin-card">
-    <h3 id="subjectFormTitle">Dodaj przedmiot</h3>
-    <input id="subjectId" type="hidden">
+    <h3 id="subjectFormTitle">Dodaj przedmiot</h3><input id="subjectId" type="hidden">
     <div class="form-grid">
       <div><label for="subjectName">Nazwa przedmiotu</label><input id="subjectName" maxlength="60"></div>
       <div><label for="subjectColor">Kolor</label><input id="subjectColor" type="color" value="#5147e8"></div>
       <div><label for="subjectPlanned">Domyślny roczny plan lekcji</label><input id="subjectPlanned" type="number" min="0" value="0"></div>
     </div>
-    <div class="actions" style="margin-top:10px">
-      <button id="saveSubjectBtn" class="primary">Dodaj przedmiot</button>
-      <button id="cancelSubjectEditBtn" class="hidden">Anuluj</button>
-    </div>
+    <div class="actions" style="margin-top:10px"><button id="saveSubjectBtn" class="primary">Dodaj przedmiot</button><button id="cancelSubjectEditBtn" class="hidden">Anuluj</button></div>
     <div id="subjectList"></div>
   </section>
 
   <section class="card admin-card">
-    <h3>Strefa czasowa</h3>
-    <label for="displayZone">Strefa wyświetlania</label>
-    <select id="displayZone"></select>
+    <h3>Strefa czasowa</h3><label for="displayZone">Strefa wyświetlania</label><select id="displayZone"></select>
     <button id="saveDisplayZoneBtn" class="primary">Zapisz strefę</button>
     <p class="muted">Domyślna strefa: Tokio (Asia/Tokyo).</p>
   </section>
@@ -204,23 +187,17 @@ dialog::backdrop{background:#13172788}
       <div><label for="exportEndDate">Do dnia</label><input id="exportEndDate" type="date"></div>
     </div>
     <label class="bulk-select-label" style="margin-top:10px"><input id="exportAllSubjects" type="checkbox" checked><span>Wszystkie przedmioty i lata szkolne</span></label>
-    <label>Albo wybierz przedmiot, klasę i rok szkolny:</label>
-    <div id="exportSubjectChoices"></div>
+    <label>Albo wybierz przedmiot, klasę i rok szkolny:</label><div id="exportSubjectChoices"></div>
     <div class="actions" style="margin-top:12px"><button id="exportIcsBtn">Eksportuj ICS</button></div>
     <hr style="border:0;border-top:1px solid var(--line);margin:16px 0">
     <h4>Import kalendarza ICS</h4>
-    <label for="icsFallbackGrade">Domyślna klasa dla zaimportowanych planów</label>
-    <select id="icsFallbackGrade"></select>
-    <div class="actions" style="margin-top:8px">
-      <input id="icsFile" type="file" accept=".ics,text/calendar">
-      <button id="importIcsBtn">Importuj ICS</button>
-    </div>
+    <label for="icsFallbackGrade">Domyślna klasa dla zaimportowanych planów</label><select id="icsFallbackGrade"></select>
+    <div class="actions" style="margin-top:8px"><input id="icsFile" type="file" accept=".ics,text/calendar"><button id="importIcsBtn">Importuj ICS</button></div>
     <p id="icsMessage" class="muted" aria-live="polite"></p>
   </section>
 
   <section class="card admin-card">
-    <h3>Zapis do repozytorium</h3>
-    <p class="muted">Skopiuj wygenerowane JSON-y do repozytorium, aby zachować zmiany.</p>
+    <h3>Zapis do repozytorium</h3><p class="muted">Skopiuj wygenerowane JSON-y do repozytorium, aby zachować zmiany.</p>
     <label>data/subjects.json</label><textarea id="subjectsJson" readonly></textarea><button class="copyJson" data-target="subjectsJson">Kopiuj JSON przedmiotów</button>
     <label>data/lessons.json</label><textarea id="lessonsJson" readonly></textarea><button class="copyJson" data-target="lessonsJson">Kopiuj JSON lekcji</button>
     <label>data/settings.json</label><textarea id="settingsJson" readonly></textarea><button class="copyJson" data-target="settingsJson">Kopiuj JSON ustawień</button>
@@ -230,8 +207,7 @@ dialog::backdrop{background:#13172788}
 
 <dialog id="lessonDialog">
 <form id="lessonForm">
-  <h2 id="lessonFormTitle"></h2>
-  <input id="lessonId" type="hidden">
+  <h2 id="lessonFormTitle"></h2><input id="lessonId" type="hidden">
   <label for="lessonSubject">Przedmiot</label><select id="lessonSubject" required></select>
   <div class="form-grid">
     <div><label for="lessonDate">Data lekcji</label><input id="lessonDate" type="date" required></div>
@@ -240,8 +216,7 @@ dialog::backdrop{background:#13172788}
     <div><label for="lessonGrade">Klasa / rocznik</label><select id="lessonGrade" required></select></div>
   </div>
   <label class="check-row"><input id="showUsedGrades" type="checkbox"><span>Pokaż także wcześniej użyte klasy</span></label>
-  <p id="schoolYearLabel" class="muted"></p>
-  <div id="previousGradeLessons" class="muted" aria-live="polite"></div>
+  <p id="schoolYearLabel" class="muted"></p><div id="previousGradeLessons" class="muted" aria-live="polite"></div>
   <label for="lessonYearPlan">Liczba lekcji w roku szkolnym</label><input id="lessonYearPlan" type="number" min="1" value="20" required>
   <label for="lessonAttendance">Obecność</label>
   <select id="lessonAttendance"><option value="unknown">Nieustalona</option><option value="present">Obecny/a</option><option value="absent">Nieobecny/a</option></select>
@@ -261,6 +236,7 @@ const DEVICE_ZONE=Intl.DateTimeFormat().resolvedOptions().timeZone||"Europe/Wars
 const COLORS=["#5147e8","#168451","#e06a24","#bd3045","#147a9e","#a13e9b"];
 const WEEKDAYS=["Pon","Wt","Śr","Czw","Pt","Sob","Niedz"];
 let subjects=[],lessons=[],settings={displayTimeZone:DEFAULT_ZONE};
+let lessonNumberById=new Map(),lessonsByDate=new Map();
 let mode="month",cursor=new Date(),selectedDate=new Date(),selectedLessonIds=new Set();
 cursor.setHours(0,0,0,0);selectedDate=new Date(cursor);
 
@@ -275,17 +251,29 @@ const subjectById=sid=>subjects.find(s=>s.id===sid);
 const subjectPlans=s=>{if(!s)return[];if(!Array.isArray(s.yearPlans))s.yearPlans=[];return s.yearPlans;};
 
 function parts(date,tz=zone()){
-  return Object.fromEntries(new Intl.DateTimeFormat("en-CA",{timeZone:tz,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).formatToParts(date).map(x=>[x.type,x.value]));
+  return Object.fromEntries(new Intl.DateTimeFormat("en-CA",{
+    timeZone:tz,year:"numeric",month:"2-digit",day:"2-digit",
+    hour:"2-digit",minute:"2-digit",hourCycle:"h23"
+  }).formatToParts(date).map(x=>[x.type,x.value]));
 }
 function zonedIso(date,time,tz){
   const [y,m,d]=date.split("-").map(Number),[h,mi]=time.split(":").map(Number);
   const wanted=Date.UTC(y,m-1,d,h,mi);let guess=wanted;
-  for(let i=0;i<4;i++){const p=parts(new Date(guess),tz);guess+=wanted-Date.UTC(+p.year,+p.month-1,+p.day,+p.hour,+p.minute);}
+  for(let i=0;i<4;i++){
+    const p=parts(new Date(guess),tz);
+    guess+=wanted-Date.UTC(+p.year,+p.month-1,+p.day,+p.hour,+p.minute);
+  }
   return new Date(guess).toISOString();
 }
-function dateInZone(iso,tz=zone()){const p=parts(new Date(iso),tz);return `${p.year}-${p.month}-${p.day}`;}
-function fmtDate(iso,tz=zone()){return new Intl.DateTimeFormat("pl-PL",{timeZone:tz,dateStyle:"medium",timeStyle:"short"}).format(new Date(iso));}
-function fmtTime(iso,tz=zone()){return new Intl.DateTimeFormat("pl-PL",{timeZone:tz,hour:"2-digit",minute:"2-digit"}).format(new Date(iso));}
+function dateInZone(iso,tz=zone()){
+  const p=parts(new Date(iso),tz);return `${p.year}-${p.month}-${p.day}`;
+}
+function fmtDate(iso,tz=zone()){
+  return new Intl.DateTimeFormat("pl-PL",{timeZone:tz,dateStyle:"medium",timeStyle:"short"}).format(new Date(iso));
+}
+function fmtTime(iso,tz=zone()){
+  return new Intl.DateTimeFormat("pl-PL",{timeZone:tz,hour:"2-digit",minute:"2-digit"}).format(new Date(iso));
+}
 function yearForDate(date,tz=zone()){
   let y,m;
   if(date){[y,m]=date.split("-").map(Number);}
@@ -298,12 +286,24 @@ function lessonYear(l){return String(l.schoolYear||yearForDate(dateInZone(l.star
 function planFor(sid,y){return subjectPlans(subjectById(sid)).find(p=>p.schoolYear===y)||null;}
 function gradeOf(l){return Number(l.grade)||Number(planFor(l.subjectId,lessonYear(l))?.grade)||null;}
 function lessonsForPlan(sid,y){return lessons.filter(l=>l.subjectId===sid&&lessonYear(l)===y).sort((a,b)=>new Date(a.start)-new Date(b.start));}
-function lessonNo(l){return lessonsForPlan(l.subjectId,lessonYear(l)).findIndex(x=>x.id===l.id)+1;}
+function lessonNo(l){return lessonNumberById.get(l.id)||1;}
 function lessonTitle(l){return `${subjectById(l.subjectId)?.name||"Przedmiot"} ${lessonNo(l)}`;}
-function lessonsOn(d){const k=dateKey(d);return lessons.filter(l=>dateInZone(l.start)===k).sort((a,b)=>new Date(a.start)-new Date(b.start));}
+function lessonsOn(d){return lessonsByDate.get(dateKey(d))||[];}
 function planRows(){
   const rows=[];subjects.forEach(s=>subjectPlans(s).forEach(p=>rows.push({key:`${s.id}|${p.schoolYear}`,sid:s.id,year:p.schoolYear,grade:p.grade})));
   return rows;
+}
+function rebuildRenderIndexes(){
+  lessonNumberById=new Map();lessonsByDate=new Map();
+  const sorted=[...lessons].sort((a,b)=>new Date(a.start)-new Date(b.start));
+  const counts=new Map();
+  sorted.forEach(l=>{
+    const key=`${l.subjectId}|${lessonYear(l)}`;
+    const n=(counts.get(key)||0)+1;counts.set(key,n);lessonNumberById.set(l.id,n);
+    const day=dateInZone(l.start);
+    if(!lessonsByDate.has(day))lessonsByDate.set(day,[]);
+    lessonsByDate.get(day).push(l);
+  });
 }
 
 function lessonCard(l){
@@ -315,16 +315,21 @@ function lessonCard(l){
 function bindLessonControls(root){
   root.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>openLesson(b.dataset.edit));
   root.querySelectorAll("[data-att]").forEach(sel=>sel.onchange=()=>{
-    const l=lessons.find(x=>x.id===sel.dataset.att);if(l){l.attendance=sel.value;renderAll();}
+    const lesson=lessons.find(x=>x.id===sel.dataset.att);
+    if(!lesson)return;
+    lesson.attendance=sel.value;
+    if(!$("adminView").classList.contains("hidden"))renderAdmin();
   });
 }
+
 function renderMonth(){
   const first=new Date(cursor.getFullYear(),cursor.getMonth(),1),start=new Date(first);
   start.setDate(first.getDate()-((first.getDay()+6)%7));
   $("periodLabel").textContent=new Intl.DateTimeFormat("pl-PL",{month:"long",year:"numeric"}).format(cursor);
   let html=`<div class="weekdays">${WEEKDAYS.map(x=>`<div class="weekday">${x}</div>`).join("")}</div><div class="month-grid">`;
   for(let i=0;i<42;i++){
-    const d=new Date(start);d.setDate(start.getDate()+i);const k=dateKey(d),items=lessonsOn(d);
+    const d=new Date(start);d.setDate(start.getDate()+i);
+    const k=dateKey(d),items=lessonsOn(d);
     const cls=["month-day",d.getMonth()!==cursor.getMonth()?"outside":"",k===dateKey(selectedDate)?"selected":"",k===dateKey(new Date())?"today":""].filter(Boolean).join(" ");
     html+=`<div class="${cls}"><div class="day-head"><button class="day-num" data-pick="${k}">${d.getDate()}</button><button class="add-day" data-add="${k}">+</button></div><div class="month-events">`;
     html+=items.slice(0,3).map(l=>`<button class="month-event" data-edit="${esc(l.id)}" style="--event-color:${esc(subjectById(l.subjectId)?.color||"#5147e8")}">${esc(lessonTitle(l))}</button>`).join("");
@@ -336,41 +341,32 @@ function renderMonth(){
   $("monthView").querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>openLesson(null,fromKey(b.dataset.add)));
   bindLessonControls($("monthView"));
   $("selectedDateTitle").textContent=new Intl.DateTimeFormat("pl-PL",{timeZone:zone(),weekday:"long",year:"numeric",month:"long",day:"numeric"}).format(selectedDate);
-  const list=lessonsOn(selectedDate);$("selectedDateCount").textContent=list.length?`${list.length} lekcji`:"";
+  const list=lessonsOn(selectedDate);
+  $("selectedDateCount").textContent=list.length?`${list.length} lekcji`:"";
   $("selectedDayLessons").innerHTML=list.length?list.map(lessonCard).join(""):'<div class="empty">Brak lekcji. Naciśnij +, aby dodać lekcję.</div>';
   bindLessonControls($("selectedDayLessons"));
 }
 
-/* Wylicza wysokość siatki z miejsca dostępnego pod paskiem nawigacji. */
-function calculateHourHeight(){
-  const top=Math.max(0,$("weekView").getBoundingClientRect().top);
-  const headerHeight=48;
-  const available=Math.max(24,window.innerHeight-top-headerHeight);
-  return available/24;
-}
+/* Siatka godzin ma stałe 48 px na godzinę, niezależnie od ekranu i przewijania. */
 function renderWeek(){
-  const weekView=$("weekView");
   const start=new Date(cursor);start.setDate(start.getDate()-((start.getDay()+6)%7));
   const days=Array.from({length:7},(_,i)=>{const d=new Date(start);d.setDate(start.getDate()+i);return d;});
   $("periodLabel").textContent=`${start.toLocaleDateString("pl-PL",{month:"short",day:"numeric"})} – ${days[6].toLocaleDateString("pl-PL",{year:"numeric",month:"short",day:"numeric"})}`;
-
-  const hourHeight=calculateHourHeight();
-  weekView.style.setProperty("--hour-height",`${hourHeight}px`);
 
   let headers='<div class="week-head"></div>';
   days.forEach((d,i)=>headers+=`<div class="week-head">${WEEKDAYS[i]}<br>${d.getMonth()+1}/${d.getDate()}</div>`);
 
   let axis='<div class="time-axis">';
-  for(let h=0;h<24;h++)axis+=`<span class="hour-label" style="top:${h*hourHeight}px">${pad(h)}:00</span>`;
+  for(let h=0;h<24;h++)axis+=`<span class="hour-label" style="top:${h*48}px">${pad(h)}:00</span>`;
   axis+="</div>";
 
   let columns="";
   days.forEach(d=>{
     let events="";
     lessonsOn(d).forEach(l=>{
-      const p=parts(new Date(l.start),zone()),minutes=Number(p.hour)*60+Number(p.minute);
-      const eventHeight=Math.max(9,hourHeight*0.75);
-      events+=`<button class="week-event" data-edit="${esc(l.id)}" style="top:${minutes/60*hourHeight}px;height:${eventHeight}px;--event-color:${esc(subjectById(l.subjectId)?.color||"#5147e8")}"><strong>${esc(fmtTime(l.start))} ${esc(lessonTitle(l))}</strong></button>`;
+      const p=parts(new Date(l.start),l.timeZone||zone());
+      const minutes=Number(p.hour)*60+Number(p.minute);
+      events+=`<button class="week-event" data-edit="${esc(l.id)}" style="top:${minutes/60*48}px;--event-color:${esc(subjectById(l.subjectId)?.color||"#5147e8")}"><strong>${esc(fmtTime(l.start))} ${esc(lessonTitle(l))}</strong></button>`;
     });
     columns+=`<div class="week-column">${events}</div>`;
   });
@@ -380,10 +376,10 @@ function renderWeek(){
     ${lessonsOn(d).map(lessonCard).join("")||'<div class="muted">Brak lekcji</div>'}
   </section>`).join("");
 
-  weekView.innerHTML=`<div class="week-scroll"><div class="week-grid">${headers}${axis}${columns}</div></div><div class="section-heading"><h2>Wszystkie lekcje</h2></div><div class="week-days">${agenda}</div>`;
-  weekView.style.setProperty("--hour-height",`${hourHeight}px`);
-  weekView.querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>openLesson(null,fromKey(b.dataset.add)));
-  bindLessonControls(weekView);
+  $("weekView").innerHTML=`<div class="week-scroll"><div class="week-grid">${headers}${axis}${columns}</div></div>
+    <div class="section-heading"><h2>Wszystkie lekcje</h2></div><div class="week-days">${agenda}</div>`;
+  $("weekView").querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>openLesson(null,fromKey(b.dataset.add)));
+  bindLessonControls($("weekView"));
 }
 function renderCalendar(){
   $("monthView").classList.toggle("hidden",mode!=="month");
@@ -394,7 +390,7 @@ function renderCalendar(){
   if(mode==="month")renderMonth();else renderWeek();
 }
 
-/* Panel Admin i filtrowanie */
+/* Filtry Admin */
 function gradesForSubject(sid){
   const grades=new Set();
   lessons.filter(l=>l.subjectId===sid).forEach(l=>{const g=gradeOf(l);if(g)grades.add(g);});
@@ -415,13 +411,18 @@ function filteredLessons(sid,grade){
   return lessons.filter(l=>l.subjectId===sid&&gradeOf(l)===Number(grade)).sort((a,b)=>new Date(a.start)-new Date(b.start));
 }
 function renderExportOptions(){
-  const box=$("exportSubjectChoices"),selected=new Set([...box.querySelectorAll("[data-export]:checked")].map(x=>x.value));
+  const box=$("exportSubjectChoices");
+  const selected=new Set([...box.querySelectorAll("[data-export]:checked")].map(x=>x.value));
   const had=box.querySelectorAll("[data-export]").length>0;
   box.innerHTML='<div class="export-subject-list">'+planRows().map(p=>{
-    const s=subjectById(p.sid),label=`${s?.name||"Przedmiot"}${p.grade?` · ${p.grade} klasa`:""} · Rok szkolny ${p.year.replace("-","–")}`;
+    const s=subjectById(p.sid);
+    const label=`${s?.name||"Przedmiot"}${p.grade?` · ${p.grade} klasa`:""} · Rok szkolny ${p.year.replace("-","–")}`;
     return `<label class="export-subject-option"><input type="checkbox" data-export value="${esc(p.key)}" ${had&&selected.has(p.key)?"checked":""}><span>${esc(label)}</span></label>`;
   }).join("")+'</div>';
-  box.querySelectorAll("[data-export]").forEach(c=>{c.disabled=$("exportAllSubjects").checked;c.onchange=()=>{if(c.checked)$("exportAllSubjects").checked=false;renderExportOptions();};});
+  box.querySelectorAll("[data-export]").forEach(c=>{
+    c.disabled=$("exportAllSubjects").checked;
+    c.onchange=()=>{if(c.checked)$("exportAllSubjects").checked=false;renderExportOptions();};
+  });
 }
 function renderAdmin(){
   const as=$("attendanceSubjectFilter").value,ls=$("lessonsSubjectFilter").value;
@@ -432,22 +433,23 @@ function renderAdmin(){
 
   const attendance=filteredLessons($("attendanceSubjectFilter").value,$("attendanceGradeFilter").value);
   const list=filteredLessons($("lessonsSubjectFilter").value,$("lessonsGradeFilter").value);
-
   $("attendanceFilterHint").classList.toggle("hidden",!!attendance);
+
   $("attendanceBody").innerHTML=attendance?attendance.map(l=>`<tr>
     <td>${lessonNo(l)}</td><td>${esc(subjectById(l.subjectId)?.name||"")}</td><td>${gradeOf(l)||"—"}</td><td>${esc(lessonYear(l))}</td>
     <td><select data-att="${esc(l.id)}"><option value="unknown" ${!l.attendance||l.attendance==="unknown"?"selected":""}>Nieustalona</option><option value="present" ${l.attendance==="present"?"selected":""}>Obecny/a</option><option value="absent" ${l.attendance==="absent"?"selected":""}>Nieobecny/a</option></select></td>
   </tr>`).join("")||'<tr><td colspan="5">Brak lekcji dla wybranego przedmiotu i klasy.</td></tr>':"";
 
   if(attendance){
-    const present=attendance.filter(l=>l.attendance==="present").length;
-    const absent=attendance.filter(l=>l.attendance==="absent").length;
-    const unknown=attendance.length-present-absent;
-    $("overallStats").innerHTML=`<div class="stat"><b>Lekcje</b><br>${attendance.length}</div><div class="stat"><b>Obecności</b><br>${present}</div><div class="stat"><b>Nieobecności</b><br>${absent}</div><div class="stat"><b>Nieustalone</b><br>${unknown}</div><div class="stat"><b>Frekwencja</b><br>${present+absent?Math.round(100*present/(present+absent))+"%":"—"}</div>`;
+    const p=attendance.filter(l=>l.attendance==="present").length;
+    const a=attendance.filter(l=>l.attendance==="absent").length;
+    const u=attendance.length-p-a;
+    $("overallStats").innerHTML=`<div class="stat"><b>Lekcje</b><br>${attendance.length}</div><div class="stat"><b>Obecności</b><br>${p}</div><div class="stat"><b>Nieobecności</b><br>${a}</div><div class="stat"><b>Nieustalone</b><br>${u}</div><div class="stat"><b>Frekwencja</b><br>${p+a?Math.round(100*p/(p+a))+"%":"—"}</div>`;
   }else $("overallStats").innerHTML="";
 
   $("attendanceBody").querySelectorAll("[data-att]").forEach(sel=>sel.onchange=()=>{
-    const l=lessons.find(x=>x.id===sel.dataset.att);if(l){l.attendance=sel.value;renderAll();}
+    const l=lessons.find(x=>x.id===sel.dataset.att);
+    if(l){l.attendance=sel.value;renderAdmin();}
   });
 
   $("lessonsFilterHint").classList.toggle("hidden",!!list);
@@ -458,7 +460,9 @@ function renderAdmin(){
     <div class="row-actions"><button data-edit="${esc(l.id)}">Edytuj</button><button class="danger" data-delete="${esc(l.id)}">Usuń</button></div>
   </div>`).join("")||'<div class="empty">Brak lekcji dla wybranego przedmiotu i klasy.</div>'):"";
 
-  $("adminLessonList").querySelectorAll("[data-select]").forEach(c=>c.onchange=()=>{c.checked?selectedLessonIds.add(c.dataset.select):selectedLessonIds.delete(c.dataset.select);renderAdmin();});
+  $("adminLessonList").querySelectorAll("[data-select]").forEach(c=>c.onchange=()=>{
+    c.checked?selectedLessonIds.add(c.dataset.select):selectedLessonIds.delete(c.dataset.select);renderAdmin();
+  });
   $("adminLessonList").querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>openLesson(b.dataset.edit));
   $("adminLessonList").querySelectorAll("[data-delete]").forEach(b=>b.onclick=()=>{
     if(confirm("Usunąć tę lekcję?")){lessons=lessons.filter(l=>l.id!==b.dataset.delete);selectedLessonIds.delete(b.dataset.delete);renderAll();}
@@ -480,7 +484,7 @@ function renderAdmin(){
   $("lessonsJson").value=JSON.stringify(lessons,null,2);
   $("settingsJson").value=JSON.stringify(settings,null,2);
 }
-function renderAll(){renderCalendar();renderAdmin();}
+function renderAll(){rebuildRenderIndexes();renderCalendar();renderAdmin();}
 
 /* Przedmioty */
 function resetSubjectForm(){
@@ -503,10 +507,12 @@ function deleteSubject(sid){
   if(!subjectById(sid)||!confirm("Usunięcie przedmiotu usunie również wszystkie jego lekcje. Kontynuować?"))return;
   const removed=new Set(lessons.filter(l=>l.subjectId===sid).map(l=>l.id));
   subjects=subjects.filter(s=>s.id!==sid);lessons=lessons.filter(l=>l.subjectId!==sid);
-  removed.forEach(x=>selectedLessonIds.delete(x));if($("subjectId").value===sid)resetSubjectForm();renderAll();
+  removed.forEach(x=>selectedLessonIds.delete(x));
+  if($("subjectId").value===sid)resetSubjectForm();
+  renderAll();
 }
 
-/* Klasy i formularz lekcji */
+/* Formularz lekcji, plany roczne i wcześniejsze wpisy */
 function usedGradesBefore(sid,y){
   const set=new Set(),start=yearStart(y),s=subjectById(sid);if(!s)return set;
   subjectPlans(s).forEach(p=>{if(yearStart(p.schoolYear)<start&&p.grade)set.add(Number(p.grade));});
@@ -516,7 +522,7 @@ function usedGradesBefore(sid,y){
 function renderEarlierLessons(){
   const box=$("previousGradeLessons"),sid=$("lessonSubject").value,g=Number($("lessonGrade").value),date=$("lessonDate").value;
   if(!sid||!g||!date){box.textContent="";return;}
-  const selectedYear=yearForDate(date,$("eventZone").value||zone()),start=yearStart(selectedYear);
+  const y=yearForDate(date,$("eventZone").value||zone()),start=yearStart(y);
   const earlier=lessons.filter(l=>l.subjectId===sid&&gradeOf(l)===g&&yearStart(lessonYear(l))<start).sort((a,b)=>new Date(a.start)-new Date(b.start));
   if(!earlier.length){box.textContent="Nie znaleziono wcześniejszych lekcji dla tej klasy.";return;}
   box.innerHTML="<strong>Wcześniejsze lekcje znalezione dla tej klasy:</strong><ul>"+earlier.map(l=>`<li>${esc(lessonTitle(l))} — ${esc(fmtDate(l.start,l.timeZone||zone()))} — ${esc(lessonYear(l))}</li>`).join("")+"</ul>";
@@ -545,8 +551,7 @@ function openLesson(lessonId=null,date=selectedDate){
     $("lessonSubject").value=l.subjectId;$("lessonDate").value=`${p.year}-${p.month}-${p.day}`;
     $("lessonTime").value=`${p.hour}:${p.minute}`;$("eventZone").value=tz;
     $("lessonAttendance").value=l.attendance||"unknown";$("lessonNote").value=l.note||"";
-    $("lessonAlarms").value=String(l.alarms?.[0]||5);
-    $("showUsedGrades").checked=true;
+    $("lessonAlarms").value=String(l.alarms?.[0]||5);$("showUsedGrades").checked=true;
   }
   const y=yearForDate($("lessonDate").value,$("eventZone").value),plan=planFor($("lessonSubject").value,y);
   $("schoolYearLabel").textContent=yearText(y);
@@ -574,7 +579,7 @@ function saveLesson(e){
   selectedDate=new Date(start);cursor=new Date(selectedDate);$("lessonDialog").close();renderAll();
 }
 
-/* ICS */
+/* Eksport i import ICS */
 function icsEscape(s){return String(s||"").replace(/\\/g,"\\\\").replace(/\r?\n/g,"\\n").replace(/,/g,"\\,").replace(/;/g,"\\;");}
 function icsUtc(iso){return new Date(iso).toISOString().replace(/[-:]/g,"").replace(/\.\d{3}/,"");}
 function exportIcs(){
@@ -667,7 +672,7 @@ async function importIcs(){
   }catch(error){console.error(error);$("icsMessage").textContent="Nie udało się odczytać pliku ICS.";}
 }
 
-/* Migracja starszych danych */
+/* Migracja starszych plików JSON */
 function migrate(oldS,oldL){
   const byName=new Map(),idMap=new Map(),newS=[];
   (Array.isArray(oldS)?oldS:[]).forEach(old=>{
@@ -691,9 +696,9 @@ function migrate(oldS,oldL){
   return {subjects:newS,lessons:newL};
 }
 async function load(path,fallback){try{const r=await fetch(path);if(!r.ok)throw Error();return await r.json();}catch{return fallback;}}
-async function copyJson(idToCopy){
-  try{await navigator.clipboard.writeText($(idToCopy).value);alert("Skopiowano JSON.");}
-  catch{$(idToCopy).select();document.execCommand("copy");alert("Skopiowano JSON.");}
+async function copyJson(target){
+  try{await navigator.clipboard.writeText($(target).value);alert("Skopiowano JSON.");}
+  catch{$(target).select();document.execCommand("copy");alert("Skopiowano JSON.");}
 }
 
 /* Zdarzenia interfejsu */
@@ -746,20 +751,9 @@ $("deleteSelectedLessonsBtn").onclick=()=>{
 };
 document.querySelectorAll(".copyJson").forEach(b=>b.onclick=()=>copyJson(b.dataset.target));
 
-/* Po zmianie rozmiaru okna przeliczamy siatkę, ale nie przewijamy strony. */
-let resizeTimer;
-window.addEventListener("resize",()=>{
-  clearTimeout(resizeTimer);
-  resizeTimer=setTimeout(()=>{
-    if(mode==="week"&&!$("weekView").classList.contains("hidden"))renderWeek();
-  },100);
-});
-
 async function start(){
   const [oldS,oldL,loadedSettings]=await Promise.all([
-    load("./data/subjects.json",[]),
-    load("./data/lessons.json",[]),
-    load("./data/settings.json",{displayTimeZone:DEFAULT_ZONE})
+    load("./data/subjects.json",[]),load("./data/lessons.json",[]),load("./data/settings.json",{displayTimeZone:DEFAULT_ZONE})
   ]);
   settings=loadedSettings&&typeof loadedSettings==="object"?loadedSettings:{displayTimeZone:DEFAULT_ZONE};
   if(!settings.displayTimeZone)settings.displayTimeZone=DEFAULT_ZONE;

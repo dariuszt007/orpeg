@@ -1,1 +1,682 @@
-[]
+[
+  {
+    "id": "03f9a620-7db6-4b36-b429-8d230cf493b1",
+    "uid": "BED2C463-95D3-4ED0-B262-FFDCD91736F4",
+    "subjectId": "12dc67ad-91e0-4f96-828b-8c356143d0cf",
+    "start": "2026-11-21T08:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "30c155e6-c8e3-4cbe-8fac-e8929affe3ef",
+    "uid": "54aef99e071d40f6a6e630d8b741afed@google.com",
+    "subjectId": "5f5e5806-c5cb-45ac-ab6d-60459fcb2a43",
+    "start": "2026-10-22T15:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "065fd0fb-8908-4aad-b355-f9ec40e20c94",
+    "uid": "dcdf413edf694f6182c6efbc498aba92@google.com",
+    "subjectId": "6c34b8c0-b0c4-480f-92ad-4a5696c6d0fb",
+    "start": "2026-11-20T07:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "fb80cc88-4999-4e5d-ac40-05aa156170c3",
+    "uid": "f1dac6b2d610499d9401f83952b130f2@google.com",
+    "subjectId": "eb35e5b9-c6b3-49f9-94ac-7ea1fe696e36",
+    "start": "2027-01-09T10:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "c6c3913e-e458-4bfb-a20e-8253ffd31e2b",
+    "uid": "AFBC9DC3-BC1D-49E2-B5B2-AF74419C8F32",
+    "subjectId": "f148d547-4483-4f31-8ab8-b3575f1db48f",
+    "start": "2026-09-19T09:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "107a3091-cd4b-4b4e-95e1-3438e30bac80",
+    "uid": "45c8095543a34bf3968dd3a34ab72f46@google.com",
+    "subjectId": "4daf51ca-b50b-42b7-a2a1-fdfc2e7f4600",
+    "start": "2026-12-19T09:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "c76307ab-9e7e-429d-a477-fd8d5a628b7a",
+    "uid": "d8cfe6468e334db488dd68e1f616464f@google.com",
+    "subjectId": "6b6b3af4-6c0a-4e8a-b8f9-e814d929bd56",
+    "start": "2027-01-07T14:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "79d6c5a6-dce7-48d7-ae34-69d0d8de424a",
+    "uid": "69bf7e3d3396448586286b79f7460b3f@google.com",
+    "subjectId": "5f5e5806-c5cb-45ac-ab6d-60459fcb2a43",
+    "start": "2027-05-06T07:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "c454fe87-fb46-47e5-980a-ae07e38c1f2a",
+    "uid": "0E378950-36CE-451E-A171-B26D7538A480",
+    "subjectId": "34701e3c-7d1e-4f49-bcd2-67b19ba7d1c7",
+    "start": "2026-10-27T14:30:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "bef85148-b1a1-4fdd-a72e-65b5026060f2",
+    "uid": "7FFD8DCC-CC53-4177-B2B8-1F0030DC0694",
+    "subjectId": "a369bc13-9bc8-40dc-9dec-f5cd48df2dfd",
+    "start": "2026-11-19T12:30:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "82820c29-8974-4326-8932-58dc2fbd3ad9",
+    "uid": "2eb0e85211f1470a835ea586ade087ec@google.com",
+    "subjectId": "5f5e5806-c5cb-45ac-ab6d-60459fcb2a43",
+    "start": "2027-04-22T15:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "238eae81-8465-4c8c-87f9-3677b29922be",
+    "uid": "f395b039f5fb48da8c2c2a062ecbfc5c@google.com",
+    "subjectId": "5f5e5806-c5cb-45ac-ab6d-60459fcb2a43",
+    "start": "2027-05-12T07:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "26f9cc36-4fa5-44b9-9760-61fe2d51548d",
+    "uid": "2232051A-497E-4ACF-BE31-240330A7D8AD",
+    "subjectId": "eb35e5b9-c6b3-49f9-94ac-7ea1fe696e36",
+    "start": "2026-10-24T14:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "6ac2b149-a6d7-4327-98be-3213f85ce79d",
+    "uid": "18530169ea6b48a1a66ee9d0627f7a4a@google.com",
+    "subjectId": "4daf51ca-b50b-42b7-a2a1-fdfc2e7f4600",
+    "start": "2027-01-23T09:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "d792e966-ffae-412c-a23c-bbea3e48f9bd",
+    "uid": "3a029eab34024e668128e34025f85759@google.com",
+    "subjectId": "3230516c-37ca-41d0-82f6-6facb6e23aae",
+    "start": "2026-10-03T06:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "52cea48f-3aae-4982-925c-c1c3b88b809b",
+    "uid": "BD32AEF2-600C-4B70-8DC8-878DCB97E4B0",
+    "subjectId": "21a50c11-44e7-4660-8429-37f69d879cb9",
+    "start": "2026-09-24T14:15:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "46464391-f883-4675-af36-25ce0b115259",
+    "uid": "8A4A64D8-DF28-4DA4-BDA2-788ED946494B",
+    "subjectId": "21a50c11-44e7-4660-8429-37f69d879cb9",
+    "start": "2026-10-27T15:15:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "8b97e8a0-36b7-41bd-8004-bd6e8db56248",
+    "uid": "4C61906D-90B3-468D-A967-F47EB48711F3",
+    "subjectId": "f148d547-4483-4f31-8ab8-b3575f1db48f",
+    "start": "2026-10-24T09:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "e0a6c6e4-1c28-4e46-90c0-5da9acf83acd",
+    "uid": "7fe696649c734da9a5589bdebfe4bc9f@google.com",
+    "subjectId": "5f5e5806-c5cb-45ac-ab6d-60459fcb2a43",
+    "start": "2027-05-12T15:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "1f69dfc7-b95b-4c22-b8fb-04a1489112e9",
+    "uid": "F5D9DECF-07F9-4739-AA9D-8FFCAFB385B8",
+    "subjectId": "eb35e5b9-c6b3-49f9-94ac-7ea1fe696e36",
+    "start": "2026-09-26T06:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "1eb9fb86-7670-4bb7-baea-4b65fd187f47",
+    "uid": "c8842625b6bc4f60a27ba32617f37946@google.com",
+    "subjectId": "5f5e5806-c5cb-45ac-ab6d-60459fcb2a43",
+    "start": "2026-12-07T08:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "7f70202d-7dce-431e-960c-150c376d8136",
+    "uid": "EF369578-9F40-4DD3-92D5-82B6CC4AC23F",
+    "subjectId": "3230516c-37ca-41d0-82f6-6facb6e23aae",
+    "start": "2026-09-19T07:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "75400bf8-bf95-4cb6-80b7-dd0d4f00087c",
+    "uid": "C71D357E-F7FB-49B4-8867-71E735EC2450",
+    "subjectId": "34701e3c-7d1e-4f49-bcd2-67b19ba7d1c7",
+    "start": "2026-11-24T14:30:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "5fb23f73-6fc7-4801-a35d-af9eca759dd2",
+    "uid": "b3beee2099094d54bf019425119ab022@google.com",
+    "subjectId": "6b6b3af4-6c0a-4e8a-b8f9-e814d929bd56",
+    "start": "2026-12-05T09:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "b2d4596b-309c-4a17-b04b-c4d588154101",
+    "uid": "e2c1460dc27247b7b7dc7187544c23a4@google.com",
+    "subjectId": "5f5e5806-c5cb-45ac-ab6d-60459fcb2a43",
+    "start": "2027-02-25T08:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "f498cd48-5e19-4831-a237-d8fa64c5964d",
+    "uid": "F8ABE8BF-EDCB-41B4-9BDB-DAB815D26EC4",
+    "subjectId": "3230516c-37ca-41d0-82f6-6facb6e23aae",
+    "start": "2026-12-05T07:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "7318c13d-1763-462c-b576-8f7dfd6a1af1",
+    "uid": "5b445b02d2914bb992310b9f4e8d0492@google.com",
+    "subjectId": "5f5e5806-c5cb-45ac-ab6d-60459fcb2a43",
+    "start": "2027-05-06T15:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "31e6bf4f-df92-4340-8724-df322df5c5cd",
+    "uid": "e974a53534d74c4fbf4b02a3c8dff0b6@google.com",
+    "subjectId": "5f5e5806-c5cb-45ac-ab6d-60459fcb2a43",
+    "start": "2027-03-18T08:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "5bc57d4f-5409-43b8-9655-68b52477045b",
+    "uid": "089505D6-7EE0-468D-A632-D9CC6DE83E5D",
+    "subjectId": "c94ba18c-a306-4e3d-9ed4-5dfc88f8ab44",
+    "start": "2026-10-17T08:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "9d282cd2-d012-494a-beea-f6c66064ff86",
+    "uid": "2148D74D-4377-4D00-A91A-6776BA89BFAB",
+    "subjectId": "12dc67ad-91e0-4f96-828b-8c356143d0cf",
+    "start": "2026-11-07T08:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "bee299f4-78b9-4065-9556-1b14dde36b7a",
+    "uid": "3810908f40594015ae22ba621b6dd066@google.com",
+    "subjectId": "3230516c-37ca-41d0-82f6-6facb6e23aae",
+    "start": "2027-01-16T08:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "718f68a3-6d0c-498e-a9a4-69c2c0a0115c",
+    "uid": "4c6fbe0e5dcc4df1bb25332840219ea7@google.com",
+    "subjectId": "eb35e5b9-c6b3-49f9-94ac-7ea1fe696e36",
+    "start": "2026-11-21T07:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "4f6d4aa1-8aa9-442b-bba0-f7fffe42fa9f",
+    "uid": "439b3c8633724e81b4a35a72f620a494@google.com",
+    "subjectId": "5f5e5806-c5cb-45ac-ab6d-60459fcb2a43",
+    "start": "2027-04-22T07:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "9b5a8242-b001-4449-a8b9-cc5b0f29cf12",
+    "uid": "4b1563f6ef8f4a0ea9709943cedcc9c8@google.com",
+    "subjectId": "5f5e5806-c5cb-45ac-ab6d-60459fcb2a43",
+    "start": "2026-09-28T15:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "d7d1dc5b-86c4-4ff0-abf8-7bd98bb0cd2e",
+    "uid": "98a53db61c534c91a80e1f1e06db896f@google.com",
+    "subjectId": "a369bc13-9bc8-40dc-9dec-f5cd48df2dfd",
+    "start": "2026-09-22T15:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "4d55760d-37c1-43af-a438-4749139ad71f",
+    "uid": "4D3FED24-6E2F-44A5-9F07-28F4BCB7EF48",
+    "subjectId": "c94ba18c-a306-4e3d-9ed4-5dfc88f8ab44",
+    "start": "2026-09-21T17:30:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "7764e01b-f1e5-41d9-b9da-1bf70e980d80",
+    "uid": "0d297bf396a4421fa5512cddccf4f517@google.com",
+    "subjectId": "3230516c-37ca-41d0-82f6-6facb6e23aae",
+    "start": "2027-01-09T07:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "4db3e7a5-3666-4009-aee6-377974bc83ec",
+    "uid": "ACAD3A31-7FE8-4280-819A-27E60C92D187",
+    "subjectId": "3230516c-37ca-41d0-82f6-6facb6e23aae",
+    "start": "2026-10-24T13:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "8f61a56d-057b-4539-90e3-db01bd3a2b7f",
+    "uid": "4efc2386555f40a8ba58db88bd6af45b@google.com",
+    "subjectId": "6b6b3af4-6c0a-4e8a-b8f9-e814d929bd56",
+    "start": "2026-10-03T08:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "f319ed62-ef42-4bf8-b825-c01dae802144",
+    "uid": "0EF385C4-75F5-4F7C-95E4-3A4C9F278EE1",
+    "subjectId": "12dc67ad-91e0-4f96-828b-8c356143d0cf",
+    "start": "2026-10-17T07:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "7ea4a5bd-1a04-4f5b-a658-f3170517c980",
+    "uid": "3BB079F7-07E1-4D29-88FA-13CCBCB187CE",
+    "subjectId": "a369bc13-9bc8-40dc-9dec-f5cd48df2dfd",
+    "start": "2026-12-01T13:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "9ae89ba7-73f8-4d7a-b5c7-56ac2ff132df",
+    "uid": "8948DC2C-5565-40E5-BEAC-E25C248295F5",
+    "subjectId": "34701e3c-7d1e-4f49-bcd2-67b19ba7d1c7",
+    "start": "2026-09-24T13:30:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "631f48eb-a6e8-45af-90cd-b75f01fdcfa9",
+    "uid": "EFB019D9-4DA7-4F08-AF1B-479E289F56B0",
+    "subjectId": "12dc67ad-91e0-4f96-828b-8c356143d0cf",
+    "start": "2026-11-21T14:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "39a3e1ed-998d-4509-9d65-d35530781cbd",
+    "uid": "a0876e0bafe344f2a01e22e9132f5daf@google.com",
+    "subjectId": "6b6b3af4-6c0a-4e8a-b8f9-e814d929bd56",
+    "start": "2027-01-09T09:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "605b4dad-4f57-4ae5-9127-b10e6e425717",
+    "uid": "b2b97c9bdd854a4fbdb7b404452b078a@google.com",
+    "subjectId": "5f5e5806-c5cb-45ac-ab6d-60459fcb2a43",
+    "start": "2026-11-19T08:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "27f4c62e-080b-4ce4-b139-27d67ff43ba6",
+    "uid": "d107c5d8b68a4e0782d0f737d17de1fa@google.com",
+    "subjectId": "3230516c-37ca-41d0-82f6-6facb6e23aae",
+    "start": "2026-11-07T12:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "735caee5-20f6-4c55-bd04-b1234bfd5737",
+    "uid": "56758F62-A34F-4A89-A8E3-57FB905E1D12",
+    "subjectId": "f148d547-4483-4f31-8ab8-b3575f1db48f",
+    "start": "2026-10-31T10:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "ea9a2d5f-a5b7-4bab-a697-8bf4fdde372a",
+    "uid": "5e2c8a1491664091a408b900af370a3e@google.com",
+    "subjectId": "12dc67ad-91e0-4f96-828b-8c356143d0cf",
+    "start": "2026-10-03T07:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "2fbd9bb4-0635-43ef-b88d-0d0035a297af",
+    "uid": "AC880FBD-FBA7-48A4-A26E-56E25AC6A8DC",
+    "subjectId": "7254537f-e3c7-40c5-a8e3-c6292472e5ce",
+    "start": "2026-11-10T15:15:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "5823659c-6023-41d5-b03a-833de92e7484",
+    "uid": "6C74E697-9867-4437-882F-6B5037AFC125",
+    "subjectId": "c94ba18c-a306-4e3d-9ed4-5dfc88f8ab44",
+    "start": "2026-11-07T09:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "6b21cb6f-4eac-43fb-8a26-5ab04d111aca",
+    "uid": "940BD2D2-6197-45D8-80FC-F8342C2A476C",
+    "subjectId": "4daf51ca-b50b-42b7-a2a1-fdfc2e7f4600",
+    "start": "2026-09-22T16:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "51c28cc3-05e9-4de6-8eec-6a68f2894bc3",
+    "uid": "a40776fe99f94940b1de6798f054140b@google.com",
+    "subjectId": "4daf51ca-b50b-42b7-a2a1-fdfc2e7f4600",
+    "start": "2026-10-24T08:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "9d0fc15f-3771-44ae-91f5-5eee2fd7d0dc",
+    "uid": "1134EA7E-BF1B-471E-AC5F-283D16F2821E",
+    "subjectId": "21a50c11-44e7-4660-8429-37f69d879cb9",
+    "start": "2026-11-24T15:15:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "6c6d6faa-df92-49a1-8c91-ab58897a2f12",
+    "uid": "cd770e5359fb49bca3bf0e214554281a@google.com",
+    "subjectId": "4daf51ca-b50b-42b7-a2a1-fdfc2e7f4600",
+    "start": "2026-11-21T09:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "a8e369ed-3e92-41ac-9eae-1bd26071e4e2",
+    "uid": "7359def1255449b180900185d1c7bcdb@google.com",
+    "subjectId": "5f5e5806-c5cb-45ac-ab6d-60459fcb2a43",
+    "start": "2027-01-21T08:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "6e05f7ff-f6f0-4769-9af3-596a39a492bd",
+    "uid": "C43E320D-44E3-4817-8983-91C152B776A6",
+    "subjectId": "f148d547-4483-4f31-8ab8-b3575f1db48f",
+    "start": "2026-11-07T10:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "156b38bc-9f2d-4981-b673-cc456fcd30cf",
+    "uid": "a53f93804585417098b682e626c3db91@google.com",
+    "subjectId": "21a50c11-44e7-4660-8429-37f69d879cb9",
+    "start": "2026-10-08T14:15:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "387d56c3-99ba-4c99-afed-cf83adc0d354",
+    "uid": "74e469a081c84938a59e677f40a535b6@google.com",
+    "subjectId": "7254537f-e3c7-40c5-a8e3-c6292472e5ce",
+    "start": "2026-09-29T14:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "4d905c71-6f74-4228-8806-219cedb1937e",
+    "uid": "e4dc38a1e62f4b47a526c302263a96eb@google.com",
+    "subjectId": "5f5e5806-c5cb-45ac-ab6d-60459fcb2a43",
+    "start": "2026-09-28T07:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "5c22a2b7-14a8-4bf0-bef6-6e8d025001ea",
+    "uid": "8036637D-742C-4FBA-9978-86AF8140B204",
+    "subjectId": "6b6b3af4-6c0a-4e8a-b8f9-e814d929bd56",
+    "start": "2026-09-25T13:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "62d70146-02b2-438f-ad38-b4d2d5f57f50",
+    "uid": "45e61edddb374202bd9ca0fa67ac428c@google.com",
+    "subjectId": "34701e3c-7d1e-4f49-bcd2-67b19ba7d1c7",
+    "start": "2026-10-08T13:30:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "bb09d311-94f3-4162-8d2f-fbd7868ab6df",
+    "uid": "f3ccfbc3b8674133baae61f4e2ed9898@google.com",
+    "subjectId": "eb35e5b9-c6b3-49f9-94ac-7ea1fe696e36",
+    "start": "2026-12-12T08:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "5d677617-3393-4532-a10e-868ede1677e5",
+    "uid": "c2dfe24a30a14ef49f7e208ca2360b85@google.com",
+    "subjectId": "eb35e5b9-c6b3-49f9-94ac-7ea1fe696e36",
+    "start": "2027-01-09T17:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "2f62ed01-fd8d-45d3-b1c1-65a14e2b9cb2",
+    "uid": "B296992B-9D0D-473C-A993-74C6F00C561A",
+    "subjectId": "12dc67ad-91e0-4f96-828b-8c356143d0cf",
+    "start": "2026-09-26T07:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "53919986-a94f-4ef0-98c6-c96b19115497",
+    "uid": "542A0359-B587-4293-A093-0A2B7D89F83E",
+    "subjectId": "c94ba18c-a306-4e3d-9ed4-5dfc88f8ab44",
+    "start": "2026-10-10T09:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "49e8090f-34ea-4336-98b2-369acc408350",
+    "uid": "9b53e574cf2a4cfdbd9ec1d23a47afad@google.com",
+    "subjectId": "137d8f9d-8730-4573-9bbd-15ec7c7cb8fa",
+    "start": "2026-10-06T12:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "383a1877-5615-4854-bf79-dac3cf9e04a5",
+    "uid": "2eafcdcbede1431eb21d739df1e1c096@google.com",
+    "subjectId": "a369bc13-9bc8-40dc-9dec-f5cd48df2dfd",
+    "start": "2026-10-02T11:15:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  },
+  {
+    "id": "7df91455-a9be-4904-b166-1633bccd03f5",
+    "uid": "67ADE3F1-7624-4BF2-AF4B-863E8519DF6E",
+    "subjectId": "c94ba18c-a306-4e3d-9ed4-5dfc88f8ab44",
+    "start": "2026-11-21T10:00:00.000Z",
+    "timeZone": "Europe/Warsaw",
+    "attendance": "unknown",
+    "alarms": [],
+    "note": ""
+  }
+]

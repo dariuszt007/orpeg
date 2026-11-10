@@ -782,5 +782,117 @@
     ],
     "note": "",
     "uid": ""
+  },
+  {
+    "id": "05c18942-39a3-42a6-bbb1-0b51041938bb",
+    "subjectId": "02f0d475-168e-450c-a671-22defa514bdf",
+    "start": "2027-01-16T08:00:00.000Z",
+    "timeZone": "Asia/Tokyo",
+    "schoolYear": "2026-2027",
+    "grade": 5,
+    "attendance": "unknown",
+    "alarms": [
+      5
+    ],
+    "note": "",
+    "uid": ""
+  },
+  {
+    "id": "ea3deb2c-de71-495d-8f1d-fe8e4ac81d92",
+    "subjectId": "cb063af6-2270-4746-aa46-a6463432698b",
+    "start": "2027-01-21T08:00:00.000Z",
+    "timeZone": "Asia/Tokyo",
+    "schoolYear": "2026-2027",
+    "grade": 5,
+    "attendance": "unknown",
+    "alarms": [
+      5
+    ],
+    "note": "",
+    "uid": ""
+  },
+  {
+    "id": "6f44b7a8-286e-4af3-9650-8978e90a703b",
+    "subjectId": "c419d3dc-d4e5-41e0-bb03-4126a20e784b",
+    "start": "2027-01-23T09:00:00.000Z",
+    "timeZone": "Asia/Tokyo",
+    "schoolYear": "2026-2027",
+    "grade": 5,
+    "attendance": "unknown",
+    "alarms": [
+      5
+    ],
+    "note": "",
+    "uid": ""
+  },
+  {
+    "id": "62df8879-f4bd-459f-8045-3ebaffd14c9b",
+    "subjectId": "c303c882-0054-454b-80d2-e81183fcdf32",
+    "start": "2027-01-26T14:30:00.000Z",
+    "timeZone": "Asia/Tokyo",
+    "schoolYear": "2026-2027",
+    "grade": 5,
+    "attendance": "unknown",
+    "alarms": [
+      5
+    ],
+    "note": "",
+    "uid": ""
+  },
+  {
+    "id": "4dd40a17-d93b-4580-a066-2597809575a4",
+    "subjectId": "3416f8aa-7f0f-4efc-9ac1-a5ff4428a817",
+    "start": "2027-01-26T15:00:00.000Z",
+    "timeZone": "Asia/Tokyo",
+    "schoolYear": "2026-2027",
+    "grade": 5,
+    "attendance": "unknown",
+    "alarms": [
+      5
+    ],
+    "note": "",
+    "uid": ""
+  },
+  {
+    "id": "bb7451ec-e3bd-4607-8721-13ec228b896a",
+    "subjectId": "cb063af6-2270-4746-aa46-a6463432698b",
+    "start": "2027-02-25T08:00:00.000Z",
+    "timeZone": "Asia/Tokyo",
+    "schoolYear": "2026-2027",
+    "grade": 5,
+    "attendance": "unknown",
+    "alarms": [
+      5
+    ],
+    "note": "",
+    "uid": ""
+  },
+  {
+    "id": "21dc5b40-13e3-448c-93db-7989675543f8",
+    "subjectId": "c303c882-0054-454b-80d2-e81183fcdf32",
+    "start": "2027-03-02T14:30:00.000Z",
+    "timeZone": "Asia/Tokyo",
+    "schoolYear": "2026-2027",
+    "grade": 5,
+    "attendance": "unknown",
+    "alarms": [
+      5
+    ],
+    "note": "",
+    "uid": ""
+  },
+  {
+    "id": "6aeeab39-c433-4584-bc8a-040e33f2458d",
+    "subjectId": "3416f8aa-7f0f-4efc-9ac1-a5ff4428a817",
+    "start": "2027-03-02T15:15:00.000Z",
+    "timeZone": "Asia/Tokyo",
+    "schoolYear": "2026-2027",
+    "grade": 5,
+    "attendance": "unknown",
+    "alarms": [
+      5
+    ],
+    "note": "",
+    "uid": ""
   }
 ]

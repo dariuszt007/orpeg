@@ -28,7 +28,7 @@
   {
     "id": "cb063af6-2270-4746-aa46-a6463432698b",
     "name": "Angielski",
-    "color": "#982abc",
+    "color": "#ffab01",
     "defaultPlannedCount": 10,
     "yearPlans": [
       {
@@ -54,7 +54,7 @@
   {
     "id": "c419d3dc-d4e5-41e0-bb03-4126a20e784b",
     "name": "Biologia",
-    "color": "#33c759",
+    "color": "#669d34",
     "defaultPlannedCount": 10,
     "yearPlans": [
       {
@@ -106,7 +106,7 @@
   {
     "id": "c864f720-d494-49ec-acb3-5298c9d3d774",
     "name": "Edukazja Zdrowotna",
-    "color": "#4e7a27",
+    "color": "#5c5c5c",
     "defaultPlannedCount": 10,
     "yearPlans": [
       {
@@ -119,7 +119,7 @@
   {
     "id": "c303c882-0054-454b-80d2-e81183fcdf32",
     "name": "Plastyka",
-    "color": "#e292fe",
+    "color": "#be38f3",
     "defaultPlannedCount": 10,
     "yearPlans": [
       {
@@ -132,7 +132,7 @@
   {
     "id": "3416f8aa-7f0f-4efc-9ac1-a5ff4428a817",
     "name": "Muzyka",
-    "color": "#ff6a00",
+    "color": "#e292fe",
     "defaultPlannedCount": 10,
     "yearPlans": [
       {
@@ -145,7 +145,7 @@
   {
     "id": "14b58501-9a0a-4056-90ee-732b19995771",
     "name": "WF",
-    "color": "#ffd977",
+    "color": "#b1dd8b",
     "defaultPlannedCount": 10,
     "yearPlans": [
       {

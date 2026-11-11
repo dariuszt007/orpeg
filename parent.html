@@ -64,7 +64,16 @@ button.active{background:var(--soft);color:var(--primary);border-color:#d7d3ff}
   background:var(--event-bg,#eeedff);
   text-align:left;font-size:10px;font-weight:700;white-space:nowrap;text-overflow:ellipsis
 }
-.more-events{padding:1px 3px;color:var(--muted);font-size:10px}
+
+.more-events {
+  min-height: 28px;
+  padding: 2px 3px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  text-align: left;
+  font-size: 10px;
+}
 .section-heading{display:flex;justify-content:space-between;align-items:center;margin:17px 2px 9px}
 .section-heading h2{margin:0}
 .muted{color:var(--muted);font-size:13px}
@@ -651,30 +660,43 @@ function renderMonth(){
       </div>
       <div class="month-events">`;
 
-    html+=items.slice(0,3).map(l=>{
-      const color=subjectById(l.subjectId)?.color||"#5147e8";
-      return `<button type="button" class="month-event" data-details="${esc(l.id)}"
-        style="--event-color:${esc(color)};--event-bg:${esc(color)}18">
-        ${esc(fmtTime(l.start,l.timeZone||zone()))} ${esc(lessonTitle(l))}
-      </button>`;
-    }).join("");
+html += items.map((l, index) => {
+  const color = subjectById(l.subjectId)?.color || "#5147e8";
+  const hidden = index >= 4 ? " hidden" : "";
 
-    if(items.length>3){
-      html+=`<span class="more-events">+${items.length-3} ${esc(t("more"))}</span>`;
-    }
+  return `<button
+    type="button"
+    class="month-event${hidden}"
+    data-details="${esc(l.id)}"
+    style="--event-color:${esc(color)};--event-bg:${esc(color)}18"
+  >
+    ${esc(fmtTime(l.start, l.timeZone || zone()))} ${esc(lessonTitle(l))}
+  </button>`;
+}).join("");
+
+if (items.length > 4) {
+  html += `<button type="button" class="more-events" data-expand-month>
+    +${items.length - 4} ${esc(t("more"))}
+  </button>`;
+}
+
+
 
     html+="</div></div>";
   }
 
   $("monthView").innerHTML=html+"</div>";
+$("monthView").querySelectorAll("[data-expand-month]").forEach(button => {
+  button.onclick = () => {
+    const day = button.closest(".month-day");
+    day.querySelectorAll(".month-event.hidden").forEach(event => {
+      event.classList.remove("hidden");
+    });
+    button.remove();
+  };
+});
 
-  $("monthView").querySelectorAll("[data-pick]").forEach(b=>{
-    b.onclick=()=>{
-      selectedDate=fromKey(b.dataset.pick);
-      weekLessonsDate=new Date(selectedDate);
-      renderAll();
-    };
-  });
+
 
   bindDetailButtons($("monthView"));
 }

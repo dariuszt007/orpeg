@@ -662,7 +662,7 @@ function renderMonth(){
 
 html += items.map((l, index) => {
   const color = subjectById(l.subjectId)?.color || "#5147e8";
-  const hidden = index >= 3 ? " hidden" : "";
+  const hidden = index >= 4 ? " hidden" : "";
 
   return `<button
     type="button"
@@ -674,9 +674,9 @@ html += items.map((l, index) => {
   </button>`;
 }).join("");
 
-if (items.length > 3) {
+if (items.length > 4) {
   html += `<button type="button" class="more-events" data-expand-month>
-    +${items.length - 3} ${esc(t("more"))}
+    +${items.length - 4} ${esc(t("more"))}
   </button>`;
 }
 

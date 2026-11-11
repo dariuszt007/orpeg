@@ -156,6 +156,25 @@ dialog::backdrop{background:#13172788}
   display: none !important;
 }
 
+.month-day.week-selected {
+  box-shadow:
+    inset 0 1px 0 #aaa3ea,
+    inset 0 -1px 0 #aaa3ea;
+}
+
+.month-day.week-selected.week-start {
+  box-shadow:
+    inset 1px 0 0 #aaa3ea,
+    inset 0 1px 0 #aaa3ea,
+    inset 0 -1px 0 #aaa3ea;
+}
+
+.month-day.week-selected.week-end {
+  box-shadow:
+    inset -1px 0 0 #aaa3ea,
+    inset 0 1px 0 #aaa3ea,
+    inset 0 -1px 0 #aaa3ea;
+}        
 
 </style>
 </head>
@@ -1084,6 +1103,36 @@ async function start(){
 
 start();
 })();
+
+        const monthView = document.getElementById("monthView");
+
+if (monthView && !monthView.dataset.weekHighlightBound) {
+  monthView.dataset.weekHighlightBound = "true";
+
+  monthView.addEventListener("click", (event) => {
+    // Kliknięcie lekcji lub „więcej” zachowuje dotychczasowe działanie.
+    if (event.target.closest(".month-event, .more-events")) return;
+
+    const clickedDay = event.target.closest(".month-day");
+    if (!clickedDay) return;
+
+    const days = [...monthView.querySelectorAll(".month-day")];
+    const index = days.indexOf(clickedDay);
+    if (index < 0) return;
+
+    const firstIndex = Math.floor(index / 7) * 7;
+
+    days.forEach(day =>
+      day.classList.remove("week-selected", "week-start", "week-end")
+    );
+
+    days.slice(firstIndex, firstIndex + 7).forEach((day, position) => {
+      day.classList.add("week-selected");
+      if (position === 0) day.classList.add("week-start");
+      if (position === 6) day.classList.add("week-end");
+    });
+  });
+}
 </script>
 </body>
 </html>

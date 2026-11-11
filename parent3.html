@@ -680,7 +680,9 @@ if (items.length > 3) {
   </button>`;
 }
 
-
+    if(items.length>3){
+      html+=`<span class="more-events">+${items.length-3} ${esc(t("more"))}</span>`;
+    }
 
     html+="</div></div>";
   }

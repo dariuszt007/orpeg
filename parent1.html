@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f6fa">
 <title>Polska Szkoła</title>
+        <meta name="apple-mobile-web-app-title" content="Polska Szkoła">
         <!-- Link do ładnej ikonki na iPhone'a -->
     <link rel="apple-touch-icon" href="apple-touch-icon1.png">
 <style>
@@ -316,6 +317,13 @@ const DEFAULT_ZONE="Asia/Tokyo";
 
 document.documentElement.lang=UI_LANG;
 document.title = t("appTitle");
+        
+const appleTitle = document.querySelector(
+  'meta[name="apple-mobile-web-app-title"]'
+);
+if (appleTitle) {
+  appleTitle.content = t("appTitle");
+}
 
 let subjects=[];
 let lessons=[];

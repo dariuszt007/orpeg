@@ -698,13 +698,7 @@ $("monthView").querySelectorAll("[data-expand-month]").forEach(button => {
   };
 });
 
-  $("monthView").querySelectorAll("[data-pick]").forEach(b=>{
-    b.onclick=()=>{
-      selectedDate=fromKey(b.dataset.pick);
-      weekLessonsDate=new Date(selectedDate);
-      renderAll();
-    };
-  });
+
 
   bindDetailButtons($("monthView"));
 }

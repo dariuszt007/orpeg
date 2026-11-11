@@ -1041,6 +1041,9 @@ async function start(){
   $("loadMessage").textContent=lessons.length
     ?t("readOnly")
     :t("loadError");
+
+  window.setInterval(refreshJsonData, 60_000);
+
 }
 
 start();

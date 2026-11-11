@@ -873,6 +873,61 @@ async function loadJson(path,fallback){
   }
 }
 
+async function loadFreshJson(path) {
+  const url = new URL(path, document.baseURI);
+  url.searchParams.set("_refresh", String(Date.now()));
+
+  const response = await fetch(url.toString(), { cache: "no-store" });
+  if (!response.ok) {
+    throw new Error(`Nie można wczytać ${path}`);
+  }
+
+  return response.json();
+}
+
+let refreshInProgress = false;
+
+async function refreshJsonData() {
+  if (refreshInProgress) return;
+  refreshInProgress = true;
+
+  try {
+    const previousGrade = $("attendanceGradeFilter").value;
+
+    const [newSubjects, newLessons, newSettings] = await Promise.all([
+      loadFreshJson("./data/subjects.json"),
+      loadFreshJson("./data/lessons.json"),
+      loadFreshJson("./data/settings.json")
+    ]);
+
+    if (!Array.isArray(newSubjects) || !Array.isArray(newLessons)) {
+      throw new Error("Nieprawidłowy format plików JSON");
+    }
+
+    subjects = newSubjects;
+    lessons = newLessons;
+    settings = newSettings && typeof newSettings === "object"
+      ? newSettings
+      : { displayTimeZone: DEFAULT_ZONE };
+
+    if (!settings.displayTimeZone) {
+      settings.displayTimeZone = DEFAULT_ZONE;
+    }
+
+    rebuildIndexes();
+    populateSubjectFilter();
+    populateGradeFilter(previousGrade);
+    renderAll();
+    renderAttendance();
+  } catch (error) {
+    // Jeśli pobranie się nie powiedzie, pozostawiamy dotychczasowe dane.
+    console.warn("Nie udało się odświeżyć danych kalendarza:", error);
+  } finally {
+    refreshInProgress = false;
+  }
+}
+
+        
 /* Nawigacja kalendarza */
 $("prevBtn").onclick=()=>{
   if(mode==="month"){

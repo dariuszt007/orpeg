@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f6fa">
 <title>Polska Szkoła</title>
+        <meta name="apple-mobile-web-app-title" content="Polska Szkoła">
         <!-- Link do ładnej ikonki na iPhone'a -->
     <link rel="apple-touch-icon" href="apple-touch-icon1.png">
 <style>
@@ -249,7 +250,7 @@ const UI_LOCALE={pl:"pl-PL",en:"en-GB",ja:"ja-JP"}[UI_LANG];
 
 const TEXT={
   pl:{
-    appTitle:"Kalendarz lekcji",viewOnly:"Podgląd",
+    appTitle:"Polska Szkoła",viewOnly:"Podgląd",
     previous:"<",today:"Dziś",next:">",
     month:"Miesiąc",week:"Tydzień",calendar:"Kalendarz",attendanceTab:"Obecności",
     monthlyCalendar:"Kalendarz miesięczny",weeklyCalendar:"Kalendarz tygodniowy",
@@ -269,8 +270,8 @@ const TEXT={
     noAttendanceRows:"Brak lekcji dla wybranego przedmiotu i klasy."
   },
   en:{
-    appTitle:"Lesson calendar",viewOnly:"View only",
-    previous:"Previous",today:"Today",next:"Next",
+    appTitle:"Polish School",viewOnly:"View only",
+    previous:"<",today:"Today",next:">",
     month:"Month",week:"Week",calendar:"Calendar",attendanceTab:"Attendance",
     monthlyCalendar:"Monthly calendar",weeklyCalendar:"Weekly calendar",
     lessonsThisWeek:"Lessons this week",lessonDetails:"Lesson details",close:"Close",
@@ -289,7 +290,7 @@ const TEXT={
     noAttendanceRows:"No lessons for the selected subject and grade."
   },
   ja:{
-    appTitle:"レッスンカレンダー",viewOnly:"閲覧専用",
+    appTitle:"ポーランドの学校",viewOnly:"閲覧専用",
     previous:"前へ",today:"今日",next:"次へ",
     month:"月",week:"週",calendar:"カレンダー",attendanceTab:"出席状況",
     monthlyCalendar:"月間カレンダー",weeklyCalendar:"週間カレンダー",
@@ -315,7 +316,14 @@ const $=id=>document.getElementById(id);
 const DEFAULT_ZONE="Asia/Tokyo";
 
 document.documentElement.lang=UI_LANG;
-document.title=`${t("appTitle")} — ${t("viewOnly")}`;
+document.title = t("appTitle");
+        
+const appleTitle = document.querySelector(
+  'meta[name="apple-mobile-web-app-title"]'
+);
+if (appleTitle) {
+  appleTitle.content = t("appTitle");
+}
 
 let subjects=[];
 let lessons=[];

@@ -156,25 +156,7 @@ dialog::backdrop{background:#13172788}
   display: none !important;
 }
 
-.month-day.week-selected {
-  box-shadow:
-    inset 0 1px 0 #aaa3ea,
-    inset 0 -1px 0 #aaa3ea;
-}
 
-.month-day.week-selected.week-start {
-  box-shadow:
-    inset 1px 0 0 #aaa3ea,
-    inset 0 1px 0 #aaa3ea,
-    inset 0 -1px 0 #aaa3ea;
-}
-
-.month-day.week-selected.week-end {
-  box-shadow:
-    inset -1px 0 0 #aaa3ea,
-    inset 0 1px 0 #aaa3ea,
-    inset 0 -1px 0 #aaa3ea;
-}
 </style>
 </head>
 
@@ -649,13 +631,6 @@ function renderMonth(){
   const start=new Date(first);
   start.setDate(first.getDate()-((first.getDay()+6)%7));
 
-const selectedWeekStart = new Date(selectedDate);
-selectedWeekStart.setHours(0, 0, 0, 0);
-selectedWeekStart.setDate(
-  selectedWeekStart.getDate() - ((selectedWeekStart.getDay() + 6) % 7)
-);
-const selectedWeekEnd = addDays(selectedWeekStart, 6);
-
   $("periodLabel").textContent=fmtCalendarDate(cursor,{
     month:"long",
     year:"numeric"
@@ -670,18 +645,12 @@ const selectedWeekEnd = addDays(selectedWeekStart, 6);
     const d=addDays(start,i);
     const key=dateKey(d);
     const items=lessonsOn(key);
-    const inSelectedWeek =
-    key >= dateKey(selectedWeekStart) &&
-    key <= dateKey(selectedWeekEnd);
 
     const classes=[
       "month-day",
       d.getMonth()!==cursor.getMonth()?"outside":"",
       key===dateKey(selectedDate)?"selected":"",
       key===dateKey(todayLocal())?"today":""
-      inSelectedWeek ? "week-selected" : "",
-      inSelectedWeek && i % 7 === 0 ? "week-start" : "",
-      inSelectedWeek && i % 7 === 6 ? "week-end" : ""
     ].filter(Boolean).join(" ");
 
     html+=`<div class="${classes}">

@@ -113,6 +113,23 @@ dialog::backdrop{background:#13172788}
 #previousGradeLessons ul{margin:5px 0 0;padding-left:20px}
 @media(min-width:720px){.app{padding:22px}.stats{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:430px){.app{padding:9px}.month-day{min-height:65px;padding:3px 2px}.month-event{font-size:9px}.form-grid{grid-template-columns:1fr;gap:3px}.subject-row,.lesson-admin-row{align-items:flex-start;flex-direction:column}}
+
+.subject-plan-list {
+  margin-top: 4px;
+}
+
+.subject-plan-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 4px 0;
+}
+
+.subject-plan-row button {
+  min-height: 32px;
+  padding: 4px 9px;
+}
 </style>
 </head>
 <body>
@@ -540,6 +557,40 @@ function renderExportOptions(){
     c.onchange=()=>{if(c.checked)$("exportAllSubjects").checked=false;renderExportOptions();};
   });
 }
+
+function deleteSubjectYearPlan(subjectId, schoolYear) {
+  const subject = subjectById(subjectId);
+  if (!subject) return;
+
+  const planLessons = lessons.filter(l =>
+    String(l.subjectId) === String(subjectId) &&
+    lessonYear(l) === String(schoolYear)
+  );
+
+  if (planLessons.length > 0) {
+    alert(
+      `Nie można usunąć planu ${String(schoolYear).replace("-", "–")}, ` +
+      `bo ma zapisane lekcje (${planLessons.length}). ` +
+      `Najpierw usuń lekcje z tego roku szkolnego.`
+    );
+    return;
+  }
+
+  if (!confirm(
+    `Usunąć plan przedmiotu „${subject.name}” na rok szkolny ` +
+    `${String(schoolYear).replace("-", "–")}?`
+  )) {
+    return;
+  }
+
+  subject.yearPlans = (subject.yearPlans || []).filter(
+    plan => String(plan.schoolYear) !== String(schoolYear)
+  );
+
+  renderAll();
+}
+
+  
 function renderAdmin(){
   const as=$("attendanceSubjectFilter").value,ls=$("lessonsSubjectFilter").value;
   const ag=$("attendanceGradeFilter").value,lg=$("lessonsGradeFilter").value;
@@ -588,12 +639,56 @@ function renderAdmin(){
   $("deleteSelectedLessonsBtn").disabled=!selectedLessonIds.size;
   $("deleteSelectedLessonsBtn").textContent=selectedLessonIds.size?`Usuń wybrane lekcje (${selectedLessonIds.size})`:"Usuń wybrane lekcje";
 
-  $("subjectList").innerHTML=subjects.map(s=>{
-    const info=subjectPlans(s).map(p=>`${p.schoolYear} · ${p.grade||"—"} klasa · plan ${p.plannedCount||0} · wpisano ${lessonsForPlan(s.id,p.schoolYear).length}`).join("<br>")||`Domyślny plan: ${s.defaultPlannedCount||0}`;
-    return `<div class="subject-row"><div class="row-info"><b style="color:${esc(s.color)}">${esc(s.name)}</b><br><span class="muted">${info}</span></div><div class="row-actions"><button data-edit-subject="${esc(s.id)}">Edytuj</button><button class="danger" data-delete-subject="${esc(s.id)}">Usuń</button></div></div>`;
-  }).join("")||'<div class="empty">Brak przedmiotów.</div>';
-  $("subjectList").querySelectorAll("[data-edit-subject]").forEach(b=>b.onclick=()=>editSubject(b.dataset.editSubject));
-  $("subjectList").querySelectorAll("[data-delete-subject]").forEach(b=>b.onclick=()=>deleteSubject(b.dataset.deleteSubject));
+$("subjectList").innerHTML = subjects.map(s => {
+  const plansHtml = subjectPlans(s).map(p => {
+    const lessonCount = lessonsForPlan(s.id, p.schoolYear).length;
+
+    return `
+      <div class="subject-plan-row">
+        <span>
+          ${esc(String(p.schoolYear).replace("-", "–"))}
+          · ${esc(p.grade || "—")} klasa
+          · plan ${esc(p.plannedCount || 0)}
+          · wpisano ${lessonCount}
+        </span>
+        <button
+          type="button"
+          class="danger"
+          data-delete-plan-subject="${esc(s.id)}"
+          data-delete-plan-year="${esc(p.schoolYear)}"
+        >Usuń</button>
+      </div>
+    `;
+  }).join("") || `Domyślny plan: ${s.defaultPlannedCount || 0}`;
+
+  return `
+    <div class="subject-row">
+      <div class="row-info">
+        <b style="color:${esc(s.color)}">${esc(s.name)}</b>
+        <div class="subject-plan-list">${plansHtml}</div>
+      </div>
+      <div class="row-actions">
+        <button data-edit-subject="${esc(s.id)}">Edytuj</button>
+        <button class="danger" data-delete-subject="${esc(s.id)}">Usuń</button>
+      </div>
+    </div>
+  `;
+}).join("") || '<div class="empty">Brak przedmiotów.</div>';
+
+$("subjectList").querySelectorAll("[data-delete-plan-subject]").forEach(button => {
+  button.onclick = () => deleteSubjectYearPlan(
+    button.dataset.deletePlanSubject,
+    button.dataset.deletePlanYear
+  );
+});
+
+$("subjectList").querySelectorAll("[data-edit-subject]").forEach(button => {
+  button.onclick = () => editSubject(button.dataset.editSubject);
+});
+
+$("subjectList").querySelectorAll("[data-delete-subject]").forEach(button => {
+  button.onclick = () => deleteSubject(button.dataset.deleteSubject);
+});
 
   renderExportOptions();
   $("subjectsJson").value=JSON.stringify(subjects,null,2);

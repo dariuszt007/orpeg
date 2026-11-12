@@ -649,6 +649,8 @@ function renderMonth(){
   const first=new Date(cursor.getFullYear(),cursor.getMonth(),1);
   const start=new Date(first);
   start.setDate(first.getDate()-((first.getDay()+6)%7));
+  const selectedWeekStart = startOfWeek(selectedDate);
+  const selectedWeekEnd = addDays(selectedWeekStart, 6);
 
   $("periodLabel").textContent=fmtCalendarDate(cursor,{
     month:"long",
@@ -663,13 +665,20 @@ function renderMonth(){
   for(let i=0;i<42;i++){
     const d=addDays(start,i);
     const key=dateKey(d);
+    const inSelectedWeek =
+            key >= dateKey(selectedWeekStart) &&
+            key <= dateKey(selectedWeekEnd);
     const items=lessonsOn(key);
 
+
     const classes=[
-      "month-day",
-      d.getMonth()!==cursor.getMonth()?"outside":"",
-      key===dateKey(selectedDate)?"selected":"",
-      key===dateKey(todayLocal())?"today":""
+        "month-day",
+        d.getMonth()!==cursor.getMonth()?"outside":"",
+        key===dateKey(selectedDate)?"selected":"",
+        key===dateKey(todayLocal())?"today":"",
+        inSelectedWeek ? "week-selected" : "",
+        inSelectedWeek && i % 7 === 0 ? "week-start" : "",
+        inSelectedWeek && i % 7 === 6 ? "week-end" : ""
     ].filter(Boolean).join(" ");
 
     html+=`<div class="${classes}">
@@ -1108,36 +1117,6 @@ async function start(){
 
 start();
 })();
-
-        const monthView = document.getElementById("monthView");
-
-if (monthView && !monthView.dataset.weekHighlightBound) {
-  monthView.dataset.weekHighlightBound = "true";
-
-  monthView.addEventListener("click", (event) => {
-    // Kliknięcie lekcji lub „więcej” zachowuje dotychczasowe działanie.
-    if (event.target.closest(".month-event, .more-events")) return;
-
-    const clickedDay = event.target.closest(".month-day");
-    if (!clickedDay) return;
-
-    const days = [...monthView.querySelectorAll(".month-day")];
-    const index = days.indexOf(clickedDay);
-    if (index < 0) return;
-
-    const firstIndex = Math.floor(index / 7) * 7;
-
-    days.forEach(day =>
-      day.classList.remove("week-selected", "week-start", "week-end")
-    );
-
-    days.slice(firstIndex, firstIndex + 7).forEach((day, position) => {
-      day.classList.add("week-selected");
-      if (position === 0) day.classList.add("week-start");
-      if (position === 6) day.classList.add("week-end");
-    });
-  });
-}
 </script>
 </body>
 </html>

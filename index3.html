@@ -206,7 +206,21 @@ dialog::backdrop{background:#13172788}
       <div><label for="exportEndDate">Do dnia</label><input id="exportEndDate" type="date"></div>
     </div>
     <label class="bulk-select-label" style="margin-top:10px"><input id="exportAllSubjects" type="checkbox" checked><span>Wszystkie przedmioty i lata szkolne</span></label>
-    <label>Albo wybierz przedmiot, klasę i rok szkolny:</label><div id="exportSubjectChoices"></div>
+    <label>Albo wybierz przedmiot i jego plan:</label>
+<div class="form-grid">
+  <div>
+    <label for="exportSubjectSelect">Przedmiot</label>
+    <select id="exportSubjectSelect">
+      <option value="">Wybierz przedmiot</option>
+    </select>
+  </div>
+  <div>
+    <label for="exportPlanSelect">Klasa i rok szkolny</label>
+    <select id="exportPlanSelect">
+      <option value="">Najpierw wybierz przedmiot</option>
+    </select>
+  </div>
+</div>
     <div class="actions" style="margin-top:12px"><button id="exportIcsBtn">Eksportuj ICS</button></div>
     <hr style="border:0;border-top:1px solid var(--line);margin:16px 0">
     <h4>Import kalendarza ICS</h4>
@@ -543,19 +557,50 @@ function filteredLessons(sid,grade){
   if(!sid||!grade)return null;
   return lessons.filter(l=>l.subjectId===sid&&gradeOf(l)===Number(grade)).sort((a,b)=>new Date(a.start)-new Date(b.start));
 }
-function renderExportOptions(){
-  const box=$("exportSubjectChoices");
-  const selected=new Set([...box.querySelectorAll("[data-export]:checked")].map(x=>x.value));
-  const had=box.querySelectorAll("[data-export]").length>0;
-  box.innerHTML='<div class="export-subject-list">'+planRows().map(p=>{
-    const s=subjectById(p.sid);
-    const label=`${s?.name||"Przedmiot"}${p.grade?` · ${p.grade} klasa`:""} · Rok szkolny ${p.year.replace("-","–")}`;
-    return `<label class="export-subject-option"><input type="checkbox" data-export value="${esc(p.key)}" ${had&&selected.has(p.key)?"checked":""}><span>${esc(label)}</span></label>`;
-  }).join("")+'</div>';
-  box.querySelectorAll("[data-export]").forEach(c=>{
-    c.disabled=$("exportAllSubjects").checked;
-    c.onchange=()=>{if(c.checked)$("exportAllSubjects").checked=false;renderExportOptions();};
-  });
+function renderExportOptions() {
+  const subjectSelect = $("exportSubjectSelect");
+  const planSelect = $("exportPlanSelect");
+
+  const previousSubject = subjectSelect.value;
+  const previousPlan = planSelect.value;
+
+  subjectSelect.innerHTML =
+    '<option value="">Wybierz przedmiot</option>' +
+    subjects.map(s =>
+      `<option value="${esc(s.id)}">${esc(s.name)}</option>`
+    ).join("");
+
+  const subjectStillExists = subjects.some(
+    s => String(s.id) === String(previousSubject)
+  );
+
+  subjectSelect.value = subjectStillExists ? previousSubject : "";
+
+  const subjectId = subjectSelect.value;
+  const plans = subjectId
+    ? subjectPlans(subjectById(subjectId))
+    : [];
+
+  planSelect.innerHTML =
+    `<option value="">${subjectId ? "Wybierz klasę i rok szkolny" : "Najpierw wybierz przedmiot"}</option>` +
+    plans.map(p => {
+      const key = `${subjectId}|${p.schoolYear}`;
+      const label =
+        `${p.grade || "—"} klasa · Rok szkolny ` +
+        `${String(p.schoolYear).replace("-", "–")}`;
+
+      return `<option value="${esc(key)}">${esc(label)}</option>`;
+    }).join("");
+
+  const planStillExists = plans.some(
+    p => `${subjectId}|${p.schoolYear}` === previousPlan
+  );
+
+  planSelect.value = planStillExists ? previousPlan : "";
+
+  const allSelected = $("exportAllSubjects").checked;
+  subjectSelect.disabled = allSelected;
+  planSelect.disabled = allSelected;
 }
 
 function deleteSubjectYearPlan(subjectId, schoolYear) {
@@ -839,9 +884,22 @@ function exportIcs(){
   const from=$("exportStartDate").value,to=$("exportEndDate").value,all=$("exportAllSubjects").checked;
   if(!from||!to){$("icsMessage").textContent="Wybierz początkowy i końcowy dzień eksportu.";return;}
   if(from>to){$("icsMessage").textContent="Data początkowa nie może być późniejsza niż końcowa.";return;}
-  const chosen=new Set([...document.querySelectorAll("[data-export]:checked")].map(x=>x.value));
-  if(!all&&!chosen.size){$("icsMessage").textContent="Zaznacz co najmniej jeden plan albo wybierz wszystkie.";return;}
-  const list=lessons.filter(l=>dateInZone(l.start,zone())>=from&&dateInZone(l.start,zone())<=to&&(all||chosen.has(`${l.subjectId}|${lessonYear(l)}`)));
+  
+const selectedPlanKey = $("exportPlanSelect").value;
+
+if (!all && !selectedPlanKey) {
+  $("icsMessage").textContent =
+    "Wybierz przedmiot oraz klasę i rok szkolny albo wybierz eksport wszystkich.";
+  return;
+}
+
+const list = lessons.filter(l =>
+  dateInZone(l.start, zone()) >= from &&
+  dateInZone(l.start, zone()) <= to &&
+  (all || `${l.subjectId}|${lessonYear(l)}` === selectedPlanKey)
+);
+
+  
   if(!list.length){$("icsMessage").textContent="Brak lekcji w wybranym zakresie i planach.";return;}
   const lines=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Lesson Calendar//","CALSCALE:GREGORIAN"];
   list.forEach(l=>{
@@ -992,7 +1050,8 @@ $("lessonForm").onsubmit=saveLesson;
 $("cancelLessonBtn").onclick=()=>$("lessonDialog").close();
 $("exportIcsBtn").onclick=exportIcs;
 $("importIcsBtn").onclick=importIcs;
-$("exportAllSubjects").onchange=renderExportOptions;
+$("exportAllSubjects").onchange = renderExportOptions;
+$("exportSubjectSelect").onchange = renderExportOptions;
 
 $("selectAllLessons").onchange=()=>{
   const list=filteredLessons($("lessonsSubjectFilter").value,$("lessonsGradeFilter").value)||[];

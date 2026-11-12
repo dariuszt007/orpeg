@@ -649,6 +649,8 @@ function renderMonth(){
   const first=new Date(cursor.getFullYear(),cursor.getMonth(),1);
   const start=new Date(first);
   start.setDate(first.getDate()-((first.getDay()+6)%7));
+  const selectedWeekStart = startOfWeek(selectedDate);
+  const selectedWeekEnd = addDays(selectedWeekStart, 6);
 
   $("periodLabel").textContent=fmtCalendarDate(cursor,{
     month:"long",
@@ -663,6 +665,9 @@ function renderMonth(){
   for(let i=0;i<42;i++){
     const d=addDays(start,i);
     const key=dateKey(d);
+    const inSelectedWeek =
+            key >= dateKey(selectedWeekStart) &&
+            key <= dateKey(selectedWeekEnd);
     const items=lessonsOn(key);
 
     const classes=[

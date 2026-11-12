@@ -636,12 +636,42 @@ function usedGradesBefore(sid,y){
   return set;
 }
 function renderEarlierLessons(){
-  const box=$("previousGradeLessons"),sid=$("lessonSubject").value,g=Number($("lessonGrade").value),date=$("lessonDate").value;
-  if(!sid||!g||!date){box.textContent="";return;}
-  const y=yearForDate(date,$("eventZone").value||zone()),start=yearStart(y);
-  const earlier=lessons.filter(l=>l.subjectId===sid&&gradeOf(l)===g&&yearStart(lessonYear(l))<start).sort((a,b)=>new Date(a.start)-new Date(b.start));
-  if(!earlier.length){box.textContent="Nie znaleziono wcześniejszych lekcji dla tej klasy.";return;}
-  box.innerHTML="<strong>Wcześniejsze lekcje znalezione dla tej klasy:</strong><ul>"+earlier.map(l=>`<li>${esc(lessonTitle(l))} — ${esc(fmtDate(l.start,l.timeZone||zone()))} — ${esc(lessonYear(l))}</li>`).join("")+"</ul>";
+  const box = $("previousGradeLessons");
+  const sid = $("lessonSubject").value;
+  const grade = Number($("lessonGrade").value);
+  const date = $("lessonDate").value;
+
+  if (!sid || !grade || !date) {
+    box.textContent = "";
+    return;
+  }
+
+  const year = yearForDate(
+    date,
+    $("eventZone").value || zone()
+  );
+
+  const currentYearLessons = lessons
+    .filter(l =>
+      String(l.subjectId) === String(sid) &&
+      lessonYear(l) === String(year) &&
+      Number(gradeOf(l)) === grade
+    )
+    .sort((a, b) => new Date(a.start) - new Date(b.start));
+
+  if (!currentYearLessons.length) {
+    box.textContent =
+      `Nie znaleziono lekcji dla tej klasy w roku szkolnym ${String(year).replace("-", "–")}.`;
+    return;
+  }
+
+  box.innerHTML =
+    `<strong>Lekcje w roku szkolnym ${String(year).replace("-", "–")} — ${grade} klasa:</strong>` +
+    "<ul>" +
+    currentYearLessons.map(l =>
+      `<li>${esc(lessonTitle(l))} — ${esc(fmtDate(l.start, l.timeZone || zone()))}</li>`
+    ).join("") +
+    "</ul>";
 }
 function fillGrades(y,preferred){
   const sid=$("lessonSubject").value,s=subjectById(sid),plan=planFor(sid,y),editing=lessons.find(l=>l.id===$("lessonId").value);

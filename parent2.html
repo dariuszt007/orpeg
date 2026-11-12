@@ -670,11 +670,15 @@ function renderMonth(){
             key <= dateKey(selectedWeekEnd);
     const items=lessonsOn(key);
 
+
     const classes=[
-      "month-day",
-      d.getMonth()!==cursor.getMonth()?"outside":"",
-      key===dateKey(selectedDate)?"selected":"",
-      key===dateKey(todayLocal())?"today":""
+        "month-day",
+        d.getMonth()!==cursor.getMonth()?"outside":"",
+        key===dateKey(selectedDate)?"selected":"",
+        key===dateKey(todayLocal())?"today":"",
+        inSelectedWeek ? "week-selected" : "",
+        inSelectedWeek && i % 7 === 0 ? "week-start" : "",
+        inSelectedWeek && i % 7 === 6 ? "week-end" : ""
     ].filter(Boolean).join(" ");
 
     html+=`<div class="${classes}">

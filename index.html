@@ -480,8 +480,8 @@ function renderMonth(){
     const k=dateKey(d),items=lessonsOn(d);
     const cls=["month-day",d.getMonth()!==cursor.getMonth()?"outside":"",k===dateKey(selectedDate)?"selected":"",k===dateKey(new Date())?"today":""].filter(Boolean).join(" ");
     html+=`<div class="${cls}"><div class="day-head"><button class="day-num" data-pick="${k}">${d.getDate()}</button><button class="add-day" data-add="${k}">+</button></div><div class="month-events">`;
-    html+=items.slice(0,3).map(l=>`<button class="month-event" data-edit="${esc(l.id)}" style="--event-color:${esc(subjectById(l.subjectId)?.color||"#5147e8")}">${esc(lessonTitle(l))}</button>`).join("");
-    if(items.length>3)html+=`<span class="muted">+${items.length-3}</span>`;
+    html+=items.slice(0,4).map(l=>`<button class="month-event" data-edit="${esc(l.id)}" style="--event-color:${esc(subjectById(l.subjectId)?.color||"#5147e8")}">${esc(lessonTitle(l))}</button>`).join("");
+    if(items.length>4)html+=`<span class="muted">+${items.length-4}</span>`;
     html+="</div></div>";
   }
   $("monthView").innerHTML=html+"</div>";

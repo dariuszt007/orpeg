@@ -681,9 +681,9 @@ function renderMonth(){
         inSelectedWeek && i % 7 === 6 ? "week-end" : ""
     ].filter(Boolean).join(" ");
 
-    html+=`<div class="${classes}">
+    html+=`<div class="${classes}" data-pick="${key}">
       <div class="day-head">
-        <button class="day-num" type="button" data-pick="${key}"
+        <button class="day-num" type="button"
           aria-label="${esc(t("selectDay"))} ${esc(key)}">${d.getDate()}</button>
       </div>
       <div class="month-events">`;
@@ -723,13 +723,17 @@ $("monthView").querySelectorAll("[data-expand-month]").forEach(button => {
     button.remove();
   };
 });
-  $("monthView").querySelectorAll("[data-pick]").forEach(b=>{
-    b.onclick=()=>{
-      selectedDate=fromKey(b.dataset.pick);
-      weekLessonsDate=new Date(selectedDate);
-      renderAll();
-    };
-  });
+  $("monthView").addEventListener("click", event => {
+// Kliknięcie lekcji lub przycisku „więcej” zachowuje własną funkcję.
+if (event.target.closest("[data-details], [data-expand-month]")) return;
+
+const day = event.target.closest(".month-day[data-pick]");
+if (!day) return;
+
+selectedDate = fromKey(day.dataset.pick);
+weekLessonsDate = new Date(selectedDate);
+renderAll();
+});
 
   bindDetailButtons($("monthView"));
 }

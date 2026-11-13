@@ -723,13 +723,17 @@ $("monthView").querySelectorAll("[data-expand-month]").forEach(button => {
     button.remove();
   };
 });
-  $("monthView").querySelectorAll("[data-pick]").forEach(b=>{
-    b.onclick=()=>{
-      selectedDate=fromKey(b.dataset.pick);
-      weekLessonsDate=new Date(selectedDate);
-      renderAll();
-    };
-  });
+  $("monthView").addEventListener("click", event => {
+// Kliknięcie lekcji lub przycisku „więcej” zachowuje własną funkcję.
+if (event.target.closest("[data-details], [data-expand-month]")) return;
+
+const day = event.target.closest(".month-day[data-pick]");
+if (!day) return;
+
+selectedDate = fromKey(day.dataset.pick);
+weekLessonsDate = new Date(selectedDate);
+renderAll();
+});
 
   bindDetailButtons($("monthView"));
 }

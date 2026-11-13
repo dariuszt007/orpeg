@@ -681,9 +681,9 @@ function renderMonth(){
         inSelectedWeek && i % 7 === 6 ? "week-end" : ""
     ].filter(Boolean).join(" ");
 
-    html+=`<div class="${classes}">
+    html+=`<div class="${classes}" data-pick="${key}">
       <div class="day-head">
-        <button class="day-num" type="button" data-pick="${key}"
+        <button class="day-num" type="button"
           aria-label="${esc(t("selectDay"))} ${esc(key)}">${d.getDate()}</button>
       </div>
       <div class="month-events">`;

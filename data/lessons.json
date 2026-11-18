@@ -1034,5 +1034,19 @@
     ],
     "note": "",
     "uid": ""
+  },
+  {
+    "id": "00394dc1-4fc5-416b-8fe1-c0eed2f3128c",
+    "subjectId": "d77def58-905d-4b14-9d93-01989f6cc2a5",
+    "start": "2026-11-21T11:00:00.000Z",
+    "timeZone": "Asia/Tokyo",
+    "schoolYear": "2026-2027",
+    "grade": 5,
+    "attendance": "unknown",
+    "alarms": [
+      5
+    ],
+    "note": "",
+    "uid": ""
   }
 ]

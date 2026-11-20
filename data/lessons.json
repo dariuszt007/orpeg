@@ -496,7 +496,7 @@
     "timeZone": "Asia/Tokyo",
     "schoolYear": "2026-2027",
     "grade": 5,
-    "attendance": "unknown",
+    "attendance": "present",
     "alarms": [
       5
     ],
@@ -510,7 +510,7 @@
     "timeZone": "Asia/Tokyo",
     "schoolYear": "2026-2027",
     "grade": 5,
-    "attendance": "unknown",
+    "attendance": "present",
     "alarms": [
       5
     ],
